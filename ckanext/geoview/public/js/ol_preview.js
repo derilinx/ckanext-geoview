@@ -14,6 +14,17 @@
 
         ckan.geoview = ckan.geoview || {}
 
+        var getParameterByName = function (name, url) {
+            if (!url) url = window.location.href;
+            name = name.replace(/[\[\]]/g, "\\$&");
+            var regex = new RegExp("[?&]" + name + "(=([^&#]*)|&|#|$)"),
+                results = regex.exec(url);
+            if (!results) return null;
+            if (!results[2]) return null;
+            return decodeURIComponent(results[2].replace(/\+/g, " "));
+        };
+
+
         var esrirestExtractor = function(resource, proxyUrl, proxyServiceUrl, layerProcessor, map) {
             var parsedUrl = resource.url.split('#');
             var url = proxyServiceUrl || parsedUrl[0];
@@ -42,6 +53,16 @@
                 var url = proxyServiceUrl || parsedUrl[0];
 
                 var ftName = parsedUrl.length > 1 && parsedUrl[1];
+
+                // do a little more parsing here to get it from a longer url
+                // what we want to do is add some extra parsing.
+                // if there's a typename in the querystring, use that for ftName.
+                if (!ftName) {
+                    if (resource.url.toLowerCase().search('typename')) {
+                        ftName = getParameterByName('typename', resource.url) || getParameterByName('TYPENAME', resource.url);
+                    }
+                }
+
                 OL_HELPERS.withFeatureTypesLayers(url, layerProcessor, ftName, map, true /* useGET */);
             },
             'wms' : function(resource, proxyUrl, proxyServiceUrl, layerProcessor, map) {
@@ -52,6 +73,13 @@
                 var url = proxyServiceUrl || getMapUrl;
 
                 var layerName = parsedUrl.length > 1 && parsedUrl[1];
+
+                if (!layerName) {
+                    if (resource.url.toLowerCase().search('typename')) {
+                        layerName = getParameterByName('layers', resource.url) || getParameterByName('LAYERS', resource.url);
+                    }
+                }
+
                 OL_HELPERS.withWMSLayers(url, getMapUrl, layerProcessor, layerName, true /* useTiling*/, map );
             },
             'wmts' : function(resource, proxyUrl, proxyServiceUrl, layerProcessor, map) {

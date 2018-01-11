@@ -20,7 +20,13 @@ def proxy_service_resource(self, context, data_dict):
     resource_id = data_dict['resource_id']
     log.info('Proxify resource {id}'.format(id=resource_id))
     resource = logic.get_action('resource_show')(context, {'id': resource_id})
-    url = resource['url']
+
+    res_format = resource['format'].lower()
+
+    if 'wms' in res_format or 'wfs' in res_format:
+        url = resource['url'].split('?')[0]
+    else:
+        url = resource['url']
 
     return proxy_service_url(self, url)
 
