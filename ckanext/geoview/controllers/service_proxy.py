@@ -6,6 +6,9 @@ import requests
 import ckan.logic as logic
 import ckan.lib.base as base
 
+import zipfile
+import StringIO
+
 log = getLogger(__name__)
 
 MAX_FILE_SIZE = 3 * 1024 * 1024  # 1MB
@@ -23,14 +26,19 @@ def proxy_service_resource(self, context, data_dict):
 
     res_format = resource['format'].lower()
 
+    unzip = False
+
     if 'wms' in res_format or 'wfs' in res_format:
         url = resource['url'].split('?')[0]
+    elif 'kml' in res_format and '.kml.zip' in resource['url']:
+        url = resource['url']
+        unzip = True
     else:
         url = resource['url']
 
-    return proxy_service_url(self, url)
+    return proxy_service_url(self, url, unzip=unzip)
 
-def proxy_service_url(self, url):
+def proxy_service_url(self, url, unzip=False):
 
     parts = urlparse.urlsplit(url)
     if not parts.scheme or not parts.netloc:
@@ -59,18 +67,25 @@ def proxy_service_url(self, url):
                 file size: {allowed}, Content-Length: {actual}. Url: '''+url).format(
                 allowed=MAX_FILE_SIZE, actual=cl))
 
-        base.response.content_type = r.headers['content-type']
-        base.response.charset = r.encoding
+        if unzip:
+            base.response.content_type = 'application/xml'
+            base.response.charset = 'utf-8'
 
-        length = 0
-        for chunk in r.iter_content(chunk_size=CHUNK_SIZE):
-            base.response.body_file.write(chunk)
-            length += len(chunk)
+            z = zipfile.ZipFile(StringIO.StringIO(r.content))
+            base.response.body_file.write(z.read(z.namelist()[0]))
+        else:
+            base.response.content_type = r.headers['content-type']
+            base.response.charset = r.encoding
 
-            if length >= MAX_FILE_SIZE:
-                base.abort(409, ('''Content is too large to be proxied. Allowed
-                file size: {allowed}, Content-Length: {actual}. Url: '''+url).format(
-                    allowed=MAX_FILE_SIZE, actual=length))
+            length = 0
+            for chunk in r.iter_content(chunk_size=CHUNK_SIZE):
+                base.response.body_file.write(chunk)
+                length += len(chunk)
+
+                if length >= MAX_FILE_SIZE:
+                    base.abort(409, ('''Content is too large to be proxied. Allowed
+                    file size: {allowed}, Content-Length: {actual}. Url: '''+url).format(
+                        allowed=MAX_FILE_SIZE, actual=length))
 
     except requests.exceptions.HTTPError, error:
         details = 'Could not proxy resource. Server responded with %s %s' % (

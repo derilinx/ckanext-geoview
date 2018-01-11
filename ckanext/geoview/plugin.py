@@ -196,8 +196,12 @@ class OLGeoView(GeoViewBase):
                 self._guess_format_from_extension(data_dict['resource']['url'])
 
         if self.proxy_enabled and not same_domain:
-            proxy_url = proxy.get_proxified_resource_url(data_dict)
-            proxy_service_url = get_proxified_service_url(data_dict)
+            if 'kml.zip' in data_dict['resource']['url']:
+                proxy_url = get_proxified_service_url(data_dict)
+                proxy_service_url = get_proxified_service_url(data_dict)
+            else:
+                proxy_url = proxy.get_proxified_resource_url(data_dict)
+                proxy_service_url = get_proxified_service_url(data_dict)
         else:
             proxy_url = data_dict['resource']['url']
             proxy_service_url = data_dict['resource']['url']
