@@ -70,15 +70,16 @@
                 // use the original URL for the getMap, as there's no need for a proxy for image requests
                 var getMapUrl = parsedUrl[0];
 
-                var url = proxyServiceUrl || getMapUrl;
-
                 var layerName = parsedUrl.length > 1 && parsedUrl[1];
 
                 if (!layerName) {
                     if (resource.url.toLowerCase().search('typename')) {
                         layerName = getParameterByName('layers', resource.url) || getParameterByName('LAYERS', resource.url);
+                        getMapUrl = resource.url.split('?')[0];
                     }
                 }
+
+                var url = proxyServiceUrl || getMapUrl;
 
                 OL_HELPERS.withWMSLayers(url, getMapUrl, layerProcessor, layerName, true /* useTiling*/, map );
             },
