@@ -276,7 +276,7 @@ class WMTSView(GeoViewBase):
 class SHPView(GeoViewBase):
     p.implements(p.ITemplateHelpers, inherit=True)
 
-    SHP = ["shp", "shapefile"]
+    SHP = ['shp', 'shapefile', 'shp / zip', 'shp/zip', 'shp/zip']
 
     # IResourceView
     def info(self):
