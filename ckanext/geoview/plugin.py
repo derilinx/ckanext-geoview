@@ -383,7 +383,7 @@ class WMTSPreview(WMTSView):
 class SHPView(GeoViewBase):
     p.implements(p.ITemplateHelpers, inherit=True)
 
-    SHP = ['shp', 'shapefile']
+    SHP = ['shp', 'shapefile', 'shp / zip', 'shp/zip', 'shp/zip']
 
     # IResourceView (CKAN >=2.3)
     def info(self):
