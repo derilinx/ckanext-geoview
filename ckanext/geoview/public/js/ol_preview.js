@@ -75,7 +75,7 @@
                 if (!layerName) {
                     if (resource.url.toLowerCase().search('typename')) {
                         layerName = getParameterByName('layers', resource.url) || getParameterByName('LAYERS', resource.url);
-                        getMapUrl = resource.url.split('?')[0];
+                        layerName = layerName.split(':').reverse()[0];
                     }
                 }
 
