@@ -63,7 +63,7 @@ def proxy_service_url(self, url, unzip=False):
 
         cl = r.headers.get('content-length')
         if cl and int(cl) > MAX_FILE_SIZE:
-            base.abort(409, ('''Content is too large to be proxied. Allowed
+            base.abort(413, ('''Dataset is too large to be previewed. Allowed
                 file size: {allowed}, Content-Length: {actual}. Url: '''+url).format(
                 allowed=MAX_FILE_SIZE, actual=cl))
 
@@ -83,7 +83,7 @@ def proxy_service_url(self, url, unzip=False):
                 length += len(chunk)
 
                 if length >= MAX_FILE_SIZE:
-                    base.abort(409, ('''Content is too large to be proxied. Allowed
+                    base.abort(413, ('''Dataset is too large to be previewed. Allowed
                     file size: {allowed}, Content-Length: {actual}. Url: '''+url).format(
                         allowed=MAX_FILE_SIZE, actual=length))
 
