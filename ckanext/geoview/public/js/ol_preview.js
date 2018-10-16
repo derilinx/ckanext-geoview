@@ -58,7 +58,7 @@
                 // what we want to do is add some extra parsing.
                 // if there's a typename in the querystring, use that for ftName.
                 if (!ftName) {
-                    if (resource.url.toLowerCase().search('typename')) {
+                    if (resource.url.toLowerCase().search('typename') !== -1) {
                         ftName = getParameterByName('typename', resource.url) || getParameterByName('TYPENAME', resource.url);
                     }
                 }
@@ -73,8 +73,8 @@
                 var layerName = parsedUrl.length > 1 && parsedUrl[1];
 
                 if (!layerName) {
-                    if (resource.url.toLowerCase().search('typename')) {
-                        layerName = getParameterByName('layers', resource.url) || getParameterByName('LAYERS', resource.url);
+                    if (resource.url.toLowerCase().search('layers') !== -1) {
+                        layerName = getParameterByName('layers', resource.url) || getParameterByName('LAYERS', resource.url) || '';
                         layerName = layerName.split(':').reverse()[0];
                     }
                 }
