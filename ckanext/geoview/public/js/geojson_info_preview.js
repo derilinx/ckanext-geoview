@@ -56,12 +56,15 @@ ckan.module('geojsoninfopreview', function (jQuery, _) {
         self.infoBox.update()
       }
 
+      window.addEventListener("message", self.onMsg(self), false)
+      window.parent.postMessage("ping", window.origin)
 
       // hack to make leaflet use a particular location to look for images
       L.Icon.Default.imagePath = this.options.site_url + 'js/vendor/leaflet/dist/images';
 
       jQuery.getJSON(preload_resource['url']).done(
         function(data){
+          self.loadedData = data
           self.geoJsonLayers = self.showPreview(data);
         })
       .fail(
@@ -75,6 +78,44 @@ ckan.module('geojsoninfopreview', function (jQuery, _) {
       // for it. See https://github.com/ckan/ckanext-geoview/issues/51
       proj4.defs['OGC:CRS84'] = proj4.defs['EPSG:4326'];
     },
+
+    onMsg: function(self) {
+      return function(e) {
+        // filter on event.origin
+        if (e.origin != window.origin) {
+          return false
+        }
+        if (! self.loadedData) {
+          return
+        }
+        // filter the map
+        var evt_data = e.data
+        var filter = evt_data['filter']
+        var map_data = { 'type': self.loadedData.type,
+                         'name': self.loadedData.name,
+                         'crs': self.loadedData.crs,
+                         'features': []
+                       }
+        if (filter) {
+          filter_func = function(props) {
+            return Object.keys(filter).map(function(k) {
+              return props[k] == filter[k]
+            }).every(function(x) { return x })
+          }
+
+          self.loadedData.features.forEach(function(feat) {
+            if (filter_func(feat['properties'])) {
+              map_data.features.push(feat)
+            }
+          })
+        } else {
+          map_data.features = self.loadedData.features
+        }
+        self.map.removeLayer(self.geoJsonLayers)
+        self.geoJsonLayers = self.showPreview(map_data)
+      }
+    },
+
 
     showError: function (jqXHR, textStatus, errorThrown) {
       if (textStatus == 'error' && jqXHR.responseText.length) {
@@ -103,21 +144,9 @@ ckan.module('geojsoninfopreview', function (jQuery, _) {
       return infoBox
     },
 
-    xonEnter: function(e) {
-      var self = this
-      var layer = e.target;
-      layer.setStyle({ weight:3 })
-      self.infoBox.update(layer.feature.properties)
-    },
-
-    xonExit: function(e) {
-      var self = this;
-      self.geoJsonLayers.setStyle(self.options.style)
-      self.infoBox.update({})
-    },
-
     showPreview: function (geojsonFeature) {
       var self = this;
+      var min_size = .2;
       var gjLayer = L.Proj.geoJson(geojsonFeature, {
         style: self.options.style,
         onEachFeature: function(feature, layer) {
@@ -127,7 +156,14 @@ ckan.module('geojsoninfopreview', function (jQuery, _) {
                    })
         }
       }).addTo(self.map);
-      self.map.fitBounds(gjLayer.getBounds());
+      var bounds = gjLayer.getBounds();
+      if (bounds._northEast.equals(bounds._southWest)) {
+        bounds._northEast.lat += min_size
+        bounds._southWest.lat -= min_size
+        bounds._northEast.lon -= min_size
+        bounds._southWest.lon += min_size
+      }
+      self.map.fitBounds(bounds);
       return gjLayer
     }
   };
