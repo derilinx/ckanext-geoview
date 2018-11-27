@@ -2,8 +2,9 @@
 ckan.module('geojsoninfopreview', function (jQuery, _) {
   return {
     options: {
+      lang: jQuery('html').attr('lang'),
       infoTitle: 'Info',
-      infoTemplate: '<br>{name_of_site_en}<br>{name_of_site_my}<br>{area_ac} ac',
+      infoTemplate: '<br>{name_en}<br>{name_my}<br>{area_ac} ac',
       style: {
         opacity: 0.7,
         fillOpacity: 0.1,
@@ -20,6 +21,14 @@ ckan.module('geojsoninfopreview', function (jQuery, _) {
     },
     initialize: function () {
       var self = this;
+
+      if (window.infoTitle && window.infoTitle[this.options.lang]) {
+        this.options.infoTitle = window.infoTitle[this.options.lang]
+      }
+
+      if (window.infoTemplate && window.infoTemplate[this.options.lang]) {
+        this.options.infoTemplate = window.infoTemplate[this.options.lang]
+      }
 
       self.el.empty();
       self.el.append($("<div></div>").attr("id","map"));
@@ -146,7 +155,7 @@ ckan.module('geojsoninfopreview', function (jQuery, _) {
 
     showPreview: function (geojsonFeature) {
       var self = this;
-      var min_size = .2;
+      var min_size = .1;
       var gjLayer = L.Proj.geoJson(geojsonFeature, {
         style: self.options.style,
         onEachFeature: function(feature, layer) {
@@ -157,12 +166,11 @@ ckan.module('geojsoninfopreview', function (jQuery, _) {
         }
       }).addTo(self.map);
       var bounds = gjLayer.getBounds();
-      if (bounds._northEast.equals(bounds._southWest)) {
-        bounds._northEast.lat += min_size
-        bounds._southWest.lat -= min_size
-        bounds._northEast.lon -= min_size
-        bounds._southWest.lon += min_size
-      }
+      // inset no matter what
+      bounds._northEast.lat += min_size
+      bounds._southWest.lat -= min_size
+      bounds._northEast.lon -= min_size
+      bounds._southWest.lon += min_size
       self.map.fitBounds(bounds);
       return gjLayer
     }
