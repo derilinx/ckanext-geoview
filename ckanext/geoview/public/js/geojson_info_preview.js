@@ -158,6 +158,12 @@ ckan.module('geojsoninfopreview', function (jQuery, _) {
       var min_size = .1;
       var gjLayer = L.Proj.geoJson(geojsonFeature, {
         style: self.options.style,
+        pointToLayer: function(feature, latlng) {
+          var size = "m_size_" + String(Math.floor(Math.log10(feature.properties.acres_en)))
+          var type = "m_land_" + feature.properties.land
+          var _icon = L.divIcon({className: ['m_point', size, type].join(" "), html: "<i class='fa fa-circle'>"});
+          return L.marker(latlng, {icon: _icon});
+        },
         onEachFeature: function(feature, layer) {
           layer.on({ mouseover: self.onEnter,
                      mouseout: self.onExit,
