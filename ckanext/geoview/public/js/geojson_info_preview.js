@@ -17,17 +17,24 @@ ckan.module('geojsoninfopreview', function (jQuery, _) {
       },
       i18n: {
         'error': _('An error occurred: %(text)s %(error)s')
-      }
+      },
+      extras: function (e) {},
+      iconFunction: function(L, feature) { return L.defaultIcon() },
+
     },
     initialize: function () {
       var self = this;
 
-      if (window.infoTitle && window.infoTitle[this.options.lang]) {
-        this.options.infoTitle = window.infoTitle[this.options.lang]
-      }
+      if (window.map_options) {
+        if (window.map_options.infoTitle && window.map_options.infoTitle[this.options.lang]) {
+          this.options.infoTitle = window.map_options.infoTitle[this.options.lang]
+        }
 
-      if (window.infoTemplate && window.infoTemplate[this.options.lang]) {
-        this.options.infoTemplate = window.infoTemplate[this.options.lang]
+        if (window.map_options.infoTemplate && window.map_options.infoTemplate[this.options.lang]) {
+          this.options.infoTemplate = window.map_options.infoTemplate[this.options.lang]
+        }
+        this.options.extras = window.map_options.extras
+        this.options.iconFunction = window.map_options.iconFunction
       }
 
       self.el.empty();
@@ -74,6 +81,7 @@ ckan.module('geojsoninfopreview', function (jQuery, _) {
       jQuery.getJSON(preload_resource['url']).done(
         function(data){
           self.loadedData = data
+          self.loadedData.features.forEach(self.options.extras)
           self.geoJsonLayers = self.showPreview(data);
         })
       .fail(
@@ -159,9 +167,7 @@ ckan.module('geojsoninfopreview', function (jQuery, _) {
       var gjLayer = L.Proj.geoJson(geojsonFeature, {
         style: self.options.style,
         pointToLayer: function(feature, latlng) {
-          var size = "m_size_" + String(Math.floor(Math.log10(feature.properties.acres_en)))
-          var type = "m_land_" + feature.properties.land
-          var _icon = L.divIcon({className: ['m_point', size, type].join(" "), html: "<i class='fa fa-circle'>"});
+          var _icon = self.options.iconFunction(L, feature)
           return L.marker(latlng, {icon: _icon});
         },
         onEachFeature: function(feature, layer) {
