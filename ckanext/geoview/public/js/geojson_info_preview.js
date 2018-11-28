@@ -164,6 +164,7 @@ ckan.module('geojsoninfopreview', function (jQuery, _) {
     showPreview: function (geojsonFeature) {
       var self = this;
       var min_size = .1;
+      window.parent.postMessage({'filtered': geojsonFeature}, window.origin)
       var gjLayer = L.Proj.geoJson(geojsonFeature, {
         style: self.options.style,
         pointToLayer: function(feature, latlng) {
