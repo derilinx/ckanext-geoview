@@ -26,11 +26,11 @@ ckan.module('geojsoninfopreview', function (jQuery, _) {
       var self = this;
 
       if (window.map_options) {
-        if (window.map_options.infoTitle && window.map_options.infoTitle[this.options.lang]) {
+        if (window.map_options.infoTitle && window.map_options.infoTitle[this.options.lang] !== undefined) {
           this.options.infoTitle = window.map_options.infoTitle[this.options.lang]
         }
 
-        if (window.map_options.infoTemplate && window.map_options.infoTemplate[this.options.lang]) {
+        if (window.map_options.infoTemplate && window.map_options.infoTemplate[this.options.lang] !== undefined) {
           this.options.infoTemplate = window.map_options.infoTemplate[this.options.lang]
         }
         this.options.extras = window.map_options.extras
