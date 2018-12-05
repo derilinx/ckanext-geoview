@@ -172,10 +172,16 @@ ckan.module('geojsoninfopreview', function (jQuery, _) {
           return L.marker(latlng, {icon: _icon});
         },
         onEachFeature: function(feature, layer) {
-          layer.on({ mouseover: self.onEnter,
-                     mouseout: self.onExit,
-                     click: self.onEnter
-                   })
+          // if there's only one feature, make sure that
+          // it's highlighted in the info box.
+          if (geojsonFeature.features.length > 1) {
+            layer.on({ mouseover: self.onEnter,
+                       mouseout: self.onExit,
+                       click: self.onEnter
+                     })
+          } else {
+            self.infoBox.update(feature.properties)
+          }
         }
       }).addTo(self.map);
       var bounds = gjLayer.getBounds();
