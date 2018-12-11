@@ -20,7 +20,7 @@ ckan.module('geojsoninfopreview', function (jQuery, _) {
       },
       extras: function (e) {},
       iconFunction: function(L, feature) { return L.defaultIcon() },
-
+      onClick: false,
     },
     initialize: function () {
       var self = this;
@@ -33,9 +33,13 @@ ckan.module('geojsoninfopreview', function (jQuery, _) {
         if (window.map_options.infoTemplate && window.map_options.infoTemplate[this.options.lang] !== undefined) {
           this.options.infoTemplate = window.map_options.infoTemplate[this.options.lang]
         }
+        if (window.map_options.onClick) {
+          this.options.onClick = window.map_options.onClick
+        }
         this.options.extras = window.map_options.extras
         this.options.iconFunction = window.map_options.iconFunction
       }
+
 
       self.el.empty();
       self.el.append($("<div></div>").attr("id","map"));
@@ -70,6 +74,15 @@ ckan.module('geojsoninfopreview', function (jQuery, _) {
       self.onExit = function(e) {
         self.geoJsonLayers.setStyle(self.options.style)
         self.infoBox.update()
+      }
+
+      self.onClick = function(e) {
+        if (self.options['onClick']) {
+          if (!self.options.onClick(e)) {
+            return false
+          }
+        }
+        self.onEnter(e)
       }
 
       window.addEventListener("message", self.onMsg(self), false)
@@ -176,11 +189,15 @@ ckan.module('geojsoninfopreview', function (jQuery, _) {
           // it's highlighted in the info box.
           if (geojsonFeature.features.length > 1) {
             layer.on({ mouseover: self.onEnter,
-                       mouseout: self.onExit,
-                       click: self.onEnter
+                       //mouseout: self.onExit,
+                       click: self.onClick
                      })
           } else {
             self.infoBox.update(feature.properties)
+            layer.on({
+              click: self.onClick
+            })
+
           }
         }
       }).addTo(self.map);
