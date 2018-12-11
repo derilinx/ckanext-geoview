@@ -20,7 +20,7 @@ ckan.module('geojsoninfopreview', function (jQuery, _) {
       },
       extras: function (e) {},
       iconFunction: function(L, feature) { return L.defaultIcon() },
-      onClick: false,
+      onClick: false
     },
     initialize: function () {
       var self = this;
@@ -38,6 +38,7 @@ ckan.module('geojsoninfopreview', function (jQuery, _) {
         }
         this.options.extras = window.map_options.extras
         this.options.iconFunction = window.map_options.iconFunction
+        this.options.map_config = window.map_options.map_config
       }
 
 
