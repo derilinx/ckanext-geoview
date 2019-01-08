@@ -5,15 +5,19 @@ ckan.module('geojsoninfopreview', function (jQuery, _) {
       lang: jQuery('html').attr('lang'),
       infoTitle: 'Info',
       infoTemplate: '<br>{name_en}<br>{name_my}<br>{area_ac} ac',
-      style: {
-        opacity: 0.7,
-        fillOpacity: 0.1,
-        weight: 2
+      style: function(feature) {
+        return {
+          opacity: 0.7,
+          fillOpacity: 0.1,
+          weight: 2,
+          className: feature.properties.style_class || ""
+        }
       },
       highlightStyle: {
         opacity: 0.7,
         fillOpacity: 0.2,
-        weight: 3
+        weight: 3,
+        className: "highlight"
       },
       i18n: {
         'error': _('An error occurred: %(text)s %(error)s')
@@ -78,8 +82,12 @@ ckan.module('geojsoninfopreview', function (jQuery, _) {
       }
 
       self.onExit = function(e) {
-        self.geoJsonLayers.setStyle(self.options.style)
-        self.infoBox.update()
+        var layer = e.target;
+        if (layer.setStyle) { // setstyle doesn't exist on point features.
+          layer.setStyle(self.options.style(layer.feature))
+        }
+        //self.geoJsonLayers.setStyle(self.options.style)
+        //self.infoBox.update()
       }
 
       self.onClick = function(e) {
@@ -194,7 +202,7 @@ ckan.module('geojsoninfopreview', function (jQuery, _) {
           // it's highlighted in the info box.
           if (geojsonFeature.features.length > 1) {
             layer.on({ mouseover: self.onEnter,
-                       //mouseout: self.onExit,
+                       mouseout: self.onExit,
                        click: self.onClick
                      })
           } else {
