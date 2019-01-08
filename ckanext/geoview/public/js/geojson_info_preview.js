@@ -20,7 +20,8 @@ ckan.module('geojsoninfopreview', function (jQuery, _) {
       },
       extras: function (e) {},
       iconFunction: function(L, feature) { return L.defaultIcon() },
-      onClick: false
+      onClick: false,
+      minSize: 0.1
     },
     initialize: function () {
       var self = this;
@@ -39,6 +40,10 @@ ckan.module('geojsoninfopreview', function (jQuery, _) {
         this.options.extras = window.map_options.extras
         this.options.iconFunction = window.map_options.iconFunction
         this.options.map_config = window.map_options.map_config
+
+        if (window.map_options.minSize !== undefined) {
+          this.options.minSize = window.map_options.minSize
+        }
       }
 
 
@@ -177,7 +182,6 @@ ckan.module('geojsoninfopreview', function (jQuery, _) {
 
     showPreview: function (geojsonFeature) {
       var self = this;
-      var min_size = .1;
       window.parent.postMessage({'filtered': geojsonFeature}, window.origin)
       var gjLayer = L.Proj.geoJson(geojsonFeature, {
         style: self.options.style,
@@ -204,10 +208,10 @@ ckan.module('geojsoninfopreview', function (jQuery, _) {
       }).addTo(self.map);
       var bounds = gjLayer.getBounds();
       // inset no matter what
-      bounds._northEast.lat += min_size
-      bounds._southWest.lat -= min_size
-      bounds._northEast.lon -= min_size
-      bounds._southWest.lon += min_size
+      bounds._northEast.lat += self.options.minSize
+      bounds._southWest.lat -= self.options.minSize
+      bounds._northEast.lon -= self.options.minSize
+      bounds._southWest.lon += self.options.minSize
       self.map.fitBounds(bounds);
       return gjLayer
     }
