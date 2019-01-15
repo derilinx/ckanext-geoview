@@ -100,7 +100,7 @@ ckan.module('geojsoninfopreview', function (jQuery, _) {
       }
 
       window.addEventListener("message", self.onMsg(self), false)
-      window.parent.postMessage("ping", window.origin)
+      window.parent.postMessage("ping", window.location.origin)
 
       // hack to make leaflet use a particular location to look for images
       L.Icon.Default.imagePath = this.options.site_url + 'js/vendor/leaflet/dist/images';
@@ -126,7 +126,7 @@ ckan.module('geojsoninfopreview', function (jQuery, _) {
     onMsg: function(self) {
       return function(e) {
         // filter on event.origin
-        if (e.origin != window.origin) {
+        if (e.origin != window.location.origin) {
           return false
         }
         if (! self.loadedData) {
@@ -190,7 +190,7 @@ ckan.module('geojsoninfopreview', function (jQuery, _) {
 
     showPreview: function (geojsonFeature) {
       var self = this;
-      window.parent.postMessage({'filtered': geojsonFeature}, window.origin)
+      window.parent.postMessage({'filtered': geojsonFeature}, window.location.origin)
       var gjLayer = L.Proj.geoJson(geojsonFeature, {
         style: self.options.style,
         pointToLayer: function(feature, latlng) {
