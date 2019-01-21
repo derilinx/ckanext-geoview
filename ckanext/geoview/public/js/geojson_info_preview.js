@@ -25,8 +25,11 @@ ckan.module('geojsoninfopreview', function (jQuery, _) {
       extras: function (e) {},
       iconFunction: function(L, feature) { return L.defaultIcon() },
       onClick: false,
-      minSize: 0.1
+      minSize: 0.1,
+      hold_infobox: false,
+      hold_layer: null
     },
+
     initialize: function () {
       var self = this;
 
@@ -50,10 +53,18 @@ ckan.module('geojsoninfopreview', function (jQuery, _) {
         }
       }
 
-
       self.el.empty();
       self.el.append($("<div></div>").attr("id","map"));
       self.map = ckan.commonLeafletMap('map', this.options.map_config);
+
+      self.map.on('click', function(e) {
+        self.options.hold_infobox = false
+        self.clearStyle(self.options.hold_layer)
+        self.options.hold_layer = null
+        self.infoBox.update()
+
+        return true
+      })
 
       // infobox, needs closure of self in the update function.
       self.infoBox = L.control();
@@ -77,21 +88,32 @@ ckan.module('geojsoninfopreview', function (jQuery, _) {
 
       // event handlers requiring self closure
       self.onEnter = function(e) {
-        var layer = e.target;
-        if (layer.setStyle) { // setstyle doesn't exist on point features.
-          layer.setStyle(self.options.highlightStyle)
+        if (!self.options.hold_infobox) {
+          var layer = e.target;
+          self.setStyle(layer)
+          self.infoBox.update(layer.feature.properties)
         }
-        //console.log(layer.feature.properties)
-        self.infoBox.update(layer.feature.properties)
       }
 
       self.onExit = function(e) {
-        var layer = e.target;
+        if (!self.options.hold_infobox) {
+          var layer = e.target;
+          if (layer.setStyle) { // setstyle doesn't exist on point features.
+            self.clearStyle(layer)
+          }
+        }
+      }
+
+      self.setStyle = function (layer) {
+        if (layer.setStyle) { // setstyle doesn't exist on point features.
+          layer.setStyle(self.options.highlightStyle)
+        }
+      }
+
+      self.clearStyle = function (layer) {
         if (layer.setStyle) { // setstyle doesn't exist on point features.
           layer.setStyle(self.options.style(layer.feature))
         }
-        //self.geoJsonLayers.setStyle(self.options.style)
-        //self.infoBox.update()
       }
 
       self.onClick = function(e) {
@@ -100,8 +122,16 @@ ckan.module('geojsoninfopreview', function (jQuery, _) {
             return false
           }
         }
-        self.onEnter(e)
+        var layer = e.target;
+        if (self.options.hold_layer) {
+          self.clearStyle(self.options.hold_layer)
+        }
+        self.options.hold_infobox = true
+        self.options.hold_layer = layer
+        self.setStyle(layer)
+        self.infoBox.update(layer.feature.properties)
       }
+
 
       console.log('adding listener')
       window.addEventListener("message", self.onMsg(self), false)
