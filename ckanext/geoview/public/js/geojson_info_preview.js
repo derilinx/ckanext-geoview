@@ -103,7 +103,9 @@ ckan.module('geojsoninfopreview', function (jQuery, _) {
         self.onEnter(e)
       }
 
+      console.log('adding listener')
       window.addEventListener("message", self.onMsg(self), false)
+      console.log('pinging')
       window.parent.postMessage("ping", window.location.origin)
 
       // hack to make leaflet use a particular location to look for images
@@ -130,6 +132,7 @@ ckan.module('geojsoninfopreview', function (jQuery, _) {
     onMsg: function(self) {
       return function(e) {
         // filter on event.origin
+        console.log('iframe: received message')
         if (e.origin != window.location.origin) {
           return false
         }
@@ -194,6 +197,7 @@ ckan.module('geojsoninfopreview', function (jQuery, _) {
 
     showPreview: function (geojsonFeature) {
       var self = this;
+      console.log('iframe: posting filtered')
       window.parent.postMessage({'filtered': geojsonFeature}, window.location.origin)
       var gjLayer = L.Proj.geoJson(geojsonFeature, {
         style: self.options.style,
