@@ -9,13 +9,13 @@ ckan.module('geojsoninfopreview', function (jQuery, _) {
         return {
           opacity: 0.7,
           fillOpacity: 0.1,
-          weight: 2,
+          weight: 1,
           className: feature.properties.style_class || ""
         }
       },
       highlightStyle: {
         opacity: 0.7,
-        fillOpacity: 0.2,
+        fillOpacity: 0.3,
         weight: 3,
         className: "highlight"
       },
