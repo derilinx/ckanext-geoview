@@ -105,13 +105,13 @@ ckan.module('geojsoninfopreview', function (jQuery, _) {
       }
 
       self.setStyle = function (layer) {
-        if (layer.setStyle) { // setstyle doesn't exist on point features.
+        if (layer && layer.setStyle) { // setstyle doesn't exist on point features.
           layer.setStyle(self.options.highlightStyle)
         }
       }
 
       self.clearStyle = function (layer) {
-        if (layer.setStyle) { // setstyle doesn't exist on point features.
+        if (layer && layer.setStyle) { // setstyle doesn't exist on point features.
           layer.setStyle(self.options.style(layer.feature))
         }
       }
