@@ -62,7 +62,11 @@ ckan.module('geojsoninfopreview', function (jQuery, _) {
           self.infoBox._div.innerHTML = self.options.infoTitle;
           return
         }
-        self.infoBox._div.innerHTML = self.options.infoTitle + L.Util.template(self.options.infoTemplate, properties)
+        filtered_props = {}
+        for (var k in properties) {
+          filtered_props[k] = properties[k] !== null ? properties[k] : ""
+        }
+        self.infoBox._div.innerHTML = self.options.infoTitle + L.Util.template(self.options.infoTemplate, filtered_props)
       }
       self.infoBox.onAdd = function(m) {
         self.infoBox._div = L.DomUtil.create('div', 'info')
