@@ -77,7 +77,7 @@ ckan.module('geojsoninfopreview', function (jQuery, _) {
         for (var k in properties) {
           filtered_props[k] = properties[k] !== null ? properties[k] : ""
         }
-        self.infoBox._div.innerHTML = self.options.infoTitle + L.Util.template(self.options.infoTemplate, filtered_props)
+        self.infoBox._div.innerHTML = self.options.infoTitle + self._template(self.options.infoTemplate, filtered_props)
       }
       self.infoBox.onAdd = function(m) {
         self.infoBox._div = L.DomUtil.create('div', 'info')
@@ -206,23 +206,24 @@ ckan.module('geojsoninfopreview', function (jQuery, _) {
       }
     },
 
-    showInfoBox: function () {
-      var self = this;
-      var infoBox = L.control();
-      infoBox.onAdd = function(m) {
-        this._div = L.DomUtil.create('div', 'info')
-        this.update()
-        return this._div;
-      }
-      infoBox.update = function (properties) {
-        if (!properties) {
-          this._div.innerHTML = self.options.infoTitle;
-          return
+    // Following leaflet, but without throwing an error if there's not an item available
+    // https://github.com/Leaflet/Leaflet/blob/master/src/core/Util.js
+    _templateRe: /\{ *([\w_-]+) *\}/g,
+    // @function template(str: String, data: Object): String
+    // Simple templating facility, accepts a template string of the form `'Hello {a}, {b}'`
+    // and a data object like `{a: 'foo', b: 'bar'}`, returns evaluated string
+    // `('Hello foo, bar')`. You can also specify functions instead of strings for
+    // data values — they will be evaluated passing `data` as an argument.
+    _template: function (str, data) {
+      return str.replace(this._templateRe, function (str, key) {
+        var value = data[key];
+        if (value === undefined) {
+            return ''
+        } else if (typeof value === 'function') {
+            value = value(data);
         }
-        this._div.innerHTML = self.options.infoTitle + L.Util.template(self.options.infoTemplate, properties)
-      }
-      infoBox.addTo(self.map)
-      return infoBox
+        return value;
+      })
     },
 
     showPreview: function (geojsonFeature) {
