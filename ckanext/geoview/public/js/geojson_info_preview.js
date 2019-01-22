@@ -169,8 +169,17 @@ ckan.module('geojsoninfopreview', function (jQuery, _) {
         if (! self.loadedData) {
           return
         }
-        // filter the map
+
         var evt_data = e.data
+        // If we get the ping event and data is loaded, then we've loaded our data
+        // and probably run ahead of the outer frame. Send the data back for the plots
+        if (evt_data == "ping") {
+          console.log('iframe ping received')
+          window.parent.postMessage({'filtered': self.loadedData}, window.location.origin)
+          return
+        }
+
+        // filter the map
         var filter = evt_data['filter']
         var map_data = { 'type': self.loadedData.type,
                          'name': self.loadedData.name,
