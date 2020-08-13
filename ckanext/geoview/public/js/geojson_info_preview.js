@@ -142,16 +142,22 @@ ckan.module('geojsoninfopreview', function (jQuery, _) {
       L.Icon.Default.imagePath = this.options.site_url + 'js/vendor/leaflet/dist/images';
 
       jQuery.getJSON(preload_resource['url']).done(
-        function(data){
-          self.loadedData = data
-          self.loadedData.features.forEach(self.options.extras)
-          self.geoJsonLayers = self.showPreview(data);
-        })
-      .fail(
-        function(jqXHR, textStatus, errorThrown) {
-          self.showError(jqXHR, textStatus, errorThrown);
-        }
-      );
+          function (data) {
+              self.loadedData = data
+              self.loadedData.features.forEach(self.options.extras)
+              self.geoJsonLayers = self.showPreview(data);
+          })
+          .fail(
+              function (jqXHR, textStatus, errorThrown) {
+                  if ('geojson' in preload_resource){
+                      self.loadedData = preload_resource.geojson
+                      self.loadedData.features.forEach(self.options.extras)
+                      self.geoJsonLayers = self.showPreview(preload_resource.geojson);
+                  } else {
+                      self.showError(jqXHR, textStatus, errorThrown);
+                  }
+              }
+          );
 
       // The standard CRS for GeoJSON according to RFC 7946 is
       // urn:ogc:def:crs:OGC::CRS84, but proj4s uses a different name
@@ -181,6 +187,7 @@ ckan.module('geojsoninfopreview', function (jQuery, _) {
 
         // filter the map
         var filter = evt_data['filter']
+
         var map_data = { 'type': self.loadedData.type,
                          'name': self.loadedData.name,
                          'crs': self.loadedData.crs,
