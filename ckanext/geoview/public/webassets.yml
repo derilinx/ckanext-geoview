@@ -18,7 +18,7 @@ openlayers_css:
     - js/vendor/openlayers/ol.css
     - js/vendor/ol-helpers/ol-helpers.css
 
-geo-resource-styles_css:
+geo-resource-styles:
   output: ckanext-geoview/%(version)s_geo-resource-styles.css
   contents:
     css/geo-resource-styles.css
