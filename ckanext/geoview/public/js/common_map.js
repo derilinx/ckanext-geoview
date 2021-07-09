@@ -48,6 +48,20 @@
           leafletBaseLayerOptions.handle = mapConfig['mapbox.map_id'];
           leafletBaseLayerOptions.subdomains = mapConfig.subdomains || 'abcd';
           leafletBaseLayerOptions.attribution = mapConfig.attribution || 'Data: <a href="http://osm.org/copyright" target="_blank">OpenStreetMap</a>, Design: <a href="http://mapbox.com/about/maps" target="_blank">MapBox</a>';
+      } else if (mapConfig.type == 'mapbox-tiles-api') {
+          if (!mapConfig['mapbox.map_id'] || !mapConfig['mapbox.access_token']) {
+            throw '[CKAN Map Widgets] You need to provide a map ID ([account]/[handle]) and an access token when using a MapBox layer. ' +
+                  'See http://www.mapbox.com/developers/api-overview/ for details';
+          }
+
+          baseLayerUrl = (isHttps ? 'https://' : 'http://') + 'api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}';
+          leafletBaseLayerOptions.attribution = '© <a href="https://www.mapbox.com/about/maps/">Mapbox</a> © <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a> <strong><a href="https://www.mapbox.com/map-feedback/" target="_blank">Improve this map</a></strong>';
+          leafletBaseLayerOptions.tileSize = 512;
+          leafletBaseLayerOptions.maxZoom = 18;
+          leafletBaseLayerOptions.zoomOffset = -1;
+          leafletBaseLayerOptions.id = mapConfig['mapbox.map_id'];
+          leafletBaseLayerOptions.accessToken = mapConfig['mapbox.access_token'];
+
       } else if (mapConfig.type == 'custom') {
           // Custom XYZ layer
           baseLayerUrl = mapConfig['custom.url'];
