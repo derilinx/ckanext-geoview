@@ -5,14 +5,16 @@ import requests
 
 import ckan.logic as logic
 import ckan.lib.base as base
+from ckan.plugins.toolkit import asint, config
 
 import zipfile
 import StringIO
 
 log = getLogger(__name__)
 
-MAX_FILE_SIZE = 3 * 1024 * 1024  # 1MB
-CHUNK_SIZE = 512
+MAX_FILE_SIZE = asint(config.get('ckan.resource_proxy.max_file_size', 1024**2))
+CHUNK_SIZE = asint(config.get('ckan.resource_proxy.chunk_size', 4096))
+TIMEOUT = asint(config.get(u'ckan.resource_proxy.timeout', 10))
 
 def proxy_service_resource(self, context, data_dict):
     ''' Chunked proxy for resources. To make sure that the file is not too
@@ -54,9 +56,9 @@ def proxy_service_url(self, url, unzip=False):
             length = int(req.environ["CONTENT_LENGTH"])
             headers = {"Content-Type": req.environ["CONTENT_TYPE"]}
             body = req.body
-            r = requests.post(url, data=body, headers=headers, stream=True)
+            r = requests.post(url, data=body, headers=headers, stream=True, timeout=TIMEOUT)
         else:
-            r = requests.get(url, params=req.query_string, stream=True)
+            r = requests.get(url, params=req.query_string, stream=True, timeout=TIMEOUT)
 
         #log.info('Request: {req}'.format(req=r.request.url))
         #log.info('Request Headers: {h}'.format(h=r.request.headers))
