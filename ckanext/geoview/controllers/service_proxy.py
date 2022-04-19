@@ -1,5 +1,5 @@
 from logging import getLogger
-import urlparse
+from six.moves.urllib.parse import urlparse
 
 import requests
 
