@@ -12,7 +12,10 @@ from ckan.plugins import toolkit
 from ckan.plugins.toolkit import asint, config
 
 import zipfile
-import StringIO
+try:
+    from StringIO import StringIO
+except ImportError:
+    from io import StringIO
 
 log = logging.getLogger(__name__)
 
