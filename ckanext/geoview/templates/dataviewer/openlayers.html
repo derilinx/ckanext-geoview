@@ -26,6 +26,5 @@
 
     {% set type = 'asset' if h.ckan_version().split('.')[1] | int >= 9 else 'resource' %}
     {% include 'geoview/snippets/openlayers_' ~ type ~ '.html' %}
-    <div id="text-muted ellipsis" align="right">Map tiles by <a href="http://stamen.com">Stamen Design</a>, under <a href="http://creativecommons.org/licenses/by/3.0">CC BY 3.0</a>. Data by <a href="http://openstreetmap.org">OpenStreetMap</a>, under <a href="http://www.openstreetmap.org/copyright">ODbL</a>.</a>
 
 {% endblock %}
