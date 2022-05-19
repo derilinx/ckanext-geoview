@@ -17,10 +17,7 @@ from ckan import plugins as p
 from ckan.plugins.toolkit import asint, config
 
 import zipfile
-try:
-    from StringIO import StringIO
-except ImportError:
-    from io import StringIO
+from io import StringIO
 
 log = logging.getLogger(__name__)
 
