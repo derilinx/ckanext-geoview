@@ -113,6 +113,9 @@ class OLGeoView(GeoViewMixin, GeoViewBase):
         else:
             view_formats = self.GEOVIEW_FORMATS
 
+        if ('arcgis_rest' in view_formats) or ('esri rest' in view_formats):
+            view_formats.append('arcgis geoservices rest api')
+
         correct_format = format_lower in view_formats
         can_preview_from_domain = self.proxy_enabled or same_domain
 
