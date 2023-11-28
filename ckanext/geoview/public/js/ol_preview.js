@@ -97,6 +97,7 @@
             },
             'arcgis_rest': esrirestExtractor ,
             'esri rest': esrirestExtractor ,
+            'arcgis geoservices rest api': esrirestExtractor ,
             'gft': function (resource, proxyUrl, proxyServiceUrl, layerProcessor, map) {
                 var tableId = OL_HELPERS.parseURL(resource.url).query.docid;
                 layerProcessor(OL_HELPERS.createGFTLayer(tableId, ckan.geoview.gapi_key));
