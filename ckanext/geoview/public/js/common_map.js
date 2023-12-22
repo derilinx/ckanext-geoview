@@ -57,7 +57,7 @@
                   'See http://www.mapbox.com/developers/api-overview/ for details';
           }
 
-          baseLayerUrl = (isHttps ? 'https://' : 'http://') + 'api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}';
+          baseLayerUrl = (isHttps ? 'https://' : 'http://') + 'api.mapbox.com/styles/v1/{id}/tiles/512/{z}/{x}/{y}?access_token={accessToken}';
           leafletBaseLayerOptions.attribution = '© <a href="https://www.mapbox.com/about/maps/">Mapbox</a> © <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a> <strong><a href="https://www.mapbox.com/map-feedback/" target="_blank">Improve this map</a></strong>';
           leafletBaseLayerOptions.tileSize = 512;
           leafletBaseLayerOptions.maxZoom = 18;
