@@ -296,7 +296,8 @@
                     overlays.push(new OL_HELPERS.FeatureInfoOverlay({
                         element: $("<div class='popupContainer'><div class='popupContent'></div></div>")[0],
                         autoPan: false,
-                        offset: [5,5]
+                        offset: [5,5],
+                        showDetails: true
                     }))
 
 
