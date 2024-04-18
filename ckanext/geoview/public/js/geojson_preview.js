@@ -1,3 +1,4 @@
+/* global preload_resource, ckan, proj4, $, L */
 // geojson preview module
 ckan.module('geojsonpreview', function (jQuery, _) {
   return {
