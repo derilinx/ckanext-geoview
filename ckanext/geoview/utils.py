@@ -9,6 +9,9 @@ import requests
 from ckan import plugins as p
 from ckan.plugins import toolkit
 
+import zipfile
+import StringIO
+
 log = logging.getLogger(__name__)
 
 GEOJSON_MAX_FILE_SIZE = 25 * 1024 * 1024
@@ -43,14 +46,19 @@ def proxy_service_resource(request, context, data_dict):
     resource = toolkit.get_action("resource_show")(context, {"id": resource_id})
     res_format = resource['format'].lower()
 
+    unzip = False
+
     if 'wms' in res_format or 'wfs' in res_format:
         url = resource['url'].split('?')[0]
+    elif 'kml' in res_format and '.kml.zip' in resource['url']:
+        url = resource['url']
+        unzip = True
     else:
         url = resource['url']
-    return proxy_service_url(request, url)
+    return proxy_service_url(request, url, unzip=unzip)
 
 
-def proxy_service_url(req, url):
+def proxy_service_url(req, url, unzip=False):
 
     parts = urlsplit(url)
     if not parts.scheme or not parts.netloc:
@@ -102,26 +110,33 @@ def proxy_service_url(req, url):
         else:
             response = toolkit.response
 
-        response.content_type = r.headers["content-type"]
-        response.charset = r.encoding
+        if unzip:
+            response.content_type = 'application/xml'
+            response.charset = 'utf-8'
 
-        length = 0
-        for chunk in r.iter_content(chunk_size=CHUNK_SIZE):
-            if toolkit.check_ckan_version("2.9"):
-                response.data += chunk
-            else:
-                response.body_file.write(chunk)
-            length += len(chunk)
+            z = zipfile.ZipFile(StringIO.StringIO(r.content))
+            response.body_file.write(z.read(z.namelist()[0]))
+        else:
+            response.content_type = r.headers["content-type"]
+            response.charset = r.encoding
 
-            if length >= MAX_FILE_SIZE:
-                toolkit.abort(
-                    409,
-                    (
-                        """Content is too large to be proxied. Allowed
-                file size: {allowed}, Content-Length: {actual}. Url: """
-                        + url
-                    ).format(allowed=MAX_FILE_SIZE, actual=length),
-                )
+            length = 0
+            for chunk in r.iter_content(chunk_size=CHUNK_SIZE):
+                if toolkit.check_ckan_version("2.9"):
+                    response.data += chunk
+                else:
+                    response.body_file.write(chunk)
+                length += len(chunk)
+
+                if length >= MAX_FILE_SIZE:
+                    toolkit.abort(
+                        409,
+                        (
+                            """Content is too large to be proxied. Allowed
+                    file size: {allowed}, Content-Length: {actual}. Url: """
+                            + url
+                        ).format(allowed=MAX_FILE_SIZE, actual=length),
+                    )
 
     except requests.exceptions.HTTPError as error:
         details = "Could not proxy resource. Server responded with %s %s" % (
