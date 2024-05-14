@@ -124,8 +124,15 @@
             },
 
             addLayer: function (resourceLayer) {
-                if (resourceLayer.setStyle) {
-                  resourceLayer.setStyle(this.defaultStyle);
+
+                try {
+                  if (resourceLayer.setStyle) {
+                    resourceLayer.setStyle(this.defaultStyle);
+                  }
+                } catch (error) {
+                    console.error("Error setting the style for the layer");
+                    console.error(error);
+                    throw error;
                 }
 
                 if (this.options.ol_config.hide_overlays &&
@@ -169,11 +176,16 @@
                 var styleMapJson = OL_HELPERS.DEFAULT_STYLEMAP;
 
                 if (ckan.geoview && ckan.geoview.feature_style) {
-                    styleMapJson = JSON.parse(ckan.geoview.feature_style);
-                    // default style can be json w/ expressions, highlight style needs to be objectified
-                    if (styleMapJson.highlight) {
-                        // must convert highlight style to objects.
-                        styleMapJson.highlight = OL_HELPERS.makeStyle(styleMapJson.highlight);
+                    try {
+                        styleMapJson = JSON.parse(ckan.geoview.feature_style);
+                        // default style can be json w/ expressions, highlight style needs to be objectified
+                        if (styleMapJson.highlight) {
+                            // must convert highlight style to objects.
+                            styleMapJson.highlight = OL_HELPERS.makeStyle(styleMapJson.highlight);
+                        }
+                    } catch (error) {
+                        console.error("Error parsing style json, IGNORING requested style");
+                        console.error(error);
                     }
                 }
                 this.defaultStyle = styleMapJson.default || styleMapJson;
