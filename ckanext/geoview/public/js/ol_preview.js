@@ -339,14 +339,14 @@
                         if (baseMapsConfig.length > 1) {
                             // add other basemaps if any
                             for (var idx=1;idx<baseMapsConfig.length;idx++) {
-                                OL_HELPERS.createLayerFromConfig(
+                                $this._commonBaseLayer(
                                     baseMapsConfig[idx],
-                                    true,
                                     function(layer) {
-                                        layer.setVisible(false)
+                                        layer[0].setVisible(false)
                                         // insert all basemaps at the bottom
-                                        $this.map.getLayers().insertAt(0, layer)
-                                    });
+                                        $this.map.getLayers().insertAt(0, layer[0])
+                                    }
+                                );
                             }
                         }
                     },

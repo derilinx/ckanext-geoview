@@ -231,7 +231,6 @@ ol.proj.addProjection(createEPSG4326Proj('EPSG:4326:LONLAT', 'enu'));
         return OL_HELPERS.getScaleFromResolution(this.getView().getResolution(), this.getView().getProjection().getUnits(), opt_round);
     };
 
-
     ol.Map.prototype.addLayerWithExtent = function (layer) {
         this.addLayer(layer)
 
@@ -260,7 +259,7 @@ ol.proj.addProjection(createEPSG4326Proj('EPSG:4326:LONLAT', 'enu'));
                 else {
                     console.warn("Adding layer : could not find extent to zoom to")
                 }
-            }
+           }
 
 
             var loading = $.Deferred();
