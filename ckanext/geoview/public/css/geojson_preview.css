@@ -29,3 +29,11 @@ html, body {
 .leaflet-control-attribution {
   font-size: 11px;
 }
+
+
+.leaflet-control-layers-toggle {
+	background-image: url(/js/vendor/leaflet/dist/images/layers.png);
+}
+.leaflet-retina .leaflet-control-layers-toggle {
+	background-image: url(/js/vendor/leaflet/dist/images/layers-2x.png);
+}
