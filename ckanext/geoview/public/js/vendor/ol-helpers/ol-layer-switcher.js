@@ -77,9 +77,16 @@ class HilatsLayerSwitcher extends ol.control.Control {
 
         this.renderLayersList(this.getMap().getLayers().getArray().slice().reverse())
             .appendTo($(this.panel).empty())
-
-        $(this.header).find("select").width($(this.panel).width() - 40)
-
+        
+        // $(this.header).find("select").width(Math.max($(this.panel).width() - 20, 120))
+        // if we only have one layer, don't show the layer list
+        if ($('.ol-control.layer-list ul li').length > 1) {
+            $('.ol-control.layer-list').show();
+        } else {            
+            $('.ol-control.layer-list').hide();
+        }
+        window.themap = this.getMap()
+        window.switcher = this
     };
 
     setMap(map) {
@@ -127,16 +134,21 @@ class HilatsLayerSwitcher extends ol.control.Control {
         var newProjection = baselayer.getSource() && baselayer.getSource().getProjection();
         if (newProjection) {
             var currentView = this.getMap().getView();
-            var currentExtent = currentView.calculateExtent();
-            var newExtent = ol.proj.transformExtent(currentExtent, currentView.getProjection(), newProjection);
-            var newView = new ol.View({
-                projection: newProjection
-            })
-            this.getMap().setView(newView);
+            // UNDONE if the view is changed here -- the geojson layers don't show anymore.
+            // They're still in the map.getLayers, they're still visible
+            // They may need to be re-added, or ...dunno. 
+            if (newProjection != currentView.getProjection()) {
+                var currentExtent = currentView.calculateExtent();
+                var newExtent = ol.proj.transformExtent(currentExtent, currentView.getProjection(), newProjection);
+                var newView = new ol.View({
+                    projection: newProjection
+                })
+                this.getMap().setView(newView);
 
-            // doing setView messes with the extent
-            // --> set extent after
-            newView.fit(newExtent, {constrainResolution: false});
+                // doing setView messes with the extent
+                // --> set extent after
+                newView.fit(newExtent, {constrainResolution: false});
+            }
         }
 
 
@@ -244,7 +256,7 @@ class HilatsLayerSwitcher extends ol.control.Control {
                 _this.renderLayer(l, $list);
             }
         });
-        return $list;
+        return $list;        
     };
 
 

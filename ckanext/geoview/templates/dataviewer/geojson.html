@@ -10,6 +10,7 @@
          data-module-site_url="{{ h.dump_json(h.url_for('home.index', locale='default', qualified=true)) }}"
          data-module-map_config="{{ h.dump_json(map_config) }}"
          data-module-max_file_size="{{ h.geojson_get_max_file_size() }}"
+         {% if basemapsConfig %} data-module-basemaps-config = "{{ h.dump_json(basemapsConfig) }}" {% endif %}
          >
         <h4 class="loading-dialog">
           <div class="loading-spinner"></div>

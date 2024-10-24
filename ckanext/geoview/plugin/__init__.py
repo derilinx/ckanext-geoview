@@ -219,6 +219,10 @@ class GeoJSONView(GeoViewBase):
             data_dict["resource"]["url"] = proxy.get_proxified_resource_url(
                 data_dict
             )
+        return {
+            "basemapsConfig": self.basemapsConfig,
+        }
+            
 
     # ITemplateHelpers
 
@@ -267,6 +271,9 @@ class WMTSView(GeoViewBase):
             data_dict["resource"]["url"] = proxy.get_proxified_resource_url(
                 data_dict
             )
+        return {
+            "basemapsConfig": self.basemapsConfig,
+        }
 
     # ITemplateHelpers
 
@@ -315,6 +322,9 @@ class SHPView(GeoViewBase):
             data_dict["resource"]["url"] = proxy.get_proxified_resource_url(
                 data_dict
             )
+        return {
+            "basemapsConfig": self.basemapsConfig,
+        }
 
     # ITemplateHelpers
 
