@@ -828,6 +828,7 @@ ol.proj.addProjection(createEPSG4326Proj('EPSG:4326:LONLAT', 'enu'));
 
                     var changed = false;
                     var features = [];
+                    // UNDONE, use featureLayer.getFeatures(pixel)??  Supposed to be faster and nearly pixel perfect.
                     map.forEachFeatureAtPixel(evt.pixel, function(feature, layer) {
                         if (layer != null) { // null layer is from unmanaged layers, presumably form Select interaction
                             if (feature && (!_this.filter || _this.filter(feature, layer))) // sometimes feature is undefined (?!)
@@ -1129,7 +1130,7 @@ ol.proj.addProjection(createEPSG4326Proj('EPSG:4326:LONLAT', 'enu'));
 
     /* TODO_OL4 */
     OL_HELPERS.createGFTLayer = function (tableId, GoogleAPIKey) {
-        return new OpenLayers.Layer.Vector(
+        return new ol.layer.Vector(
             "GFT", {
                 style: OL_HELPERS.DEFAULT_STYLEMAP.default,
                 projection: EPSG4326,
@@ -1140,7 +1141,7 @@ ol.proj.addProjection(createEPSG4326Proj('EPSG:4326:LONLAT', 'enu'));
                         sql: "select * from " + tableId,
                         key: GoogleAPIKey
                     },
-                    format: new OpenLayers.Format.GeoJSON({
+                    format: new ol.format.GeoJSON({
                         ignoreExtraDims: true,
                         read: function (json) {
                             var row, feature, atts = {}, features = [];
@@ -1179,12 +1180,12 @@ ol.proj.addProjection(createEPSG4326Proj('EPSG:4326:LONLAT', 'enu'));
     /* TODO_OL4 */
     OL_HELPERS.createGMLLayer = function (url) {
 
-        var gml = new OpenLayers.Layer.Vector("GML", {
+        var gml = new ol.layer.Vector("GML", {
             style: OL_HELPERS.DEFAULT_STYLEMAP.default,
             strategies: [new OpenLayers.Strategy.Fixed()],
             protocol: new OpenLayers.Protocol.HTTP({
                 url: url,
-                format: new OpenLayers.Format.GML()
+                format: new ol.format.GML()
             })
         });
 
@@ -2183,7 +2184,7 @@ ol.proj.addProjection(createEPSG4326Proj('EPSG:4326:LONLAT', 'enu'));
     /* TODO_OL4 */
     OL_HELPERS.createEsriGeoJSONLayer = function (url) {
 
-        var esrijson = new OpenLayers.Layer.Vector(
+        var esrijson = new ol.layer.Vector(
             "Esri GeoJSON",
             {
                 style: OL_HELPERS.DEFAULT_STYLEMAP.default,
@@ -2192,7 +2193,7 @@ ol.proj.addProjection(createEPSG4326Proj('EPSG:4326:LONLAT', 'enu'));
                 style: default_style,
                 protocol: new OpenLayers.Protocol.Script({
                     url: url, //ArcGIS Server REST GeoJSON output url
-                    format: new OpenLayers.Format.EsriGeoJSON(),
+                    format: new ol.format.EsriJSON(),
                     parseFeatures: function (data) {
                         return this.format.read(data);
                     }
