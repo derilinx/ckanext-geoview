@@ -755,7 +755,7 @@ ol.proj.addProjection(createEPSG4326Proj('EPSG:4326:LONLAT', 'enu'));
                 if (displayDetails) {
                     var feature = features[0];
 
-                    var layerTitle = feature && feature.layer && feature.layer.get('title');
+                    var layerTitle = feature && feature.layer && feature.layer.get('title') || '';
                     var featureTitle = feature.get('name') || feature.getId() || '';
 
                     htmlContent = "<div class='name'>" + layerTitle + (featureTitle ? (": <b>"+ featureTitle + "</b>") :'') + "</div>";
