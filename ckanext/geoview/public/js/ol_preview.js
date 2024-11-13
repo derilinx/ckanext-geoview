@@ -103,7 +103,14 @@
             'gft': function (resource, proxyUrl, proxyServiceUrl, layerProcessor, map) {
                 var tableId = OL_HELPERS.parseURL(resource.url).query.docid;
                 layerProcessor(OL_HELPERS.createGFTLayer(tableId, ckan.geoview.gapi_key));
-            }
+            },
+            'pmtiles': function (resource, proxyUrl, proxyServiceUrl, layerProcessor, map) {
+                var url = proxyUrl || resource.url;
+                console.log('PMTILES')
+                console.log(resource)
+                layerProcessor(OL_HELPERS.createPmtilesLayer(url));
+            },
+
         }
 
         var withLayers = function (resource, proxyUrl, proxyServiceUrl, layerProcessor, map) {
@@ -230,21 +237,6 @@
                     {constrainResolution: false}
                 );
 
-                map.highlightStyle = this.highlightStyle;
-                let selected = null;
-                map.on('pointermove', function (e) {
-                    if (selected !== null) {
-                        selected.setStyle(undefined);
-                        selected = null;
-                    }
-
-                    map.forEachFeatureAtPixel(e.pixel, function (f) {
-                        selected = f;
-                        f.setStyle(map.highlightStyle);
-                        return true;
-                    });
-                });
-
                 // force a reload of all vector sources on projection change
                 map.getView().on('change:projection', function() {
                     map.getLayers().forEach(function(layer) {
@@ -261,7 +253,6 @@
                     });
                 });
 
-
                 var fragMap = OL_HELPERS.parseKVP((window.parent || window).location.hash && (window.parent || window).location.hash.substring(1));
 
                 var bbox = fragMap.bbox && fragMap.bbox.split(',').map(parseFloat)
@@ -275,6 +266,44 @@
 
 
                 withLayers(preload_resource, proxyUrl, proxyServiceUrl, $_.bind(this.addLayer, this), this.map);
+                
+                if (this.highlightStyle) {
+                    const layers = this.map.getLayers().getArray()
+                    const featureLayer = layers[layers.length -1]
+                    const highlightLayer = new ol.layer.Vector({
+                        source: new ol.source.Vector(),
+                        map: this.map,
+                        style: this.highlightStyle
+                    });
+
+                    let selected = null;
+                    let selected_rf = null;
+                    const onHighlight = (pixel) =>
+                          featureLayer.getFeatures(pixel).then(function (features) {
+                              // Vector tile layers use _RenderFeatures, which are read-only versions that don't 
+                              // have many of the interfaces in common with Features.
+                              // Add/remove feature depend on actual features, not render features.
+                              const feature_rf = features.length ? features[0] : undefined;
+                              const feature = (feature_rf && !feature_rf.on) ? ol.render.Feature.toFeature(feature_rf) : feature_rf
+                              if (feature_rf !== selected_rf) {
+                                  if (selected) {
+                                      highlightLayer.getSource().removeFeature(selected);
+                                  }
+                                  if (feature) {
+                                      highlightLayer.getSource().addFeature(feature);
+                                  }
+                                  selected = feature;
+                                  selected_rf = feature_rf;
+                              }
+                          });
+                    
+                    map.on('pointermove', function (e) {
+                        const pixel = map.getEventPixel(e.originalEvent);
+                        onHighlight(pixel)
+                    });
+                 }
+                    
+                        
             },
 
             _onReady: function () {

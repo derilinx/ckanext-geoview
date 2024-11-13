@@ -760,10 +760,12 @@ ol.proj.addProjection(createEPSG4326Proj('EPSG:4326:LONLAT', 'enu'));
 
                     htmlContent = "<div class='name'>" + layerTitle + (featureTitle ? (": <b>"+ featureTitle + "</b>") :'') + "</div>";
                     htmlContent += "<table>";
-                    feature.getKeys().forEach(function(prop) {
+                    const _add_prop = function(prop) {
                         if (prop.startsWith('_') || typeof(feature.get(prop)) ==='object') { return; }
                         htmlContent += "<tr><td class='propKey'>" + prop + "</td><td class='propValue'>" + feature.get(prop) + "</td></tr></div>";
-                    });
+                    }
+                    // pmtiles don't have a getkeys function
+                    feature.getKeys ? feature.getKeys().forEach(_add_prop) : Object.keys(feature.getProperties()).forEach(_add_prop);
                     htmlContent += "</table>";
                 } else {
                     htmlContent = "";
@@ -1189,6 +1191,16 @@ ol.proj.addProjection(createEPSG4326Proj('EPSG:4326:LONLAT', 'enu'));
         //TODO styles
 
         return gml
+    }
+
+    OL_HELPERS.createPmtilesLayer = function(url) {
+        return new ol.layer.VectorTile({
+            declutter: true,
+            source: new olpmtiles.PMTilesVectorSource({
+                url: url
+            }),
+            style: OL_HELPERS.DEFAULT_STYLEMAP.default,
+        })
     }
 
     /**
