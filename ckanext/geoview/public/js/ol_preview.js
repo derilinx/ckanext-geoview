@@ -298,6 +298,9 @@
                           });
                     
                     map.on('pointermove', function (e) {
+                        if (e.dragging) {
+                            return;
+                        }
                         const pixel = map.getEventPixel(e.originalEvent);
                         onHighlight(pixel)
                     });
