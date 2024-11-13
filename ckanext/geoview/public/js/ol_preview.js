@@ -26,7 +26,7 @@
         };
 
 
-        var esrirestExtractor = function(resource, proxyUrl, proxyServiceUrl, layerProcessor, map) {
+        var esrirestExtractor = async function(resource, proxyUrl, proxyServiceUrl, layerProcessor, map) {
             var parsedUrl = resource.url.split('#');
             var url = parsedUrl[0]; // proxy urls don't work with ckan's resource proxy and the /query added on at the end.
 
@@ -38,19 +38,19 @@
 
         ckan.geoview.layerExtractors = {
 
-            'kml': function (resource, proxyUrl, proxyServiceUrl, layerProcessor, map) {
+            'kml': async function (resource, proxyUrl, proxyServiceUrl, layerProcessor, map) {
                 var url = proxyUrl || resource.url;
                 layerProcessor(OL_HELPERS.createKMLLayer(url));
             },
-            'gml': function (resource, proxyUrl, proxyServiceUrl, layerProcessor, map) {
+            'gml': async function (resource, proxyUrl, proxyServiceUrl, layerProcessor, map) {
                 var url = proxyUrl || resource.url;
                 layerProcessor(OL_HELPERS.createGMLLayer(url));
             },
-            'geojson': function (resource, proxyUrl, proxyServiceUrl, layerProcessor, map) {
+            'geojson': async function (resource, proxyUrl, proxyServiceUrl, layerProcessor, map) {
                 var url = proxyUrl || resource.url;
                 layerProcessor(OL_HELPERS.createGeoJSONLayer(url));
             },
-            'wfs': function(resource, proxyUrl, proxyServiceUrl, layerProcessor, map) {
+            'wfs': async function(resource, proxyUrl, proxyServiceUrl, layerProcessor, map) {
                 var parsedUrl = resource.url.split('#');
                 var url = proxyServiceUrl || parsedUrl[0];
 
@@ -67,7 +67,7 @@
 
                 OL_HELPERS.withFeatureTypesLayers(url, layerProcessor, ftName, map, true /* useGET */);
             },
-            'wms' : function(resource, proxyUrl, proxyServiceUrl, layerProcessor, map) {
+            'wms' : async function(resource, proxyUrl, proxyServiceUrl, layerProcessor, map) {
                 var parsedUrl = resource.url.split('#');
                 // use the original URL for the getMap, as there's no need for a proxy for image requests
                 var getMapUrl = parsedUrl[0];
@@ -85,7 +85,7 @@
 
                 OL_HELPERS.withWMSLayers(url, getMapUrl, layerProcessor, layerName, true /* useTiling*/, map );
             },
-            'wmts' : function(resource, proxyUrl, proxyServiceUrl, layerProcessor, map) {
+            'wmts' : async function(resource, proxyUrl, proxyServiceUrl, layerProcessor, map) {
                 var parsedUrl = resource.url.split('#');
 
                 var url = proxyServiceUrl || parsedUrl[0];
@@ -93,30 +93,30 @@
                 var layerName = parsedUrl.length > 1 && parsedUrl[1];
                 OL_HELPERS.withWMTSLayers(url, layerProcessor, layerName);
             },
-            'esrigeojson': function (resource, proxyUrl, proxyServiceUrl, layerProcessor, map) {
+            'esrigeojson': async function (resource, proxyUrl, proxyServiceUrl, layerProcessor, map) {
                 var url = proxyUrl || resource.url;
                 layerProcessor(OL_HELPERS.createEsriGeoJSONLayer(url));
             },
             'arcgis_rest': esrirestExtractor ,
             'esri rest': esrirestExtractor ,
             'arcgis geoservices rest api': esrirestExtractor ,
-            'gft': function (resource, proxyUrl, proxyServiceUrl, layerProcessor, map) {
+            'gft': async function (resource, proxyUrl, proxyServiceUrl, layerProcessor, map) {
                 var tableId = OL_HELPERS.parseURL(resource.url).query.docid;
                 layerProcessor(OL_HELPERS.createGFTLayer(tableId, ckan.geoview.gapi_key));
             },
-            'pmtiles': function (resource, proxyUrl, proxyServiceUrl, layerProcessor, map) {
+            'pmtiles': async function (resource, proxyUrl, proxyServiceUrl, layerProcessor, map) {
                 var url = proxyUrl || resource.url;
                 console.log('PMTILES')
                 console.log(resource)
-                layerProcessor(OL_HELPERS.createPmtilesLayer(url));
+                layerProcessor(await OL_HELPERS.createPmtilesLayer(url));
             },
 
         }
 
-        var withLayers = function (resource, proxyUrl, proxyServiceUrl, layerProcessor, map) {
+        var withLayers = async function (resource, proxyUrl, proxyServiceUrl, layerProcessor, map) {
 
             var withLayers = ckan.geoview.layerExtractors[resource.format && resource.format.toLocaleLowerCase()];
-            withLayers && withLayers(resource, proxyUrl, proxyServiceUrl, layerProcessor, map);
+            withLayers && await withLayers(resource, proxyUrl, proxyServiceUrl, layerProcessor, map);
         }
 
         return {
@@ -176,7 +176,7 @@
                 return OL_HELPERS.createLayerFromConfig(mapConfig, true).then(callback);
             },
 
-            createMapFun: function (baseMapLayerList, overlays) {
+            createMapFun: async function (baseMapLayerList, overlays) {
 
                 var layerSwitcher = new ol.control.HilatsLayerSwitcher();
 
@@ -265,7 +265,7 @@
                 ckan.geoview.googleApiKey = this.options.gapi_key;
 
 
-                withLayers(preload_resource, proxyUrl, proxyServiceUrl, $_.bind(this.addLayer, this), this.map);
+                await withLayers(preload_resource, proxyUrl, proxyServiceUrl, $_.bind(this.addLayer, this), this.map);
                 
                 if (this.highlightStyle) {
                     const layers = this.map.getLayers().getArray()
@@ -362,9 +362,9 @@
 
                 this._commonBaseLayer(
                     baseMapsConfig[0],
-                    function(layer) {
+                    async function(layer) {
                         baseMapsConfig[0].$ol_layer = layer;
-                        $this.createMapFun(layer, overlays);
+                        await $this.createMapFun(layer, overlays);
 
                         // add all configured basemap layers
                         if (baseMapsConfig.length > 1) {

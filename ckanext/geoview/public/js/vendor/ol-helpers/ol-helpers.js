@@ -1193,14 +1193,23 @@ ol.proj.addProjection(createEPSG4326Proj('EPSG:4326:LONLAT', 'enu'));
         return gml
     }
 
-    OL_HELPERS.createPmtilesLayer = function(url) {
+    OL_HELPERS.createPmtilesLayer = async function(url) {
+        const response = await fetch(url, {
+            method: 'GET',
+            headers: {'Content-Range': '0-1000'},
+        })
+        
+        if (response.redirected) {
+            url = response.url;
+        }
+            
         return new ol.layer.VectorTile({
             declutter: true,
             source: new olpmtiles.PMTilesVectorSource({
                 url: url
             }),
             style: OL_HELPERS.DEFAULT_STYLEMAP.default,
-        })
+        });
     }
 
     /**
