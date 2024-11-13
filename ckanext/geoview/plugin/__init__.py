@@ -94,19 +94,7 @@ class OLGeoView(GeoViewMixin, GeoViewBase):
             },
         }
 
-    def can_view(self, data_dict):
-        format_lower = data_dict["resource"].get("format", "").lower()
-        same_domain = on_same_domain(data_dict)
-
-        # Guess from file extension
-        if not format_lower and data_dict["resource"].get("url"):
-            format_lower = self._guess_format_from_extension(
-                data_dict["resource"]["url"]
-            )
-
-        if not format_lower:
-            return False
-
+    def view_formats(self):  
         view_formats = toolkit.config.get(
             "ckanext.geoview.ol_viewer.formats", ""
         )
@@ -118,7 +106,44 @@ class OLGeoView(GeoViewMixin, GeoViewBase):
         if ('arcgis_rest' in view_formats) or ('esri rest' in view_formats):
             view_formats.append('arcgis geoservices rest api')
 
-        correct_format = format_lower in view_formats
+        return view_formats
+
+    def alternate_formats(self, resource):
+        alternate_formats_str = resource.get('alternate_formats','{}')
+        alternate_formats = json.loads(alternate_formats_str)
+        return alternate_formats
+
+    def available_formats(self, resource):
+        view_formats = self.view_formats()
+        available_formats = {k: v['url'] for k,v in self.alternate_formats(resource).items() if k in view_formats}
+
+        format_lower = resource.get('format','').lower() or self._guess_format_from_extension(resource['url'])
+
+        if format_lower in view_formats:
+            available_formats[format_lower] = resource['url']
+
+        return available_formats
+                                                                                              
+    
+    def can_view(self, data_dict):
+        format_lower = data_dict["resource"].get("format", "").lower()
+        same_domain = on_same_domain(data_dict)
+
+        # Guess from file extension
+        if not format_lower and data_dict["resource"].get("url"):
+            format_lower = self._guess_format_from_extension(
+                data_dict["resource"]["url"]
+            )
+            
+        alternate_formats = set(self.alternate_formats(data_dict['resource']).keys())
+
+        if not format_lower or not alternate_formats:
+            return False
+
+        view_formats = self.view_formats()
+        
+        log.error(data_dict['resource'])
+        correct_format = format_lower in view_formats or not alternate_formats.isdisjoint(set(view_formats))
         can_preview_from_domain = self.proxy_enabled or same_domain
 
         return correct_format and can_preview_from_domain
@@ -153,6 +178,9 @@ class OLGeoView(GeoViewMixin, GeoViewBase):
                 "format"
             ] = self._guess_format_from_extension(data_dict["resource"]["url"])
 
+        proxy_url = None
+        proxy_service_url = None
+        
         if self.proxy_enabled and not same_domain:
             if 'kml.zip' in data_dict['resource']['url']:
                 proxy_url = proxy.get_proxified_service_url(data_dict)
@@ -161,8 +189,18 @@ class OLGeoView(GeoViewMixin, GeoViewBase):
                 proxy_url = proxy.get_proxified_resource_url(data_dict)
                 proxy_service_url = utils.get_proxified_service_url(data_dict)
         else:
-            proxy_url = data_dict["resource"]["url"]
-            proxy_service_url = data_dict["resource"]["url"]
+            available_formats = self.available_formats(data_dict['resource'])
+            for fmt in ('pmtiles', 'geojson'):
+                if fmt in available_formats:
+                    url = available_formats[fmt]
+                    proxy_url = url
+                    proxy_service_url = url
+                    data_dict['resource']['url'] = url
+                    data_dict['resource']['format'] = fmt
+                    break
+            else:
+                proxy_url = data_dict["resource"]["url"]
+                proxy_service_url = data_dict["resource"]["url"]
 
         gapi_key = toolkit.config.get("ckanext.geoview.gapi_key")
         return {
