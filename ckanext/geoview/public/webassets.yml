@@ -8,6 +8,7 @@ openlayers_js:
     - js/vendor/underscore/underscore.js
     - js/vendor/proj4/dist/proj4-src.js
     - js/vendor/openlayers/dist/ol.js
+    - js/vendor/pmtiles/olpmtiles.js
     - js/vendor/ol-helpers/ol-helpers.js
     - js/vendor/ol-helpers/ol-layer-switcher.js
     - js/ol_preview.js
