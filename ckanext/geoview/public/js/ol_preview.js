@@ -245,13 +245,13 @@
                         }
                     });
                 });
-                map.on('change:view', function() {
-                    map.getLayers().forEach(function(layer) {
-                        if (layer instanceof ol.layer.Vector) {
-                            layer.getSource().clear();
-                        }
-                    });
-                });
+                // map.on('change:view', function() {
+                //     map.getLayers().forEach(function(layer) {
+                //         if (layer instanceof ol.layer.Vector) {
+                //             layer.getSource().clear();
+                //         }
+                //     });
+                // });
 
                 var fragMap = OL_HELPERS.parseKVP((window.parent || window).location.hash && (window.parent || window).location.hash.substring(1));
 
