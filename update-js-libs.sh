@@ -16,7 +16,9 @@ declare -a libs=(
   "proj4leaflet;/node_modules/proj4leaflet/src/proj4leaflet.js;/proj4leaflet/"
   "proj4;/node_modules/proj4/dist/proj4.js;/proj4/"
   "spinjs;/node_modules/spin.js/spin.js;/spin.js/"
-  "underscore;/node_modules/underscore/underscore-min.js;/underscore/" 
+  "underscore;/node_modules/underscore/underscore-min.js;/underscore/"
+  "ol-pmtiles;/node_modules/ol-pmtiles/dist/olpmtiles.js;/pmtiles"
+  "pmtiles;/node_modules/pmtiles/dist/pmtiles.js;/pmtiles"
 )
 
 for lib in "${libs[@]}"

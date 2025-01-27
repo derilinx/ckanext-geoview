@@ -9,19 +9,25 @@ var olpmtiles = (() => {
   var __hasOwnProp = Object.prototype.hasOwnProperty;
   var __propIsEnum = Object.prototype.propertyIsEnumerable;
   var __defNormalProp = (obj, key, value) => key in obj ? __defProp(obj, key, { enumerable: true, configurable: true, writable: true, value }) : obj[key] = value;
-  var __spreadValues = (a, b) => {
-    for (var prop in b || (b = {}))
-      if (__hasOwnProp.call(b, prop))
-        __defNormalProp(a, prop, b[prop]);
+  var __spreadValues = (a, b2) => {
+    for (var prop in b2 || (b2 = {}))
+      if (__hasOwnProp.call(b2, prop))
+        __defNormalProp(a, prop, b2[prop]);
     if (__getOwnPropSymbols)
-      for (var prop of __getOwnPropSymbols(b)) {
-        if (__propIsEnum.call(b, prop))
-          __defNormalProp(a, prop, b[prop]);
+      for (var prop of __getOwnPropSymbols(b2)) {
+        if (__propIsEnum.call(b2, prop))
+          __defNormalProp(a, prop, b2[prop]);
       }
     return a;
   };
   var __name = (target, value) => __defProp(target, "name", { value, configurable: true });
-  var __commonJS = (cb, mod) => function __require() {
+  var __require = /* @__PURE__ */ ((x2) => typeof require !== "undefined" ? require : typeof Proxy !== "undefined" ? new Proxy(x2, {
+    get: (a, b2) => (typeof require !== "undefined" ? require : a)[b2]
+  }) : x2)(function(x2) {
+    if (typeof require !== "undefined") return require.apply(this, arguments);
+    throw Error('Dynamic require of "' + x2 + '" is not supported');
+  });
+  var __commonJS = (cb, mod) => function __require2() {
     return mod || (0, cb[__getOwnPropNames(cb)[0]])((mod = { exports: {} }).exports, mod), mod.exports;
   };
   var __export = (target, all) => {
@@ -71,47 +77,47 @@ var olpmtiles = (() => {
     "node_modules/ieee754/index.js"(exports) {
       "use strict";
       exports.read = function(buffer2, offset, isLE, mLen, nBytes) {
-        var e, m;
+        var e, m2;
         var eLen = nBytes * 8 - mLen - 1;
         var eMax = (1 << eLen) - 1;
         var eBias = eMax >> 1;
         var nBits = -7;
-        var i2 = isLE ? nBytes - 1 : 0;
+        var i = isLE ? nBytes - 1 : 0;
         var d = isLE ? -1 : 1;
-        var s = buffer2[offset + i2];
-        i2 += d;
+        var s = buffer2[offset + i];
+        i += d;
         e = s & (1 << -nBits) - 1;
         s >>= -nBits;
         nBits += eLen;
-        for (; nBits > 0; e = e * 256 + buffer2[offset + i2], i2 += d, nBits -= 8) {
+        for (; nBits > 0; e = e * 256 + buffer2[offset + i], i += d, nBits -= 8) {
         }
-        m = e & (1 << -nBits) - 1;
+        m2 = e & (1 << -nBits) - 1;
         e >>= -nBits;
         nBits += mLen;
-        for (; nBits > 0; m = m * 256 + buffer2[offset + i2], i2 += d, nBits -= 8) {
+        for (; nBits > 0; m2 = m2 * 256 + buffer2[offset + i], i += d, nBits -= 8) {
         }
         if (e === 0) {
           e = 1 - eBias;
         } else if (e === eMax) {
-          return m ? NaN : (s ? -1 : 1) * Infinity;
+          return m2 ? NaN : (s ? -1 : 1) * Infinity;
         } else {
-          m = m + Math.pow(2, mLen);
+          m2 = m2 + Math.pow(2, mLen);
           e = e - eBias;
         }
-        return (s ? -1 : 1) * m * Math.pow(2, e - mLen);
+        return (s ? -1 : 1) * m2 * Math.pow(2, e - mLen);
       };
       exports.write = function(buffer2, value, offset, isLE, mLen, nBytes) {
-        var e, m, c;
+        var e, m2, c;
         var eLen = nBytes * 8 - mLen - 1;
         var eMax = (1 << eLen) - 1;
         var eBias = eMax >> 1;
         var rt = mLen === 23 ? Math.pow(2, -24) - Math.pow(2, -77) : 0;
-        var i2 = isLE ? 0 : nBytes - 1;
+        var i = isLE ? 0 : nBytes - 1;
         var d = isLE ? 1 : -1;
         var s = value < 0 || value === 0 && 1 / value < 0 ? 1 : 0;
         value = Math.abs(value);
         if (isNaN(value) || value === Infinity) {
-          m = isNaN(value) ? 1 : 0;
+          m2 = isNaN(value) ? 1 : 0;
           e = eMax;
         } else {
           e = Math.floor(Math.log(value) / Math.LN2);
@@ -129,23 +135,23 @@ var olpmtiles = (() => {
             c /= 2;
           }
           if (e + eBias >= eMax) {
-            m = 0;
+            m2 = 0;
             e = eMax;
           } else if (e + eBias >= 1) {
-            m = (value * c - 1) * Math.pow(2, mLen);
+            m2 = (value * c - 1) * Math.pow(2, mLen);
             e = e + eBias;
           } else {
-            m = value * Math.pow(2, eBias - 1) * Math.pow(2, mLen);
+            m2 = value * Math.pow(2, eBias - 1) * Math.pow(2, mLen);
             e = 0;
           }
         }
-        for (; mLen >= 8; buffer2[offset + i2] = m & 255, i2 += d, m /= 256, mLen -= 8) {
+        for (; mLen >= 8; buffer2[offset + i] = m2 & 255, i += d, m2 /= 256, mLen -= 8) {
         }
-        e = e << mLen | m;
+        e = e << mLen | m2;
         eLen += mLen;
-        for (; eLen > 0; buffer2[offset + i2] = e & 255, i2 += d, e /= 256, eLen -= 8) {
+        for (; eLen > 0; buffer2[offset + i] = e & 255, i += d, e /= 256, eLen -= 8) {
         }
-        buffer2[offset + i2 - d] |= s * 128;
+        buffer2[offset + i - d] |= s * 128;
       };
     }
   });
@@ -221,22 +227,22 @@ var olpmtiles = (() => {
           return val;
         }, "readDouble"),
         readVarint: /* @__PURE__ */ __name(function(isSigned) {
-          var buf = this.buf, val, b;
-          b = buf[this.pos++];
-          val = b & 127;
-          if (b < 128) return val;
-          b = buf[this.pos++];
-          val |= (b & 127) << 7;
-          if (b < 128) return val;
-          b = buf[this.pos++];
-          val |= (b & 127) << 14;
-          if (b < 128) return val;
-          b = buf[this.pos++];
-          val |= (b & 127) << 21;
-          if (b < 128) return val;
-          b = buf[this.pos];
-          val |= (b & 15) << 28;
-          return readVarintRemainder2(val, isSigned, this);
+          var buf = this.buf, val, b2;
+          b2 = buf[this.pos++];
+          val = b2 & 127;
+          if (b2 < 128) return val;
+          b2 = buf[this.pos++];
+          val |= (b2 & 127) << 7;
+          if (b2 < 128) return val;
+          b2 = buf[this.pos++];
+          val |= (b2 & 127) << 14;
+          if (b2 < 128) return val;
+          b2 = buf[this.pos++];
+          val |= (b2 & 127) << 21;
+          if (b2 < 128) return val;
+          b2 = buf[this.pos];
+          val |= (b2 & 15) << 28;
+          return readVarintRemainder(val, isSigned, this);
         }, "readVarint"),
         readVarint64: /* @__PURE__ */ __name(function() {
           return this.readVarint(true);
@@ -423,7 +429,7 @@ var olpmtiles = (() => {
           var len = buffer2.length;
           this.writeVarint(len);
           this.realloc(len);
-          for (var i2 = 0; i2 < len; i2++) this.buf[this.pos++] = buffer2[i2];
+          for (var i = 0; i < len; i++) this.buf[this.pos++] = buffer2[i];
         }, "writeBytes"),
         writeRawMessage: /* @__PURE__ */ __name(function(fn, obj) {
           this.pos++;
@@ -510,40 +516,40 @@ var olpmtiles = (() => {
           this.writeVarintField(tag, Boolean(val));
         }, "writeBooleanField")
       };
-      function readVarintRemainder2(l, s, p) {
-        var buf = p.buf, h, b;
-        b = buf[p.pos++];
-        h = (b & 112) >> 4;
-        if (b < 128) return toNum2(l, h, s);
-        b = buf[p.pos++];
-        h |= (b & 127) << 3;
-        if (b < 128) return toNum2(l, h, s);
-        b = buf[p.pos++];
-        h |= (b & 127) << 10;
-        if (b < 128) return toNum2(l, h, s);
-        b = buf[p.pos++];
-        h |= (b & 127) << 17;
-        if (b < 128) return toNum2(l, h, s);
-        b = buf[p.pos++];
-        h |= (b & 127) << 24;
-        if (b < 128) return toNum2(l, h, s);
-        b = buf[p.pos++];
-        h |= (b & 1) << 31;
-        if (b < 128) return toNum2(l, h, s);
+      function readVarintRemainder(l2, s, p) {
+        var buf = p.buf, h, b2;
+        b2 = buf[p.pos++];
+        h = (b2 & 112) >> 4;
+        if (b2 < 128) return toNum(l2, h, s);
+        b2 = buf[p.pos++];
+        h |= (b2 & 127) << 3;
+        if (b2 < 128) return toNum(l2, h, s);
+        b2 = buf[p.pos++];
+        h |= (b2 & 127) << 10;
+        if (b2 < 128) return toNum(l2, h, s);
+        b2 = buf[p.pos++];
+        h |= (b2 & 127) << 17;
+        if (b2 < 128) return toNum(l2, h, s);
+        b2 = buf[p.pos++];
+        h |= (b2 & 127) << 24;
+        if (b2 < 128) return toNum(l2, h, s);
+        b2 = buf[p.pos++];
+        h |= (b2 & 1) << 31;
+        if (b2 < 128) return toNum(l2, h, s);
         throw new Error("Expected varint not more than 10 bytes");
       }
-      __name(readVarintRemainder2, "readVarintRemainder");
+      __name(readVarintRemainder, "readVarintRemainder");
       function readPackedEnd(pbf) {
         return pbf.type === Pbf.Bytes ? pbf.readVarint() + pbf.pos : pbf.pos + 1;
       }
       __name(readPackedEnd, "readPackedEnd");
-      function toNum2(low, high, isSigned) {
+      function toNum(low, high, isSigned) {
         if (isSigned) {
           return high * 4294967296 + (low >>> 0);
         }
         return (high >>> 0) * 4294967296 + (low >>> 0);
       }
-      __name(toNum2, "toNum");
+      __name(toNum, "toNum");
       function writeBigVarint(val, pbf) {
         var low, high;
         if (val >= 0) {
@@ -597,43 +603,43 @@ var olpmtiles = (() => {
       function makeRoomForExtraLength(startPos, len, pbf) {
         var extraLen = len <= 16383 ? 1 : len <= 2097151 ? 2 : len <= 268435455 ? 3 : Math.floor(Math.log(len) / (Math.LN2 * 7));
         pbf.realloc(extraLen);
-        for (var i2 = pbf.pos - 1; i2 >= startPos; i2--) pbf.buf[i2 + extraLen] = pbf.buf[i2];
+        for (var i = pbf.pos - 1; i >= startPos; i--) pbf.buf[i + extraLen] = pbf.buf[i];
       }
       __name(makeRoomForExtraLength, "makeRoomForExtraLength");
       function writePackedVarint(arr, pbf) {
-        for (var i2 = 0; i2 < arr.length; i2++) pbf.writeVarint(arr[i2]);
+        for (var i = 0; i < arr.length; i++) pbf.writeVarint(arr[i]);
       }
       __name(writePackedVarint, "writePackedVarint");
       function writePackedSVarint(arr, pbf) {
-        for (var i2 = 0; i2 < arr.length; i2++) pbf.writeSVarint(arr[i2]);
+        for (var i = 0; i < arr.length; i++) pbf.writeSVarint(arr[i]);
       }
       __name(writePackedSVarint, "writePackedSVarint");
       function writePackedFloat(arr, pbf) {
-        for (var i2 = 0; i2 < arr.length; i2++) pbf.writeFloat(arr[i2]);
+        for (var i = 0; i < arr.length; i++) pbf.writeFloat(arr[i]);
       }
       __name(writePackedFloat, "writePackedFloat");
       function writePackedDouble(arr, pbf) {
-        for (var i2 = 0; i2 < arr.length; i2++) pbf.writeDouble(arr[i2]);
+        for (var i = 0; i < arr.length; i++) pbf.writeDouble(arr[i]);
       }
       __name(writePackedDouble, "writePackedDouble");
       function writePackedBoolean(arr, pbf) {
-        for (var i2 = 0; i2 < arr.length; i2++) pbf.writeBoolean(arr[i2]);
+        for (var i = 0; i < arr.length; i++) pbf.writeBoolean(arr[i]);
       }
       __name(writePackedBoolean, "writePackedBoolean");
       function writePackedFixed32(arr, pbf) {
-        for (var i2 = 0; i2 < arr.length; i2++) pbf.writeFixed32(arr[i2]);
+        for (var i = 0; i < arr.length; i++) pbf.writeFixed32(arr[i]);
       }
       __name(writePackedFixed32, "writePackedFixed32");
       function writePackedSFixed32(arr, pbf) {
-        for (var i2 = 0; i2 < arr.length; i2++) pbf.writeSFixed32(arr[i2]);
+        for (var i = 0; i < arr.length; i++) pbf.writeSFixed32(arr[i]);
       }
       __name(writePackedSFixed32, "writePackedSFixed32");
       function writePackedFixed64(arr, pbf) {
-        for (var i2 = 0; i2 < arr.length; i2++) pbf.writeFixed64(arr[i2]);
+        for (var i = 0; i < arr.length; i++) pbf.writeFixed64(arr[i]);
       }
       __name(writePackedFixed64, "writePackedFixed64");
       function writePackedSFixed64(arr, pbf) {
-        for (var i2 = 0; i2 < arr.length; i2++) pbf.writeSFixed64(arr[i2]);
+        for (var i = 0; i < arr.length; i++) pbf.writeSFixed64(arr[i]);
       }
       __name(writePackedSFixed64, "writePackedSFixed64");
       function readUInt32(buf, pos) {
@@ -653,19 +659,19 @@ var olpmtiles = (() => {
       __name(readInt32, "readInt32");
       function readUtf8(buf, pos, end) {
         var str = "";
-        var i2 = pos;
-        while (i2 < end) {
-          var b0 = buf[i2];
+        var i = pos;
+        while (i < end) {
+          var b0 = buf[i];
           var c = null;
           var bytesPerSequence = b0 > 239 ? 4 : b0 > 223 ? 3 : b0 > 191 ? 2 : 1;
-          if (i2 + bytesPerSequence > end) break;
+          if (i + bytesPerSequence > end) break;
           var b1, b2, b3;
           if (bytesPerSequence === 1) {
             if (b0 < 128) {
               c = b0;
             }
           } else if (bytesPerSequence === 2) {
-            b1 = buf[i2 + 1];
+            b1 = buf[i + 1];
             if ((b1 & 192) === 128) {
               c = (b0 & 31) << 6 | b1 & 63;
               if (c <= 127) {
@@ -673,8 +679,8 @@ var olpmtiles = (() => {
               }
             }
           } else if (bytesPerSequence === 3) {
-            b1 = buf[i2 + 1];
-            b2 = buf[i2 + 2];
+            b1 = buf[i + 1];
+            b2 = buf[i + 2];
             if ((b1 & 192) === 128 && (b2 & 192) === 128) {
               c = (b0 & 15) << 12 | (b1 & 63) << 6 | b2 & 63;
               if (c <= 2047 || c >= 55296 && c <= 57343) {
@@ -682,9 +688,9 @@ var olpmtiles = (() => {
               }
             }
           } else if (bytesPerSequence === 4) {
-            b1 = buf[i2 + 1];
-            b2 = buf[i2 + 2];
-            b3 = buf[i2 + 3];
+            b1 = buf[i + 1];
+            b2 = buf[i + 2];
+            b3 = buf[i + 3];
             if ((b1 & 192) === 128 && (b2 & 192) === 128 && (b3 & 192) === 128) {
               c = (b0 & 15) << 18 | (b1 & 63) << 12 | (b2 & 63) << 6 | b3 & 63;
               if (c <= 65535 || c >= 1114112) {
@@ -701,7 +707,7 @@ var olpmtiles = (() => {
             c = 56320 | c & 1023;
           }
           str += String.fromCharCode(c);
-          i2 += bytesPerSequence;
+          i += bytesPerSequence;
         }
         return str;
       }
@@ -711,8 +717,8 @@ var olpmtiles = (() => {
       }
       __name(readUtf8TextDecoder, "readUtf8TextDecoder");
       function writeUtf8(buf, str, pos) {
-        for (var i2 = 0, c, lead; i2 < str.length; i2++) {
-          c = str.charCodeAt(i2);
+        for (var i = 0, c, lead; i < str.length; i++) {
+          c = str.charCodeAt(i);
           if (c > 55295 && c < 57344) {
             if (lead) {
               if (c < 56320) {
@@ -726,7 +732,7 @@ var olpmtiles = (() => {
                 lead = null;
               }
             } else {
-              if (c > 56319 || i2 + 1 === str.length) {
+              if (c > 56319 || i + 1 === str.length) {
                 buf[pos++] = 239;
                 buf[pos++] = 191;
                 buf[pos++] = 189;
@@ -847,8 +853,8 @@ var olpmtiles = (() => {
     return found ? low : ~low;
   }
   __name(binarySearch, "binarySearch");
-  function ascending(a, b) {
-    return a > b ? 1 : a < b ? -1 : 0;
+  function ascending(a, b2) {
+    return a > b2 ? 1 : a < b2 ? -1 : 0;
   }
   __name(ascending, "ascending");
   function linearFindNearest(arr, target, direction) {
@@ -860,45 +866,45 @@ var olpmtiles = (() => {
       return n - 1;
     }
     if (typeof direction === "function") {
-      for (let i2 = 1; i2 < n; ++i2) {
-        const candidate = arr[i2];
+      for (let i = 1; i < n; ++i) {
+        const candidate = arr[i];
         if (candidate === target) {
-          return i2;
+          return i;
         }
         if (candidate < target) {
-          if (direction(target, arr[i2 - 1], candidate) > 0) {
-            return i2 - 1;
+          if (direction(target, arr[i - 1], candidate) > 0) {
+            return i - 1;
           }
-          return i2;
+          return i;
         }
       }
       return n - 1;
     }
     if (direction > 0) {
-      for (let i2 = 1; i2 < n; ++i2) {
-        if (arr[i2] < target) {
-          return i2 - 1;
+      for (let i = 1; i < n; ++i) {
+        if (arr[i] < target) {
+          return i - 1;
         }
       }
       return n - 1;
     }
     if (direction < 0) {
-      for (let i2 = 1; i2 < n; ++i2) {
-        if (arr[i2] <= target) {
-          return i2;
+      for (let i = 1; i < n; ++i) {
+        if (arr[i] <= target) {
+          return i;
         }
       }
       return n - 1;
     }
-    for (let i2 = 1; i2 < n; ++i2) {
-      if (arr[i2] == target) {
-        return i2;
+    for (let i = 1; i < n; ++i) {
+      if (arr[i] == target) {
+        return i;
       }
-      if (arr[i2] < target) {
-        if (arr[i2 - 1] - target < target - arr[i2]) {
-          return i2 - 1;
+      if (arr[i] < target) {
+        if (arr[i - 1] - target < target - arr[i]) {
+          return i - 1;
         }
-        return i2;
+        return i;
       }
     }
     return n - 1;
@@ -907,8 +913,8 @@ var olpmtiles = (() => {
   function extend(arr, data) {
     const extension = Array.isArray(data) ? data : [data];
     const length = extension.length;
-    for (let i2 = 0; i2 < length; i2++) {
-      arr[arr.length] = extension[i2];
+    for (let i = 0; i < length; i++) {
+      arr[arr.length] = extension[i];
     }
   }
   __name(extend, "extend");
@@ -917,8 +923,8 @@ var olpmtiles = (() => {
     if (len1 !== arr2.length) {
       return false;
     }
-    for (let i2 = 0; i2 < len1; i2++) {
-      if (arr1[i2] !== arr2[i2]) {
+    for (let i = 0; i < len1; i++) {
+      if (arr1[i] !== arr2[i]) {
         return false;
       }
     }
@@ -926,12 +932,12 @@ var olpmtiles = (() => {
   }
   __name(equals, "equals");
   function isSorted(arr, func, strict) {
-    const compare2 = func || ascending;
+    const compare = func || ascending;
     return arr.every(function(currentVal, index) {
       if (index === 0) {
         return true;
       }
-      const res = compare2(arr[index - 1], currentVal);
+      const res = compare(arr[index - 1], currentVal);
       return !(res > 0 || strict && res === 0);
     });
   }
@@ -1050,13 +1056,13 @@ var olpmtiles = (() => {
       }
       ++dispatching[type];
       let propagate;
-      for (let i2 = 0, ii = listeners.length; i2 < ii; ++i2) {
-        if ("handleEvent" in listeners[i2]) {
+      for (let i = 0, ii = listeners.length; i < ii; ++i) {
+        if ("handleEvent" in listeners[i]) {
           propagate = /** @type {import("../events.js").ListenerObject} */
-          listeners[i2].handleEvent(evt);
+          listeners[i].handleEvent(evt);
         } else {
           propagate = /** @type {import("../events.js").ListenerFunction} */
-          listeners[i2].call(this, evt);
+          listeners[i].call(this, evt);
         }
         if (propagate === false || evt.propagationStopped) {
           propagate = false;
@@ -1539,8 +1545,8 @@ var olpmtiles = (() => {
   // node_modules/ol/extent.js
   function boundingExtent(coordinates2) {
     const extent = createEmpty();
-    for (let i2 = 0, ii = coordinates2.length; i2 < ii; ++i2) {
-      extendCoordinate(extent, coordinates2[i2]);
+    for (let i = 0, ii = coordinates2.length; i < ii; ++i) {
+      extendCoordinate(extent, coordinates2[i]);
     }
     return extent;
   }
@@ -2094,15 +2100,15 @@ var olpmtiles = (() => {
         output = new Array(length);
       }
     }
-    for (let i2 = 0; i2 < length; i2 += dimension) {
-      output[i2] = HALF_SIZE * input[i2] / 180;
-      let y = RADIUS * Math.log(Math.tan(Math.PI * (+input[i2 + 1] + 90) / 360));
+    for (let i = 0; i < length; i += dimension) {
+      output[i] = HALF_SIZE * input[i] / 180;
+      let y = RADIUS * Math.log(Math.tan(Math.PI * (+input[i + 1] + 90) / 360));
       if (y > MAX_SAFE_Y) {
         y = MAX_SAFE_Y;
       } else if (y < -MAX_SAFE_Y) {
         y = -MAX_SAFE_Y;
       }
-      output[i2 + 1] = y;
+      output[i + 1] = y;
     }
     return output;
   }
@@ -2117,9 +2123,9 @@ var olpmtiles = (() => {
         output = new Array(length);
       }
     }
-    for (let i2 = 0; i2 < length; i2 += dimension) {
-      output[i2] = 180 * input[i2] / HALF_SIZE;
-      output[i2 + 1] = 360 * Math.atan(Math.exp(input[i2 + 1] / RADIUS)) / Math.PI - 90;
+    for (let i = 0; i < length; i += dimension) {
+      output[i] = 180 * input[i] / HALF_SIZE;
+      output[i + 1] = 360 * Math.atan(Math.exp(input[i + 1] / RADIUS)) / Math.PI - 90;
     }
     return output;
   }
@@ -2218,11 +2224,11 @@ var olpmtiles = (() => {
   __name(squaredDistance, "squaredDistance");
   function solveLinearSystem(mat) {
     const n = mat.length;
-    for (let i2 = 0; i2 < n; i2++) {
-      let maxRow = i2;
-      let maxEl = Math.abs(mat[i2][i2]);
-      for (let r = i2 + 1; r < n; r++) {
-        const absValue = Math.abs(mat[r][i2]);
+    for (let i = 0; i < n; i++) {
+      let maxRow = i;
+      let maxEl = Math.abs(mat[i][i]);
+      for (let r = i + 1; r < n; r++) {
+        const absValue = Math.abs(mat[r][i]);
         if (absValue > maxEl) {
           maxEl = absValue;
           maxRow = r;
@@ -2232,24 +2238,24 @@ var olpmtiles = (() => {
         return null;
       }
       const tmp = mat[maxRow];
-      mat[maxRow] = mat[i2];
-      mat[i2] = tmp;
-      for (let j = i2 + 1; j < n; j++) {
-        const coef = -mat[j][i2] / mat[i2][i2];
-        for (let k = i2; k < n + 1; k++) {
-          if (i2 == k) {
-            mat[j][k] = 0;
+      mat[maxRow] = mat[i];
+      mat[i] = tmp;
+      for (let j2 = i + 1; j2 < n; j2++) {
+        const coef = -mat[j2][i] / mat[i][i];
+        for (let k2 = i; k2 < n + 1; k2++) {
+          if (i == k2) {
+            mat[j2][k2] = 0;
           } else {
-            mat[j][k] += coef * mat[i2][k];
+            mat[j2][k2] += coef * mat[i][k2];
           }
         }
       }
     }
     const x2 = new Array(n);
-    for (let l = n - 1; l >= 0; l--) {
-      x2[l] = mat[l][n] / mat[l][l];
-      for (let m = l - 1; m >= 0; m--) {
-        mat[m][n] -= mat[m][l] * x2[l];
+    for (let l2 = n - 1; l2 >= 0; l2--) {
+      x2[l2] = mat[l2][n] / mat[l2][l2];
+      for (let m2 = l2 - 1; m2 >= 0; m2--) {
+        mat[m2][n] -= mat[m2][l2] * x2[l2];
       }
     }
     return x2;
@@ -2259,13 +2265,13 @@ var olpmtiles = (() => {
     return angleInDegrees * Math.PI / 180;
   }
   __name(toRadians, "toRadians");
-  function modulo(a, b) {
-    const r = a % b;
-    return r * b < 0 ? r + b : r;
+  function modulo(a, b2) {
+    const r = a % b2;
+    return r * b2 < 0 ? r + b2 : r;
   }
   __name(modulo, "modulo");
-  function lerp(a, b, x2) {
-    return a + x2 * (b - a);
+  function lerp(a, b2, x2) {
+    return a + x2 * (b2 - a);
   }
   __name(lerp, "lerp");
   function toFixed(n, decimals) {
@@ -2298,8 +2304,8 @@ var olpmtiles = (() => {
   // node_modules/ol/proj.js
   function cloneTransform(input, output) {
     if (output !== void 0) {
-      for (let i2 = 0, ii = input.length; i2 < ii; ++i2) {
-        output[i2] = input[i2];
+      for (let i = 0, ii = input.length; i < ii; ++i) {
+        output[i] = input[i];
       }
       output = output;
     } else {
@@ -2310,8 +2316,8 @@ var olpmtiles = (() => {
   __name(cloneTransform, "cloneTransform");
   function identityTransform(input, output) {
     if (output !== void 0 && input !== output) {
-      for (let i2 = 0, ii = input.length; i2 < ii; ++i2) {
-        output[i2] = input[i2];
+      for (let i = 0, ii = input.length; i < ii; ++i) {
+        output[i] = input[i];
       }
       input = output;
     }
@@ -2511,7 +2517,7 @@ var olpmtiles = (() => {
       );
       if (this.wrapsXInSource_) {
         let leftBound = Infinity;
-        this.triangles_.forEach(function(triangle, i2, arr) {
+        this.triangles_.forEach(function(triangle, i, arr) {
           leftBound = Math.min(
             leftBound,
             triangle.source[0][0],
@@ -2567,10 +2573,10 @@ var olpmtiles = (() => {
      * @param {import("../coordinate.js").Coordinate} cSrc The source c coordinate.
      * @private
      */
-    addTriangle_(a, b, c, aSrc, bSrc, cSrc) {
+    addTriangle_(a, b2, c, aSrc, bSrc, cSrc) {
       this.triangles_.push({
         source: [aSrc, bSrc, cSrc],
-        target: [a, b, c]
+        target: [a, b2, c]
       });
     }
     /**
@@ -2589,7 +2595,7 @@ var olpmtiles = (() => {
      * @param {number} maxSubdivision Maximal allowed subdivision of the quad.
      * @private
      */
-    addQuad_(a, b, c, d, aSrc, bSrc, cSrc, dSrc, maxSubdivision) {
+    addQuad_(a, b2, c, d, aSrc, bSrc, cSrc, dSrc, maxSubdivision) {
       const sourceQuadExtent = boundingExtent([aSrc, bSrc, cSrc, dSrc]);
       const sourceCoverageX = this.sourceWorldWidth_ ? getWidth(sourceQuadExtent) / this.sourceWorldWidth_ : null;
       const sourceWorldWidth = (
@@ -2600,7 +2606,7 @@ var olpmtiles = (() => {
       let needsSubdivision = false;
       if (maxSubdivision > 0) {
         if (this.targetProj_.isGlobal() && this.targetWorldWidth_) {
-          const targetQuadExtent = boundingExtent([a, b, c, d]);
+          const targetQuadExtent = boundingExtent([a, b2, c, d]);
           const targetCoverageX = getWidth(targetQuadExtent) / this.targetWorldWidth_;
           needsSubdivision = targetCoverageX > MAX_TRIANGLE_WIDTH || needsSubdivision;
         }
@@ -2645,13 +2651,13 @@ var olpmtiles = (() => {
         }
         if (needsSubdivision) {
           if (Math.abs(a[0] - c[0]) <= Math.abs(a[1] - c[1])) {
-            const bc = [(b[0] + c[0]) / 2, (b[1] + c[1]) / 2];
+            const bc = [(b2[0] + c[0]) / 2, (b2[1] + c[1]) / 2];
             const bcSrc = this.transformInv_(bc);
             const da = [(d[0] + a[0]) / 2, (d[1] + a[1]) / 2];
             const daSrc = this.transformInv_(da);
             this.addQuad_(
               a,
-              b,
+              b2,
               bc,
               da,
               aSrc,
@@ -2672,7 +2678,7 @@ var olpmtiles = (() => {
               maxSubdivision - 1
             );
           } else {
-            const ab = [(a[0] + b[0]) / 2, (a[1] + b[1]) / 2];
+            const ab = [(a[0] + b2[0]) / 2, (a[1] + b2[1]) / 2];
             const abSrc = this.transformInv_(ab);
             const cd = [(c[0] + d[0]) / 2, (c[1] + d[1]) / 2];
             const cdSrc = this.transformInv_(cd);
@@ -2689,7 +2695,7 @@ var olpmtiles = (() => {
             );
             this.addQuad_(
               ab,
-              b,
+              b2,
               c,
               cd,
               abSrc,
@@ -2712,14 +2718,14 @@ var olpmtiles = (() => {
         this.addTriangle_(a, c, d, aSrc, cSrc, dSrc);
       }
       if ((isNotFinite & 14) == 0) {
-        this.addTriangle_(a, c, b, aSrc, cSrc, bSrc);
+        this.addTriangle_(a, c, b2, aSrc, cSrc, bSrc);
       }
       if (isNotFinite) {
         if ((isNotFinite & 13) == 0) {
-          this.addTriangle_(b, d, a, bSrc, dSrc, aSrc);
+          this.addTriangle_(b2, d, a, bSrc, dSrc, aSrc);
         }
         if ((isNotFinite & 7) == 0) {
-          this.addTriangle_(b, d, c, bSrc, dSrc, cSrc);
+          this.addTriangle_(b2, d, c, bSrc, dSrc, cSrc);
         }
       }
     }
@@ -2730,7 +2736,7 @@ var olpmtiles = (() => {
      */
     calculateSourceExtent() {
       const extent = createEmpty();
-      this.triangles_.forEach(function(triangle, i2, arr) {
+      this.triangles_.forEach(function(triangle, i, arr) {
         const src = triangle.source;
         extendCoordinate(extent, src[0]);
         extendCoordinate(extent, src[1]);
@@ -2849,7 +2855,7 @@ var olpmtiles = (() => {
     __name(pixelRound, "pixelRound");
     context.globalCompositeOperation = "lighter";
     const sourceDataExtent = createEmpty();
-    sources.forEach(function(src, i2, arr) {
+    sources.forEach(function(src, i, arr) {
       extend2(sourceDataExtent, src.extent);
     });
     let stitchContext;
@@ -2872,7 +2878,7 @@ var olpmtiles = (() => {
         stitchContext.rect(xPos, yPos, width2, height2);
         stitchContext.clip();
       }
-      sources.forEach(function(src, i2, arr) {
+      sources.forEach(function(src, i, arr) {
         if (src.image.width > 0 && src.image.height > 0) {
           if (src.clipExtent) {
             stitchContext.save();
@@ -2910,7 +2916,7 @@ var olpmtiles = (() => {
       });
     }
     const targetTopLeft = getTopLeft(targetExtent);
-    triangulation.getTriangles().forEach(function(triangle, i2, arr) {
+    triangulation.getTriangles().forEach(function(triangle, i, arr) {
       const source = triangle.source;
       const target = triangle.target;
       let x0 = source[0][0], y0 = source[0][1];
@@ -3009,7 +3015,7 @@ var olpmtiles = (() => {
       context.globalCompositeOperation = "source-over";
       context.strokeStyle = "black";
       context.lineWidth = 1;
-      triangulation.getTriangles().forEach(function(triangle, i2, arr) {
+      triangulation.getTriangles().forEach(function(triangle, i, arr) {
         const target = triangle.target;
         const u0 = (target[0][0] - targetTopLeft[0]) / targetResolution;
         const v0 = -(target[0][1] - targetTopLeft[1]) / targetResolution;
@@ -3217,7 +3223,7 @@ var olpmtiles = (() => {
     reproject_() {
       const dataSources = [];
       this.sourceTiles_.forEach((source) => {
-        var _a6;
+        var _a9;
         const tile = source.tile;
         if (!tile || tile.getState() !== TileState_default.LOADED) {
           return;
@@ -3259,7 +3265,7 @@ var olpmtiles = (() => {
         const extent = this.sourceTileGrid_.getTileCoordExtent(tile.tileCoord);
         extent[0] += source.offset;
         extent[2] += source.offset;
-        const clipExtent = (_a6 = this.clipExtent_) == null ? void 0 : _a6.slice();
+        const clipExtent = (_a9 = this.clipExtent_) == null ? void 0 : _a9.slice();
         if (clipExtent) {
           clipExtent[0] += source.offset;
           clipExtent[2] += source.offset;
@@ -3277,11 +3283,11 @@ var olpmtiles = (() => {
       if (dataSources.length === 0) {
         this.state = TileState_default.ERROR;
       } else {
-        const z = this.wrappedTileCoord_[0];
-        const size = this.targetTileGrid_.getTileSize(z);
+        const z2 = this.wrappedTileCoord_[0];
+        const size = this.targetTileGrid_.getTileSize(z2);
         const targetWidth = typeof size === "number" ? size : size[0];
         const targetHeight = typeof size === "number" ? size : size[1];
-        const targetResolution = this.targetTileGrid_.getResolution(z);
+        const targetResolution = this.targetTileGrid_.getResolution(z2);
         const sourceResolution = this.sourceTileGrid_.getResolution(
           this.sourceZ_
         );
@@ -3293,8 +3299,8 @@ var olpmtiles = (() => {
         const reprojs = Math.ceil(bytesPerPixel / 3);
         for (let reproj = reprojs - 1; reproj >= 0; --reproj) {
           const sources = [];
-          for (let i2 = 0, len = dataSources.length; i2 < len; ++i2) {
-            const dataSource = dataSources[i2];
+          for (let i = 0, len = dataSources.length; i < len; ++i) {
+            const dataSource = dataSources[i];
             const buffer2 = dataSource.data;
             const pixelSize = dataSource.pixelSize;
             const width = pixelSize[0];
@@ -3303,11 +3309,11 @@ var olpmtiles = (() => {
             const imageData2 = context2.createImageData(width, height);
             const data2 = imageData2.data;
             let offset2 = reproj * 3;
-            for (let j = 0, len2 = data2.length; j < len2; j += 4) {
-              data2[j] = buffer2[offset2];
-              data2[j + 1] = buffer2[offset2 + 1];
-              data2[j + 2] = buffer2[offset2 + 2];
-              data2[j + 3] = 255;
+            for (let j2 = 0, len2 = data2.length; j2 < len2; j2 += 4) {
+              data2[j2] = buffer2[offset2];
+              data2[j2 + 1] = buffer2[offset2 + 1];
+              data2[j2 + 2] = buffer2[offset2 + 2];
+              data2[j2 + 3] = 255;
               offset2 += bytesPerPixel;
             }
             context2.putImageData(imageData2, 0, 0);
@@ -3333,8 +3339,8 @@ var olpmtiles = (() => {
             false
             //true,
           );
-          for (let i2 = 0, len = sources.length; i2 < len; ++i2) {
-            const canvas2 = sources[i2].image;
+          for (let i = 0, len = sources.length; i < len; ++i) {
+            const canvas2 = sources[i].image;
             const context2 = canvas2.getContext("2d");
             releaseCanvas(context2);
             canvasPool.push(context2.canvas);
@@ -3356,11 +3362,11 @@ var olpmtiles = (() => {
           }
           const data = imageData.data;
           let offset = reproj * 3;
-          for (let i2 = 0, len = data.length; i2 < len; i2 += 4) {
-            if (data[i2 + 3] === 255) {
-              dataU[offset] = data[i2];
-              dataU[offset + 1] = data[i2 + 1];
-              dataU[offset + 2] = data[i2 + 2];
+          for (let i = 0, len = data.length; i < len; i += 4) {
+            if (data[i + 3] === 255) {
+              dataU[offset] = data[i];
+              dataU[offset + 1] = data[i + 1];
+              dataU[offset + 2] = data[i + 2];
             } else {
               dataU[offset] = 0;
               dataU[offset + 1] = 0;
@@ -3570,10 +3576,10 @@ var olpmtiles = (() => {
      */
     getKeys() {
       const keys = new Array(this.count_);
-      let i2 = 0;
+      let i = 0;
       let entry;
       for (entry = this.newest_; entry; entry = entry.older) {
-        keys[i2++] = entry.key_;
+        keys[i++] = entry.key_;
       }
       return keys;
     }
@@ -3582,10 +3588,10 @@ var olpmtiles = (() => {
      */
     getValues() {
       const values = new Array(this.count_);
-      let i2 = 0;
+      let i = 0;
       let entry;
       for (entry = this.newest_; entry; entry = entry.older) {
-        values[i2++] = entry.value_;
+        values[i++] = entry.value_;
       }
       return values;
     }
@@ -3614,8 +3620,8 @@ var olpmtiles = (() => {
      * @return {T|undefined} Value.
      */
     peek(key) {
-      var _a6;
-      return (_a6 = this.entries_[key]) == null ? void 0 : _a6.value_;
+      var _a9;
+      return (_a9 = this.entries_[key]) == null ? void 0 : _a9.value_;
     }
     /**
      * @return {T} value Value.
@@ -3680,18 +3686,18 @@ var olpmtiles = (() => {
   var LRUCache_default = LRUCache;
 
   // node_modules/ol/tilecoord.js
-  function createOrUpdate2(z, x2, y, tileCoord) {
+  function createOrUpdate2(z2, x2, y, tileCoord) {
     if (tileCoord !== void 0) {
-      tileCoord[0] = z;
+      tileCoord[0] = z2;
       tileCoord[1] = x2;
       tileCoord[2] = y;
       return tileCoord;
     }
-    return [z, x2, y];
+    return [z2, x2, y];
   }
   __name(createOrUpdate2, "createOrUpdate");
-  function getKeyZXY(z, x2, y) {
-    return z + "/" + x2 + "/" + y;
+  function getKeyZXY(z2, x2, y) {
+    return z2 + "/" + x2 + "/" + y;
   }
   __name(getKeyZXY, "getKeyZXY");
   function getKey(tileCoord) {
@@ -3699,8 +3705,8 @@ var olpmtiles = (() => {
   }
   __name(getKey, "getKey");
   function getCacheKeyForTileKey(tileKey) {
-    const [z, x2, y] = tileKey.substring(tileKey.lastIndexOf("/") + 1, tileKey.length).split(",").map(Number);
-    return getKeyZXY(z, x2, y);
+    const [z2, x2, y] = tileKey.substring(tileKey.lastIndexOf("/") + 1, tileKey.length).split(",").map(Number);
+    return getKeyZXY(z2, x2, y);
   }
   __name(getCacheKeyForTileKey, "getCacheKeyForTileKey");
   function fromKey(key) {
@@ -3712,13 +3718,13 @@ var olpmtiles = (() => {
   }
   __name(hash, "hash");
   function withinExtentAndZ(tileCoord, tileGrid) {
-    const z = tileCoord[0];
+    const z2 = tileCoord[0];
     const x2 = tileCoord[1];
     const y = tileCoord[2];
-    if (tileGrid.getMinZoom() > z || z > tileGrid.getMaxZoom()) {
+    if (tileGrid.getMinZoom() > z2 || z2 > tileGrid.getMaxZoom()) {
       return false;
     }
-    const tileRange = tileGrid.getFullTileRange(z);
+    const tileRange = tileGrid.getFullTileRange(z2);
     if (!tileRange) {
       return true;
     }
@@ -3756,9 +3762,9 @@ var olpmtiles = (() => {
       }
       const key = this.peekFirstKey();
       const tileCoord = fromKey(key);
-      const z = tileCoord[0];
+      const z2 = tileCoord[0];
       this.forEach((tile) => {
-        if (tile.tileCoord[0] !== z) {
+        if (tile.tileCoord[0] !== z2) {
           this.remove(getKey(tile.tileCoord));
           tile.release();
         }
@@ -3843,8 +3849,8 @@ var olpmtiles = (() => {
       if (Array.isArray(type)) {
         const len = type.length;
         const keys = new Array(len);
-        for (let i2 = 0; i2 < len; ++i2) {
-          keys[i2] = listen(this, type[i2], listener);
+        for (let i = 0; i < len; ++i) {
+          keys[i] = listen(this, type[i], listener);
         }
         return keys;
       }
@@ -3866,8 +3872,8 @@ var olpmtiles = (() => {
       if (Array.isArray(type)) {
         const len = type.length;
         key = new Array(len);
-        for (let i2 = 0; i2 < len; ++i2) {
-          key[i2] = listenOnce(this, type[i2], listener);
+        for (let i = 0; i < len; ++i) {
+          key[i] = listenOnce(this, type[i], listener);
         }
       } else {
         key = listenOnce(
@@ -3894,8 +3900,8 @@ var olpmtiles = (() => {
       if (key) {
         unByKey(key);
       } else if (Array.isArray(type)) {
-        for (let i2 = 0, ii = type.length; i2 < ii; ++i2) {
-          this.removeEventListener(type[i2], listener);
+        for (let i = 0, ii = type.length; i < ii; ++i) {
+          this.removeEventListener(type[i], listener);
         }
       } else {
         this.removeEventListener(type, listener);
@@ -3909,8 +3915,8 @@ var olpmtiles = (() => {
   Observable.prototype.un;
   function unByKey(key) {
     if (Array.isArray(key)) {
-      for (let i2 = 0, ii = key.length; i2 < ii; ++i2) {
-        unlistenByKey(key[i2]);
+      for (let i = 0, ii = key.length; i < ii; ++i) {
+        unlistenByKey(key[i]);
       }
     } else {
       unlistenByKey(
@@ -4385,8 +4391,8 @@ var olpmtiles = (() => {
     if (!linearRingContainsXY(flatCoordinates, offset, ends[0], stride, x2, y)) {
       return false;
     }
-    for (let i2 = 1, ii = ends.length; i2 < ii; ++i2) {
-      if (linearRingContainsXY(flatCoordinates, ends[i2 - 1], ends[i2], stride, x2, y)) {
+    for (let i = 1, ii = ends.length; i < ii; ++i) {
+      if (linearRingContainsXY(flatCoordinates, ends[i - 1], ends[i], stride, x2, y)) {
         return false;
       }
     }
@@ -4397,8 +4403,8 @@ var olpmtiles = (() => {
     if (endss.length === 0) {
       return false;
     }
-    for (let i2 = 0, ii = endss.length; i2 < ii; ++i2) {
-      const ends = endss[i2];
+    for (let i = 0, ii = endss.length; i < ii; ++i) {
+      const ends = endss[i];
       if (linearRingsContainsXY(flatCoordinates, offset, ends, stride, x2, y)) {
         return true;
       }
@@ -4447,11 +4453,11 @@ var olpmtiles = (() => {
   }
   __name(intersectsLineString, "intersectsLineString");
   function intersectsLineStringArray(flatCoordinates, offset, ends, stride, extent) {
-    for (let i2 = 0, ii = ends.length; i2 < ii; ++i2) {
-      if (intersectsLineString(flatCoordinates, offset, ends[i2], stride, extent)) {
+    for (let i = 0, ii = ends.length; i < ii; ++i) {
+      if (intersectsLineString(flatCoordinates, offset, ends[i], stride, extent)) {
         return true;
       }
-      offset = ends[i2];
+      offset = ends[i];
     }
     return false;
   }
@@ -4510,18 +4516,18 @@ var olpmtiles = (() => {
     if (ends.length === 1) {
       return true;
     }
-    for (let i2 = 1, ii = ends.length; i2 < ii; ++i2) {
+    for (let i = 1, ii = ends.length; i < ii; ++i) {
       if (linearRingContainsExtent(
         flatCoordinates,
-        ends[i2 - 1],
-        ends[i2],
+        ends[i - 1],
+        ends[i],
         stride,
         extent
       )) {
         if (!intersectsLineString(
           flatCoordinates,
-          ends[i2 - 1],
-          ends[i2],
+          ends[i - 1],
+          ends[i],
           stride,
           extent
         )) {
@@ -4533,8 +4539,8 @@ var olpmtiles = (() => {
   }
   __name(intersectsLinearRingArray, "intersectsLinearRingArray");
   function intersectsLinearRingMultiArray(flatCoordinates, offset, endss, stride, extent) {
-    for (let i2 = 0, ii = endss.length; i2 < ii; ++i2) {
-      const ends = endss[i2];
+    for (let i = 0, ii = endss.length; i < ii; ++i) {
+      const ends = endss[i];
       if (intersectsLinearRingArray(flatCoordinates, offset, ends, stride, extent)) {
         return true;
       }
@@ -4586,18 +4592,18 @@ var olpmtiles = (() => {
            * @param {number} b Second resolution
            * @return {number} Comparison result
            */
-          (a, b) => b - a,
+          (a, b2) => b2 - a,
           true
         ),
         "`resolutions` must be sorted in descending order"
       );
       let zoomFactor;
       if (!options.origins) {
-        for (let i2 = 0, ii = this.resolutions_.length - 1; i2 < ii; ++i2) {
+        for (let i = 0, ii = this.resolutions_.length - 1; i < ii; ++i) {
           if (!zoomFactor) {
-            zoomFactor = this.resolutions_[i2] / this.resolutions_[i2 + 1];
+            zoomFactor = this.resolutions_[i] / this.resolutions_[i + 1];
           } else {
-            if (this.resolutions_[i2] / this.resolutions_[i2 + 1] !== zoomFactor) {
+            if (this.resolutions_[i] / this.resolutions_[i + 1] !== zoomFactor) {
               zoomFactor = void 0;
               break;
             }
@@ -4641,7 +4647,7 @@ var olpmtiles = (() => {
       this.tmpSize_ = [0, 0];
       this.tmpExtent_ = [0, 0, 0, 0];
       if (options.sizes !== void 0) {
-        this.fullTileRanges_ = options.sizes.map((size, z) => {
+        this.fullTileRanges_ = options.sizes.map((size, z2) => {
           const tileRange = new TileRange_default(
             Math.min(0, size[0]),
             Math.max(size[0] - 1, -1),
@@ -4649,7 +4655,7 @@ var olpmtiles = (() => {
             Math.max(size[1] - 1, -1)
           );
           if (extent) {
-            const restrictedTileRange = this.getTileRangeForExtentAndZ(extent, z);
+            const restrictedTileRange = this.getTileRangeForExtentAndZ(extent, z2);
             tileRange.minX = Math.max(restrictedTileRange.minX, tileRange.minX);
             tileRange.maxX = Math.min(restrictedTileRange.maxX, tileRange.maxX);
             tileRange.minY = Math.max(restrictedTileRange.minY, tileRange.minY);
@@ -4671,9 +4677,9 @@ var olpmtiles = (() => {
      */
     forEachTileCoord(extent, zoom, callback) {
       const tileRange = this.getTileRangeForExtentAndZ(extent, zoom);
-      for (let i2 = tileRange.minX, ii = tileRange.maxX; i2 <= ii; ++i2) {
-        for (let j = tileRange.minY, jj = tileRange.maxY; j <= jj; ++j) {
-          callback([zoom, i2, j]);
+      for (let i = tileRange.minX, ii = tileRange.maxX; i <= ii; ++i) {
+        for (let j2 = tileRange.minY, jj = tileRange.maxY; j2 <= jj; ++j2) {
+          callback([zoom, i, j2]);
         }
       }
     }
@@ -4687,14 +4693,14 @@ var olpmtiles = (() => {
     forEachTileCoordParentTileRange(tileCoord, callback, tempTileRange, tempExtent) {
       let tileRange, x2, y;
       let tileCoordExtent = null;
-      let z = tileCoord[0] - 1;
+      let z2 = tileCoord[0] - 1;
       if (this.zoomFactor_ === 2) {
         x2 = tileCoord[1];
         y = tileCoord[2];
       } else {
         tileCoordExtent = this.getTileCoordExtent(tileCoord, tempExtent);
       }
-      while (z >= this.minZoom) {
+      while (z2 >= this.minZoom) {
         if (x2 !== void 0 && y !== void 0) {
           x2 = Math.floor(x2 / 2);
           y = Math.floor(y / 2);
@@ -4702,14 +4708,14 @@ var olpmtiles = (() => {
         } else {
           tileRange = this.getTileRangeForExtentAndZ(
             tileCoordExtent,
-            z,
+            z2,
             tempTileRange
           );
         }
-        if (callback(z, tileRange)) {
+        if (callback(z2, tileRange)) {
           return true;
         }
-        --z;
+        --z2;
       }
       return false;
     }
@@ -4743,11 +4749,11 @@ var olpmtiles = (() => {
      * @return {import("../coordinate.js").Coordinate} Origin.
      * @api
      */
-    getOrigin(z) {
+    getOrigin(z2) {
       if (this.origin_) {
         return this.origin_;
       }
-      return this.origins_[z];
+      return this.origins_[z2];
     }
     /**
      * Get the resolution for the given zoom level.
@@ -4755,8 +4761,8 @@ var olpmtiles = (() => {
      * @return {number} Resolution.
      * @api
      */
-    getResolution(z) {
-      return this.resolutions_[z];
+    getResolution(z2) {
+      return this.resolutions_[z2];
     }
     /**
      * Get the list of resolutions for the tile grid.
@@ -4803,14 +4809,14 @@ var olpmtiles = (() => {
      * @param {import("../TileRange.js").default} [tempTileRange] Temporary import("../TileRange.js").default object.
      * @return {import("../TileRange.js").default|null} Tile range.
      */
-    getTileRangeForTileCoordAndZ(tileCoord, z, tempTileRange) {
-      if (z > this.maxZoom || z < this.minZoom) {
+    getTileRangeForTileCoordAndZ(tileCoord, z2, tempTileRange) {
+      if (z2 > this.maxZoom || z2 < this.minZoom) {
         return null;
       }
       const tileCoordZ = tileCoord[0];
       const tileCoordX = tileCoord[1];
       const tileCoordY = tileCoord[2];
-      if (z === tileCoordZ) {
+      if (z2 === tileCoordZ) {
         return createOrUpdate3(
           tileCoordX,
           tileCoordY,
@@ -4820,10 +4826,10 @@ var olpmtiles = (() => {
         );
       }
       if (this.zoomFactor_) {
-        const factor = Math.pow(this.zoomFactor_, z - tileCoordZ);
+        const factor = Math.pow(this.zoomFactor_, z2 - tileCoordZ);
         const minX = Math.floor(tileCoordX * factor);
         const minY = Math.floor(tileCoordY * factor);
-        if (z < tileCoordZ) {
+        if (z2 < tileCoordZ) {
           return createOrUpdate3(minX, minX, minY, minY, tempTileRange);
         }
         const maxX = Math.floor(factor * (tileCoordX + 1)) - 1;
@@ -4831,7 +4837,7 @@ var olpmtiles = (() => {
         return createOrUpdate3(minX, maxX, minY, maxY, tempTileRange);
       }
       const tileCoordExtent = this.getTileCoordExtent(tileCoord, this.tmpExtent_);
-      return this.getTileRangeForExtentAndZ(tileCoordExtent, z, tempTileRange);
+      return this.getTileRangeForExtentAndZ(tileCoordExtent, z2, tempTileRange);
     }
     /**
      * Get a tile range for the given extent and integer zoom level.
@@ -4840,11 +4846,11 @@ var olpmtiles = (() => {
      * @param {import("../TileRange.js").default} [tempTileRange] Temporary tile range object.
      * @return {import("../TileRange.js").default} Tile range.
      */
-    getTileRangeForExtentAndZ(extent, z, tempTileRange) {
-      this.getTileCoordForXYAndZ_(extent[0], extent[3], z, false, tmpTileCoord);
+    getTileRangeForExtentAndZ(extent, z2, tempTileRange) {
+      this.getTileCoordForXYAndZ_(extent[0], extent[3], z2, false, tmpTileCoord);
       const minX = tmpTileCoord[1];
       const minY = tmpTileCoord[2];
-      this.getTileCoordForXYAndZ_(extent[2], extent[1], z, true, tmpTileCoord);
+      this.getTileCoordForXYAndZ_(extent[2], extent[1], z2, true, tmpTileCoord);
       const maxX = tmpTileCoord[1];
       const maxY = tmpTileCoord[2];
       return createOrUpdate3(minX, maxX, minY, maxY, tempTileRange);
@@ -4914,10 +4920,10 @@ var olpmtiles = (() => {
      * @private
      */
     getTileCoordForXYAndResolution_(x2, y, resolution, reverseIntersectionPolicy, opt_tileCoord) {
-      const z = this.getZForResolution(resolution);
-      const scale3 = resolution / this.getResolution(z);
-      const origin = this.getOrigin(z);
-      const tileSize = toSize(this.getTileSize(z), this.tmpSize_);
+      const z2 = this.getZForResolution(resolution);
+      const scale3 = resolution / this.getResolution(z2);
+      const origin = this.getOrigin(z2);
+      const tileSize = toSize(this.getTileSize(z2), this.tmpSize_);
       let tileCoordX = scale3 * (x2 - origin[0]) / resolution / tileSize[0];
       let tileCoordY = scale3 * (origin[1] - y) / resolution / tileSize[1];
       if (reverseIntersectionPolicy) {
@@ -4927,7 +4933,7 @@ var olpmtiles = (() => {
         tileCoordX = floor(tileCoordX, DECIMALS);
         tileCoordY = floor(tileCoordY, DECIMALS);
       }
-      return createOrUpdate2(z, tileCoordX, tileCoordY, opt_tileCoord);
+      return createOrUpdate2(z2, tileCoordX, tileCoordY, opt_tileCoord);
     }
     /**
      * Although there is repetition between this method and `getTileCoordForXYAndResolution_`,
@@ -4944,10 +4950,10 @@ var olpmtiles = (() => {
      * @return {import("../tilecoord.js").TileCoord} Tile coordinate.
      * @private
      */
-    getTileCoordForXYAndZ_(x2, y, z, reverseIntersectionPolicy, opt_tileCoord) {
-      const origin = this.getOrigin(z);
-      const resolution = this.getResolution(z);
-      const tileSize = toSize(this.getTileSize(z), this.tmpSize_);
+    getTileCoordForXYAndZ_(x2, y, z2, reverseIntersectionPolicy, opt_tileCoord) {
+      const origin = this.getOrigin(z2);
+      const resolution = this.getResolution(z2);
+      const tileSize = toSize(this.getTileSize(z2), this.tmpSize_);
       let tileCoordX = (x2 - origin[0]) / resolution / tileSize[0];
       let tileCoordY = (origin[1] - y) / resolution / tileSize[1];
       if (reverseIntersectionPolicy) {
@@ -4957,7 +4963,7 @@ var olpmtiles = (() => {
         tileCoordX = floor(tileCoordX, DECIMALS);
         tileCoordY = floor(tileCoordY, DECIMALS);
       }
-      return createOrUpdate2(z, tileCoordX, tileCoordY, opt_tileCoord);
+      return createOrUpdate2(z2, tileCoordX, tileCoordY, opt_tileCoord);
     }
     /**
      * Get a tile coordinate given a map coordinate and zoom level.
@@ -4967,11 +4973,11 @@ var olpmtiles = (() => {
      * @return {import("../tilecoord.js").TileCoord} Tile coordinate.
      * @api
      */
-    getTileCoordForCoordAndZ(coordinate, z, opt_tileCoord) {
+    getTileCoordForCoordAndZ(coordinate, z2, opt_tileCoord) {
       return this.getTileCoordForXYAndZ_(
         coordinate[0],
         coordinate[1],
-        z,
+        z2,
         false,
         opt_tileCoord
       );
@@ -4991,21 +4997,21 @@ var olpmtiles = (() => {
      * @return {number|import("../size.js").Size} Tile size.
      * @api
      */
-    getTileSize(z) {
+    getTileSize(z2) {
       if (this.tileSize_) {
         return this.tileSize_;
       }
-      return this.tileSizes_[z];
+      return this.tileSizes_[z2];
     }
     /**
      * @param {number} z Zoom level.
      * @return {import("../TileRange.js").default|null} Extent tile range for the specified zoom level.
      */
-    getFullTileRange(z) {
+    getFullTileRange(z2) {
       if (!this.fullTileRanges_) {
-        return this.extent_ ? this.getTileRangeForExtentAndZ(this.extent_, z) : null;
+        return this.extent_ ? this.getTileRangeForExtentAndZ(this.extent_, z2) : null;
       }
-      return this.fullTileRanges_[z];
+      return this.fullTileRanges_[z2];
     }
     /**
      * @param {number} resolution Resolution.
@@ -5025,12 +5031,12 @@ var olpmtiles = (() => {
      * @api
      */
     getZForResolution(resolution, opt_direction) {
-      const z = linearFindNearest(
+      const z2 = linearFindNearest(
         this.resolutions_,
         resolution,
         opt_direction || 0
       );
-      return clamp(z, this.minZoom, this.maxZoom);
+      return clamp(z2, this.minZoom, this.maxZoom);
     }
     /**
      * The tile with the provided tile coordinate intersects the given viewport.
@@ -5054,8 +5060,8 @@ var olpmtiles = (() => {
     calculateTileRanges_(extent) {
       const length = this.resolutions_.length;
       const fullTileRanges = new Array(length);
-      for (let z = this.minZoom; z < length; ++z) {
-        fullTileRanges[z] = this.getTileRangeForExtentAndZ(extent, z);
+      for (let z2 = this.minZoom; z2 < length; ++z2) {
+        fullTileRanges[z2] = this.getTileRangeForExtentAndZ(extent, z2);
       }
       this.fullTileRanges_ = fullTileRanges;
     }
@@ -5075,7 +5081,7 @@ var olpmtiles = (() => {
   }
   __name(getForProjection, "getForProjection");
   function wrapX2(tileGrid, tileCoord, projection) {
-    const z = tileCoord[0];
+    const z2 = tileCoord[0];
     const center = tileGrid.getTileCoordCenter(tileCoord);
     const projectionExtent = extentFromProjection(projection);
     if (!containsCoordinate(projectionExtent, center)) {
@@ -5084,7 +5090,7 @@ var olpmtiles = (() => {
         (projectionExtent[0] - center[0]) / worldWidth
       );
       center[0] += worldWidth * worldsAway;
-      return tileGrid.getTileCoordForCoordAndZ(center, z);
+      return tileGrid.getTileCoordForCoordAndZ(center, z2);
     }
     return tileCoord;
   }
@@ -5125,8 +5131,8 @@ var olpmtiles = (() => {
     maxResolution = maxResolution > 0 ? maxResolution : Math.max(width / tileSize[0], height / tileSize[1]);
     const length = maxZoom + 1;
     const resolutions = new Array(length);
-    for (let z = 0; z < length; ++z) {
-      resolutions[z] = maxResolution / Math.pow(2, z);
+    for (let z2 = 0; z2 < length; ++z2) {
+      resolutions[z2] = maxResolution / Math.pow(2, z2);
     }
     return resolutions;
   }
@@ -5205,7 +5211,7 @@ var olpmtiles = (() => {
      *     considered loaded.
      * @return {boolean} The tile range is fully covered with loaded tiles.
      */
-    forEachLoadedTile(projection, z, tileRange, callback) {
+    forEachLoadedTile(projection, z2, tileRange, callback) {
       const tileCache = this.getTileCacheForProjection(projection);
       if (!tileCache) {
         return false;
@@ -5214,7 +5220,7 @@ var olpmtiles = (() => {
       let tile, tileCoordKey, loaded;
       for (let x2 = tileRange.minX; x2 <= tileRange.maxX; ++x2) {
         for (let y = tileRange.minY; y <= tileRange.maxY; ++y) {
-          tileCoordKey = getKeyZXY(z, x2, y);
+          tileCoordKey = getKeyZXY(z2, x2, y);
           loaded = false;
           if (tileCache.containsKey(tileCoordKey)) {
             tile = /** @type {!import("../Tile.js").default} */
@@ -5283,7 +5289,7 @@ var olpmtiles = (() => {
      * @param {import("../proj/Projection.js").default} projection Projection.
      * @return {!import("../Tile.js").default} Tile.
      */
-    getTile(z, x2, y, pixelRatio, projection) {
+    getTile(z2, x2, y, pixelRatio, projection) {
       return abstract();
     }
     /**
@@ -5333,10 +5339,10 @@ var olpmtiles = (() => {
      * @param {import("../proj/Projection.js").default} projection Projection.
      * @return {import("../size.js").Size} Tile size.
      */
-    getTilePixelSize(z, pixelRatio, projection) {
+    getTilePixelSize(z2, pixelRatio, projection) {
       const tileGrid = this.getTileGridForProjection(projection);
       const tilePixelRatio = this.getTilePixelRatio(pixelRatio);
-      const tileSize = toSize(tileGrid.getTileSize(z), this.tmpSize);
+      const tileSize = toSize(tileGrid.getTileSize(z2), this.tmpSize);
       if (tilePixelRatio == 1) {
         return tileSize;
       }
@@ -5389,7 +5395,7 @@ var olpmtiles = (() => {
      * @param {number} y Tile coordinate y.
      * @param {import("../proj/Projection.js").default} projection Projection.
      */
-    useTile(z, x2, y, projection) {
+    useTile(z2, x2, y, projection) {
     }
   };
   __name(_TileSource, "TileSource");
@@ -5464,15 +5470,15 @@ var olpmtiles = (() => {
      * @param {number} z Tile zoom level.
      * @return {import('../size.js').Size} The source tile size.
      */
-    getTileSize(z) {
+    getTileSize(z2) {
       if (this.tileSizes_) {
-        return this.tileSizes_[z];
+        return this.tileSizes_[z2];
       }
       if (this.tileSize_) {
         return this.tileSize_;
       }
       const tileGrid = this.getTileGrid();
-      return tileGrid ? toSize(tileGrid.getTileSize(z)) : [256, 256];
+      return tileGrid ? toSize(tileGrid.getTileSize(z2)) : [256, 256];
     }
     /**
      * @param {import("../proj/Projection.js").default} projection Projection.
@@ -5500,9 +5506,9 @@ var olpmtiles = (() => {
      * @param {import("../proj/Projection.js").default} sourceProj The input projection.
      * @return {!DataTile} Tile.
      */
-    getReprojTile_(z, x2, y, targetProj, sourceProj) {
+    getReprojTile_(z2, x2, y, targetProj, sourceProj) {
       const cache2 = this.getTileCacheForProjection(targetProj);
-      const tileCoordKey = getKeyZXY(z, x2, y);
+      const tileCoordKey = getKeyZXY(z2, x2, y);
       if (cache2.containsKey(tileCoordKey)) {
         const tile = cache2.get(tileCoordKey);
         if (tile && tile.key == this.getKey()) {
@@ -5512,9 +5518,9 @@ var olpmtiles = (() => {
       const tileGrid = this.getTileGrid();
       const reprojTilePixelRatio = Math.max.apply(
         null,
-        tileGrid.getResolutions().map((r, z2) => {
-          const tileSize = toSize(tileGrid.getTileSize(z2));
-          const textureSize = this.getTileSize(z2);
+        tileGrid.getResolutions().map((r, z3) => {
+          const tileSize = toSize(tileGrid.getTileSize(z3));
+          const textureSize = this.getTileSize(z3);
           return Math.max(
             textureSize[0] / tileSize[0],
             textureSize[1] / tileSize[1]
@@ -5523,7 +5529,7 @@ var olpmtiles = (() => {
       );
       const sourceTileGrid = this.getTileGridForProjection(sourceProj);
       const targetTileGrid = this.getTileGridForProjection(targetProj);
-      const tileCoord = [z, x2, y];
+      const tileCoord = [z2, x2, y];
       const wrappedTileCoord = this.getTileCoordForTileUrlFunction(
         tileCoord,
         targetProj
@@ -5538,7 +5544,7 @@ var olpmtiles = (() => {
           wrappedTileCoord,
           pixelRatio: reprojTilePixelRatio,
           gutter: this.getGutterForProjection(sourceProj),
-          getTileFunction: /* @__PURE__ */ __name((z2, x3, y2, pixelRatio) => this.getTile(z2, x3, y2, pixelRatio, sourceProj), "getTileFunction")
+          getTileFunction: /* @__PURE__ */ __name((z3, x3, y2, pixelRatio) => this.getTile(z3, x3, y2, pixelRatio, sourceProj), "getTileFunction")
         },
         this.tileOptions
       );
@@ -5554,26 +5560,26 @@ var olpmtiles = (() => {
      * @param {import("../proj/Projection.js").default} projection Projection.
      * @return {!DataTile} Tile.
      */
-    getTile(z, x2, y, pixelRatio, projection) {
+    getTile(z2, x2, y, pixelRatio, projection) {
       const sourceProjection = this.getProjection();
       if (sourceProjection && projection && !equivalent(sourceProjection, projection)) {
-        return this.getReprojTile_(z, x2, y, projection, sourceProjection);
+        return this.getReprojTile_(z2, x2, y, projection, sourceProjection);
       }
-      const size = this.getTileSize(z);
-      const tileCoordKey = getKeyZXY(z, x2, y);
+      const size = this.getTileSize(z2);
+      const tileCoordKey = getKeyZXY(z2, x2, y);
       if (this.tileCache.containsKey(tileCoordKey)) {
         return this.tileCache.get(tileCoordKey);
       }
       const sourceLoader = this.loader_;
       function loader() {
         return toPromise(function() {
-          return sourceLoader(z, x2, y);
+          return sourceLoader(z2, x2, y);
         });
       }
       __name(loader, "loader");
       const options = Object.assign(
         {
-          tileCoord: [z, x2, y],
+          tileCoord: [z2, x2, y],
           loader,
           size
         },
@@ -5920,15 +5926,15 @@ var olpmtiles = (() => {
   // node_modules/ol/geom/flat/transform.js
   function transform2D(flatCoordinates, offset, end, stride, transform2, dest) {
     dest = dest ? dest : [];
-    let i2 = 0;
-    for (let j = offset; j < end; j += stride) {
-      const x2 = flatCoordinates[j];
-      const y = flatCoordinates[j + 1];
-      dest[i2++] = transform2[0] * x2 + transform2[2] * y + transform2[4];
-      dest[i2++] = transform2[1] * x2 + transform2[3] * y + transform2[5];
+    let i = 0;
+    for (let j2 = offset; j2 < end; j2 += stride) {
+      const x2 = flatCoordinates[j2];
+      const y = flatCoordinates[j2 + 1];
+      dest[i++] = transform2[0] * x2 + transform2[2] * y + transform2[4];
+      dest[i++] = transform2[1] * x2 + transform2[3] * y + transform2[5];
     }
-    if (dest && dest.length != i2) {
-      dest.length = i2;
+    if (dest && dest.length != i) {
+      dest.length = i;
     }
     return dest;
   }
@@ -5939,18 +5945,18 @@ var olpmtiles = (() => {
     const sin = Math.sin(angle);
     const anchorX = anchor[0];
     const anchorY = anchor[1];
-    let i2 = 0;
-    for (let j = offset; j < end; j += stride) {
-      const deltaX = flatCoordinates[j] - anchorX;
-      const deltaY = flatCoordinates[j + 1] - anchorY;
-      dest[i2++] = anchorX + deltaX * cos - deltaY * sin;
-      dest[i2++] = anchorY + deltaX * sin + deltaY * cos;
-      for (let k = j + 2; k < j + stride; ++k) {
-        dest[i2++] = flatCoordinates[k];
+    let i = 0;
+    for (let j2 = offset; j2 < end; j2 += stride) {
+      const deltaX = flatCoordinates[j2] - anchorX;
+      const deltaY = flatCoordinates[j2 + 1] - anchorY;
+      dest[i++] = anchorX + deltaX * cos - deltaY * sin;
+      dest[i++] = anchorY + deltaX * sin + deltaY * cos;
+      for (let k2 = j2 + 2; k2 < j2 + stride; ++k2) {
+        dest[i++] = flatCoordinates[k2];
       }
     }
-    if (dest && dest.length != i2) {
-      dest.length = i2;
+    if (dest && dest.length != i) {
+      dest.length = i;
     }
     return dest;
   }
@@ -5959,34 +5965,34 @@ var olpmtiles = (() => {
     dest = dest ? dest : [];
     const anchorX = anchor[0];
     const anchorY = anchor[1];
-    let i2 = 0;
-    for (let j = offset; j < end; j += stride) {
-      const deltaX = flatCoordinates[j] - anchorX;
-      const deltaY = flatCoordinates[j + 1] - anchorY;
-      dest[i2++] = anchorX + sx * deltaX;
-      dest[i2++] = anchorY + sy * deltaY;
-      for (let k = j + 2; k < j + stride; ++k) {
-        dest[i2++] = flatCoordinates[k];
+    let i = 0;
+    for (let j2 = offset; j2 < end; j2 += stride) {
+      const deltaX = flatCoordinates[j2] - anchorX;
+      const deltaY = flatCoordinates[j2 + 1] - anchorY;
+      dest[i++] = anchorX + sx * deltaX;
+      dest[i++] = anchorY + sy * deltaY;
+      for (let k2 = j2 + 2; k2 < j2 + stride; ++k2) {
+        dest[i++] = flatCoordinates[k2];
       }
     }
-    if (dest && dest.length != i2) {
-      dest.length = i2;
+    if (dest && dest.length != i) {
+      dest.length = i;
     }
     return dest;
   }
   __name(scale2, "scale");
   function translate(flatCoordinates, offset, end, stride, deltaX, deltaY, dest) {
     dest = dest ? dest : [];
-    let i2 = 0;
-    for (let j = offset; j < end; j += stride) {
-      dest[i2++] = flatCoordinates[j] + deltaX;
-      dest[i2++] = flatCoordinates[j + 1] + deltaY;
-      for (let k = j + 2; k < j + stride; ++k) {
-        dest[i2++] = flatCoordinates[k];
+    let i = 0;
+    for (let j2 = offset; j2 < end; j2 += stride) {
+      dest[i++] = flatCoordinates[j2] + deltaX;
+      dest[i++] = flatCoordinates[j2 + 1] + deltaY;
+      for (let k2 = j2 + 2; k2 < j2 + stride; ++k2) {
+        dest[i++] = flatCoordinates[k2];
       }
     }
-    if (dest && dest.length != i2) {
-      dest.length = i2;
+    if (dest && dest.length != i) {
+      dest.length = i;
     }
     return dest;
   }
@@ -6366,7 +6372,7 @@ var olpmtiles = (() => {
       if (layout) {
         stride = getStrideForLayout(layout);
       } else {
-        for (let i2 = 0; i2 < nesting; ++i2) {
+        for (let i = 0; i < nesting; ++i) {
           if (coordinates2.length === 0) {
             this.layout = "XY";
             this.stride = 2;
@@ -6511,17 +6517,17 @@ var olpmtiles = (() => {
 
   // node_modules/ol/geom/flat/deflate.js
   function deflateCoordinate(flatCoordinates, offset, coordinate, stride) {
-    for (let i2 = 0, ii = coordinate.length; i2 < ii; ++i2) {
-      flatCoordinates[offset++] = coordinate[i2];
+    for (let i = 0, ii = coordinate.length; i < ii; ++i) {
+      flatCoordinates[offset++] = coordinate[i];
     }
     return offset;
   }
   __name(deflateCoordinate, "deflateCoordinate");
   function deflateCoordinates(flatCoordinates, offset, coordinates2, stride) {
-    for (let i2 = 0, ii = coordinates2.length; i2 < ii; ++i2) {
-      const coordinate = coordinates2[i2];
-      for (let j = 0; j < stride; ++j) {
-        flatCoordinates[offset++] = coordinate[j];
+    for (let i = 0, ii = coordinates2.length; i < ii; ++i) {
+      const coordinate = coordinates2[i];
+      for (let j2 = 0; j2 < stride; ++j2) {
+        flatCoordinates[offset++] = coordinate[j2];
       }
     }
     return offset;
@@ -6529,39 +6535,39 @@ var olpmtiles = (() => {
   __name(deflateCoordinates, "deflateCoordinates");
   function deflateCoordinatesArray(flatCoordinates, offset, coordinatess, stride, ends) {
     ends = ends ? ends : [];
-    let i2 = 0;
-    for (let j = 0, jj = coordinatess.length; j < jj; ++j) {
+    let i = 0;
+    for (let j2 = 0, jj = coordinatess.length; j2 < jj; ++j2) {
       const end = deflateCoordinates(
         flatCoordinates,
         offset,
-        coordinatess[j],
+        coordinatess[j2],
         stride
       );
-      ends[i2++] = end;
+      ends[i++] = end;
       offset = end;
     }
-    ends.length = i2;
+    ends.length = i;
     return ends;
   }
   __name(deflateCoordinatesArray, "deflateCoordinatesArray");
   function deflateMultiCoordinatesArray(flatCoordinates, offset, coordinatesss, stride, endss) {
     endss = endss ? endss : [];
-    let i2 = 0;
-    for (let j = 0, jj = coordinatesss.length; j < jj; ++j) {
+    let i = 0;
+    for (let j2 = 0, jj = coordinatesss.length; j2 < jj; ++j2) {
       const ends = deflateCoordinatesArray(
         flatCoordinates,
         offset,
-        coordinatesss[j],
+        coordinatesss[j2],
         stride,
-        endss[i2]
+        endss[i]
       );
       if (ends.length === 0) {
         ends[0] = offset;
       }
-      endss[i2++] = ends;
+      endss[i++] = ends;
       offset = ends[ends.length - 1];
     }
-    endss.length = i2;
+    endss.length = i;
     return endss;
   }
   __name(deflateMultiCoordinatesArray, "deflateMultiCoordinatesArray");
@@ -6580,10 +6586,10 @@ var olpmtiles = (() => {
       if (t > 1) {
         offset = offset2;
       } else if (t > 0) {
-        for (let i2 = 0; i2 < stride; ++i2) {
-          closestPoint[i2] = lerp(
-            flatCoordinates[offset1 + i2],
-            flatCoordinates[offset2 + i2],
+        for (let i = 0; i < stride; ++i) {
+          closestPoint[i] = lerp(
+            flatCoordinates[offset1 + i],
+            flatCoordinates[offset2 + i],
             t
           );
         }
@@ -6593,8 +6599,8 @@ var olpmtiles = (() => {
         offset = offset1;
       }
     }
-    for (let i2 = 0; i2 < stride; ++i2) {
-      closestPoint[i2] = flatCoordinates[offset + i2];
+    for (let i = 0; i < stride; ++i) {
+      closestPoint[i] = flatCoordinates[offset + i];
     }
     closestPoint.length = stride;
   }
@@ -6616,8 +6622,8 @@ var olpmtiles = (() => {
   }
   __name(maxSquaredDelta, "maxSquaredDelta");
   function arrayMaxSquaredDelta(flatCoordinates, offset, ends, stride, max2) {
-    for (let i2 = 0, ii = ends.length; i2 < ii; ++i2) {
-      const end = ends[i2];
+    for (let i = 0, ii = ends.length; i < ii; ++i) {
+      const end = ends[i];
       max2 = maxSquaredDelta(flatCoordinates, offset, end, stride, max2);
       offset = end;
     }
@@ -6625,8 +6631,8 @@ var olpmtiles = (() => {
   }
   __name(arrayMaxSquaredDelta, "arrayMaxSquaredDelta");
   function multiArrayMaxSquaredDelta(flatCoordinates, offset, endss, stride, max2) {
-    for (let i2 = 0, ii = endss.length; i2 < ii; ++i2) {
-      const ends = endss[i2];
+    for (let i = 0, ii = endss.length; i < ii; ++i) {
+      const ends = endss[i];
       max2 = arrayMaxSquaredDelta(flatCoordinates, offset, ends, stride, max2);
       offset = ends[ends.length - 1];
     }
@@ -6637,7 +6643,7 @@ var olpmtiles = (() => {
     if (offset == end) {
       return minSquaredDistance;
     }
-    let i2, squaredDistance2;
+    let i, squaredDistance2;
     if (maxDelta === 0) {
       squaredDistance2 = squaredDistance(
         x2,
@@ -6646,8 +6652,8 @@ var olpmtiles = (() => {
         flatCoordinates[offset + 1]
       );
       if (squaredDistance2 < minSquaredDistance) {
-        for (i2 = 0; i2 < stride; ++i2) {
-          closestPoint[i2] = flatCoordinates[offset + i2];
+        for (i = 0; i < stride; ++i) {
+          closestPoint[i] = flatCoordinates[offset + i];
         }
         closestPoint.length = stride;
         return squaredDistance2;
@@ -6669,8 +6675,8 @@ var olpmtiles = (() => {
       squaredDistance2 = squaredDistance(x2, y, tmpPoint[0], tmpPoint[1]);
       if (squaredDistance2 < minSquaredDistance) {
         minSquaredDistance = squaredDistance2;
-        for (i2 = 0; i2 < stride; ++i2) {
-          closestPoint[i2] = tmpPoint[i2];
+        for (i = 0; i < stride; ++i) {
+          closestPoint[i] = tmpPoint[i];
         }
         closestPoint.length = stride;
         index += stride;
@@ -6694,8 +6700,8 @@ var olpmtiles = (() => {
       squaredDistance2 = squaredDistance(x2, y, tmpPoint[0], tmpPoint[1]);
       if (squaredDistance2 < minSquaredDistance) {
         minSquaredDistance = squaredDistance2;
-        for (i2 = 0; i2 < stride; ++i2) {
-          closestPoint[i2] = tmpPoint[i2];
+        for (i = 0; i < stride; ++i) {
+          closestPoint[i] = tmpPoint[i];
         }
         closestPoint.length = stride;
       }
@@ -6705,8 +6711,8 @@ var olpmtiles = (() => {
   __name(assignClosestPoint, "assignClosestPoint");
   function assignClosestArrayPoint(flatCoordinates, offset, ends, stride, maxDelta, isRing, x2, y, closestPoint, minSquaredDistance, tmpPoint) {
     tmpPoint = tmpPoint ? tmpPoint : [NaN, NaN];
-    for (let i2 = 0, ii = ends.length; i2 < ii; ++i2) {
-      const end = ends[i2];
+    for (let i = 0, ii = ends.length; i < ii; ++i) {
+      const end = ends[i];
       minSquaredDistance = assignClosestPoint(
         flatCoordinates,
         offset,
@@ -6727,8 +6733,8 @@ var olpmtiles = (() => {
   __name(assignClosestArrayPoint, "assignClosestArrayPoint");
   function assignClosestMultiArrayPoint(flatCoordinates, offset, endss, stride, maxDelta, isRing, x2, y, closestPoint, minSquaredDistance, tmpPoint) {
     tmpPoint = tmpPoint ? tmpPoint : [NaN, NaN];
-    for (let i2 = 0, ii = endss.length; i2 < ii; ++i2) {
-      const ends = endss[i2];
+    for (let i = 0, ii = endss.length; i < ii; ++i) {
+      const ends = endss[i];
       minSquaredDistance = assignClosestArrayPoint(
         flatCoordinates,
         offset,
@@ -6771,12 +6777,12 @@ var olpmtiles = (() => {
       const y1 = flatCoordinates[first + 1];
       const x2 = flatCoordinates[last];
       const y2 = flatCoordinates[last + 1];
-      for (let i2 = first + stride; i2 < last; i2 += stride) {
-        const x3 = flatCoordinates[i2];
-        const y = flatCoordinates[i2 + 1];
+      for (let i = first + stride; i < last; i += stride) {
+        const x3 = flatCoordinates[i];
+        const y = flatCoordinates[i + 1];
         const squaredDistance2 = squaredSegmentDistance(x3, y, x1, y1, x2, y2);
         if (squaredDistance2 > maxSquaredDistance) {
-          index = i2;
+          index = i;
           maxSquaredDistance = squaredDistance2;
         }
       }
@@ -6790,18 +6796,18 @@ var olpmtiles = (() => {
         }
       }
     }
-    for (let i2 = 0; i2 < n; ++i2) {
-      if (markers[i2]) {
-        simplifiedFlatCoordinates[simplifiedOffset++] = flatCoordinates[offset + i2 * stride];
-        simplifiedFlatCoordinates[simplifiedOffset++] = flatCoordinates[offset + i2 * stride + 1];
+    for (let i = 0; i < n; ++i) {
+      if (markers[i]) {
+        simplifiedFlatCoordinates[simplifiedOffset++] = flatCoordinates[offset + i * stride];
+        simplifiedFlatCoordinates[simplifiedOffset++] = flatCoordinates[offset + i * stride + 1];
       }
     }
     return simplifiedOffset;
   }
   __name(douglasPeucker, "douglasPeucker");
   function douglasPeuckerArray(flatCoordinates, offset, ends, stride, squaredTolerance, simplifiedFlatCoordinates, simplifiedOffset, simplifiedEnds) {
-    for (let i2 = 0, ii = ends.length; i2 < ii; ++i2) {
-      const end = ends[i2];
+    for (let i = 0, ii = ends.length; i < ii; ++i) {
+      const end = ends[i];
       simplifiedOffset = douglasPeucker(
         flatCoordinates,
         offset,
@@ -6870,8 +6876,8 @@ var olpmtiles = (() => {
   }
   __name(quantize, "quantize");
   function quantizeArray(flatCoordinates, offset, ends, stride, tolerance, simplifiedFlatCoordinates, simplifiedOffset, simplifiedEnds) {
-    for (let i2 = 0, ii = ends.length; i2 < ii; ++i2) {
-      const end = ends[i2];
+    for (let i = 0, ii = ends.length; i < ii; ++i) {
+      const end = ends[i];
       simplifiedOffset = quantize(
         flatCoordinates,
         offset,
@@ -6888,8 +6894,8 @@ var olpmtiles = (() => {
   }
   __name(quantizeArray, "quantizeArray");
   function quantizeMultiArray(flatCoordinates, offset, endss, stride, tolerance, simplifiedFlatCoordinates, simplifiedOffset, simplifiedEndss) {
-    for (let i2 = 0, ii = endss.length; i2 < ii; ++i2) {
-      const ends = endss[i2];
+    for (let i = 0, ii = endss.length; i < ii; ++i) {
+      const ends = endss[i];
       const simplifiedEnds = [];
       simplifiedOffset = quantizeArray(
         flatCoordinates,
@@ -6911,47 +6917,47 @@ var olpmtiles = (() => {
   // node_modules/ol/geom/flat/inflate.js
   function inflateCoordinates(flatCoordinates, offset, end, stride, coordinates2) {
     coordinates2 = coordinates2 !== void 0 ? coordinates2 : [];
-    let i2 = 0;
-    for (let j = offset; j < end; j += stride) {
-      coordinates2[i2++] = flatCoordinates.slice(j, j + stride);
+    let i = 0;
+    for (let j2 = offset; j2 < end; j2 += stride) {
+      coordinates2[i++] = flatCoordinates.slice(j2, j2 + stride);
     }
-    coordinates2.length = i2;
+    coordinates2.length = i;
     return coordinates2;
   }
   __name(inflateCoordinates, "inflateCoordinates");
   function inflateCoordinatesArray(flatCoordinates, offset, ends, stride, coordinatess) {
     coordinatess = coordinatess !== void 0 ? coordinatess : [];
-    let i2 = 0;
-    for (let j = 0, jj = ends.length; j < jj; ++j) {
-      const end = ends[j];
-      coordinatess[i2++] = inflateCoordinates(
+    let i = 0;
+    for (let j2 = 0, jj = ends.length; j2 < jj; ++j2) {
+      const end = ends[j2];
+      coordinatess[i++] = inflateCoordinates(
         flatCoordinates,
         offset,
         end,
         stride,
-        coordinatess[i2]
+        coordinatess[i]
       );
       offset = end;
     }
-    coordinatess.length = i2;
+    coordinatess.length = i;
     return coordinatess;
   }
   __name(inflateCoordinatesArray, "inflateCoordinatesArray");
   function inflateMultiCoordinatesArray(flatCoordinates, offset, endss, stride, coordinatesss) {
     coordinatesss = coordinatesss !== void 0 ? coordinatesss : [];
-    let i2 = 0;
-    for (let j = 0, jj = endss.length; j < jj; ++j) {
-      const ends = endss[j];
-      coordinatesss[i2++] = ends.length === 1 && ends[0] === offset ? [] : inflateCoordinatesArray(
+    let i = 0;
+    for (let j2 = 0, jj = endss.length; j2 < jj; ++j2) {
+      const ends = endss[j2];
+      coordinatesss[i++] = ends.length === 1 && ends[0] === offset ? [] : inflateCoordinatesArray(
         flatCoordinates,
         offset,
         ends,
         stride,
-        coordinatesss[i2]
+        coordinatesss[i]
       );
       offset = ends[ends.length - 1];
     }
-    coordinatesss.length = i2;
+    coordinatesss.length = i;
     return coordinatesss;
   }
   __name(inflateMultiCoordinatesArray, "inflateMultiCoordinatesArray");
@@ -6973,8 +6979,8 @@ var olpmtiles = (() => {
   __name(linearRing, "linearRing");
   function linearRings(flatCoordinates, offset, ends, stride) {
     let area = 0;
-    for (let i2 = 0, ii = ends.length; i2 < ii; ++i2) {
-      const end = ends[i2];
+    for (let i = 0, ii = ends.length; i < ii; ++i) {
+      const end = ends[i];
       area += linearRing(flatCoordinates, offset, end, stride);
       offset = end;
     }
@@ -6983,8 +6989,8 @@ var olpmtiles = (() => {
   __name(linearRings, "linearRings");
   function linearRingss(flatCoordinates, offset, endss, stride) {
     let area = 0;
-    for (let i2 = 0, ii = endss.length; i2 < ii; ++i2) {
-      const ends = endss[i2];
+    for (let i = 0, ii = endss.length; i < ii; ++i) {
+      const ends = endss[i];
       area += linearRings(flatCoordinates, offset, ends, stride);
       offset = ends[ends.length - 1];
     }
@@ -7160,9 +7166,9 @@ var olpmtiles = (() => {
       let y1 = flatCoordinates[offset + 1];
       let length = 0;
       const cumulativeLengths = [0];
-      for (let i2 = offset + stride; i2 < end; i2 += stride) {
-        const x2 = flatCoordinates[i2];
-        const y2 = flatCoordinates[i2 + 1];
+      for (let i = offset + stride; i < end; i += stride) {
+        const x2 = flatCoordinates[i];
+        const y2 = flatCoordinates[i + 1];
         length += Math.sqrt((x2 - x1) * (x2 - x1) + (y2 - y1) * (y2 - y1));
         cumulativeLengths.push(length);
         x1 = x2;
@@ -7179,109 +7185,109 @@ var olpmtiles = (() => {
     }
     dimension = dimension > 1 ? dimension : 2;
     dest = dest ? dest : new Array(dimension);
-    for (let i2 = 0; i2 < dimension; ++i2) {
-      dest[i2] = o === void 0 ? NaN : t === void 0 ? flatCoordinates[o + i2] : lerp(flatCoordinates[o + i2], flatCoordinates[o + stride + i2], t);
+    for (let i = 0; i < dimension; ++i) {
+      dest[i] = o === void 0 ? NaN : t === void 0 ? flatCoordinates[o + i] : lerp(flatCoordinates[o + i], flatCoordinates[o + stride + i], t);
     }
     return dest;
   }
   __name(interpolatePoint, "interpolatePoint");
-  function lineStringCoordinateAtM(flatCoordinates, offset, end, stride, m, extrapolate) {
+  function lineStringCoordinateAtM(flatCoordinates, offset, end, stride, m2, extrapolate) {
     if (end == offset) {
       return null;
     }
     let coordinate;
-    if (m < flatCoordinates[offset + stride - 1]) {
+    if (m2 < flatCoordinates[offset + stride - 1]) {
       if (extrapolate) {
         coordinate = flatCoordinates.slice(offset, offset + stride);
-        coordinate[stride - 1] = m;
+        coordinate[stride - 1] = m2;
         return coordinate;
       }
       return null;
     }
-    if (flatCoordinates[end - 1] < m) {
+    if (flatCoordinates[end - 1] < m2) {
       if (extrapolate) {
         coordinate = flatCoordinates.slice(end - stride, end);
-        coordinate[stride - 1] = m;
+        coordinate[stride - 1] = m2;
         return coordinate;
       }
       return null;
     }
-    if (m == flatCoordinates[offset + stride - 1]) {
+    if (m2 == flatCoordinates[offset + stride - 1]) {
       return flatCoordinates.slice(offset, offset + stride);
     }
     let lo = offset / stride;
     let hi = end / stride;
     while (lo < hi) {
       const mid = lo + hi >> 1;
-      if (m < flatCoordinates[(mid + 1) * stride - 1]) {
+      if (m2 < flatCoordinates[(mid + 1) * stride - 1]) {
         hi = mid;
       } else {
         lo = mid + 1;
       }
     }
     const m0 = flatCoordinates[lo * stride - 1];
-    if (m == m0) {
+    if (m2 == m0) {
       return flatCoordinates.slice((lo - 1) * stride, (lo - 1) * stride + stride);
     }
     const m1 = flatCoordinates[(lo + 1) * stride - 1];
-    const t = (m - m0) / (m1 - m0);
+    const t = (m2 - m0) / (m1 - m0);
     coordinate = [];
-    for (let i2 = 0; i2 < stride - 1; ++i2) {
+    for (let i = 0; i < stride - 1; ++i) {
       coordinate.push(
         lerp(
-          flatCoordinates[(lo - 1) * stride + i2],
-          flatCoordinates[lo * stride + i2],
+          flatCoordinates[(lo - 1) * stride + i],
+          flatCoordinates[lo * stride + i],
           t
         )
       );
     }
-    coordinate.push(m);
+    coordinate.push(m2);
     return coordinate;
   }
   __name(lineStringCoordinateAtM, "lineStringCoordinateAtM");
-  function lineStringsCoordinateAtM(flatCoordinates, offset, ends, stride, m, extrapolate, interpolate) {
+  function lineStringsCoordinateAtM(flatCoordinates, offset, ends, stride, m2, extrapolate, interpolate) {
     if (interpolate) {
       return lineStringCoordinateAtM(
         flatCoordinates,
         offset,
         ends[ends.length - 1],
         stride,
-        m,
+        m2,
         extrapolate
       );
     }
     let coordinate;
-    if (m < flatCoordinates[stride - 1]) {
+    if (m2 < flatCoordinates[stride - 1]) {
       if (extrapolate) {
         coordinate = flatCoordinates.slice(0, stride);
-        coordinate[stride - 1] = m;
+        coordinate[stride - 1] = m2;
         return coordinate;
       }
       return null;
     }
-    if (flatCoordinates[flatCoordinates.length - 1] < m) {
+    if (flatCoordinates[flatCoordinates.length - 1] < m2) {
       if (extrapolate) {
         coordinate = flatCoordinates.slice(flatCoordinates.length - stride);
-        coordinate[stride - 1] = m;
+        coordinate[stride - 1] = m2;
         return coordinate;
       }
       return null;
     }
-    for (let i2 = 0, ii = ends.length; i2 < ii; ++i2) {
-      const end = ends[i2];
+    for (let i = 0, ii = ends.length; i < ii; ++i) {
+      const end = ends[i];
       if (offset == end) {
         continue;
       }
-      if (m < flatCoordinates[offset + stride - 1]) {
+      if (m2 < flatCoordinates[offset + stride - 1]) {
         return null;
       }
-      if (m <= flatCoordinates[end - 1]) {
+      if (m2 <= flatCoordinates[end - 1]) {
         return lineStringCoordinateAtM(
           flatCoordinates,
           offset,
           end,
           stride,
-          m,
+          m2,
           false
         );
       }
@@ -7296,9 +7302,9 @@ var olpmtiles = (() => {
     let x1 = flatCoordinates[offset];
     let y1 = flatCoordinates[offset + 1];
     let length = 0;
-    for (let i2 = offset + stride; i2 < end; i2 += stride) {
-      const x2 = flatCoordinates[i2];
-      const y2 = flatCoordinates[i2 + 1];
+    for (let i = offset + stride; i < end; i += stride) {
+      const x2 = flatCoordinates[i];
+      const y2 = flatCoordinates[i + 1];
       length += Math.sqrt((x2 - x1) * (x2 - x1) + (y2 - y1) * (y2 - y1));
       x1 = x2;
       y1 = y2;
@@ -7426,7 +7432,7 @@ var olpmtiles = (() => {
      * @return {import("../coordinate.js").Coordinate|null} Coordinate.
      * @api
      */
-    getCoordinateAtM(m, extrapolate) {
+    getCoordinateAtM(m2, extrapolate) {
       if (this.layout != "XYM" && this.layout != "XYZM") {
         return null;
       }
@@ -7436,7 +7442,7 @@ var olpmtiles = (() => {
         0,
         this.flatCoordinates.length,
         this.stride,
-        m,
+        m2,
         extrapolate
       );
     }
@@ -7491,11 +7497,11 @@ var olpmtiles = (() => {
      * @return {Array<number>} Flat midpoint.
      */
     getFlatMidpoint() {
-      var _a6;
+      var _a9;
       if (this.flatMidpointRevision_ != this.getRevision()) {
         this.flatMidpoint_ = this.getCoordinateAt(
           0.5,
-          (_a6 = this.flatMidpoint_) != null ? _a6 : void 0
+          (_a9 = this.flatMidpoint_) != null ? _a9 : void 0
         );
         this.flatMidpointRevision_ = this.getRevision();
       }
@@ -7603,8 +7609,8 @@ var olpmtiles = (() => {
         );
         const flatCoordinates = [];
         const ends2 = [];
-        for (let i2 = 0, ii = lineStrings.length; i2 < ii; ++i2) {
-          const lineString = lineStrings[i2];
+        for (let i = 0, ii = lineStrings.length; i < ii; ++i) {
+          const lineString = lineStrings[i];
           extend(flatCoordinates, lineString.getFlatCoordinates());
           ends2.push(flatCoordinates.length);
         }
@@ -7695,7 +7701,7 @@ var olpmtiles = (() => {
      * @return {import("../coordinate.js").Coordinate|null} Coordinate.
      * @api
      */
-    getCoordinateAtM(m, extrapolate, interpolate) {
+    getCoordinateAtM(m2, extrapolate, interpolate) {
       if (this.layout != "XYM" && this.layout != "XYZM" || this.flatCoordinates.length === 0) {
         return null;
       }
@@ -7706,7 +7712,7 @@ var olpmtiles = (() => {
         0,
         this.ends_,
         this.stride,
-        m,
+        m2,
         extrapolate,
         interpolate
       );
@@ -7759,8 +7765,8 @@ var olpmtiles = (() => {
       const layout = this.layout;
       const lineStrings = [];
       let offset = 0;
-      for (let i2 = 0, ii = ends.length; i2 < ii; ++i2) {
-        const end = ends[i2];
+      for (let i = 0, ii = ends.length; i < ii; ++i) {
+        const end = ends[i];
         const lineString = new LineString_default(
           flatCoordinates.slice(offset, end),
           layout
@@ -7779,8 +7785,8 @@ var olpmtiles = (() => {
       let offset = 0;
       const ends = this.ends_;
       const stride = this.stride;
-      for (let i2 = 0, ii = ends.length; i2 < ii; ++i2) {
-        const end = ends[i2];
+      for (let i = 0, ii = ends.length; i < ii; ++i) {
+        const end = ends[i];
         const midpoint = interpolatePoint(
           flatCoordinates,
           offset,
@@ -7899,8 +7905,8 @@ var olpmtiles = (() => {
       );
       if (squaredDistance2 < minSquaredDistance) {
         const stride = this.stride;
-        for (let i2 = 0; i2 < stride; ++i2) {
-          closestPoint[i2] = flatCoordinates[i2];
+        for (let i = 0; i < stride; ++i) {
+          closestPoint[i] = flatCoordinates[i];
         }
         closestPoint.length = stride;
         return squaredDistance2;
@@ -8021,17 +8027,17 @@ var olpmtiles = (() => {
       }
       const flatCoordinates = this.flatCoordinates;
       const stride = this.stride;
-      for (let i2 = 0, ii = flatCoordinates.length; i2 < ii; i2 += stride) {
+      for (let i = 0, ii = flatCoordinates.length; i < ii; i += stride) {
         const squaredDistance2 = squaredDistance(
           x2,
           y,
-          flatCoordinates[i2],
-          flatCoordinates[i2 + 1]
+          flatCoordinates[i],
+          flatCoordinates[i + 1]
         );
         if (squaredDistance2 < minSquaredDistance) {
           minSquaredDistance = squaredDistance2;
-          for (let j = 0; j < stride; ++j) {
-            closestPoint[j] = flatCoordinates[i2 + j];
+          for (let j2 = 0; j2 < stride; ++j2) {
+            closestPoint[j2] = flatCoordinates[i + j2];
           }
           closestPoint.length = stride;
         }
@@ -8080,8 +8086,8 @@ var olpmtiles = (() => {
       const layout = this.layout;
       const stride = this.stride;
       const points = [];
-      for (let i2 = 0, ii = flatCoordinates.length; i2 < ii; i2 += stride) {
-        const point = new Point_default(flatCoordinates.slice(i2, i2 + stride), layout);
+      for (let i = 0, ii = flatCoordinates.length; i < ii; i += stride) {
+        const point = new Point_default(flatCoordinates.slice(i, i + stride), layout);
         points.push(point);
       }
       return points;
@@ -8103,9 +8109,9 @@ var olpmtiles = (() => {
     intersectsExtent(extent) {
       const flatCoordinates = this.flatCoordinates;
       const stride = this.stride;
-      for (let i2 = 0, ii = flatCoordinates.length; i2 < ii; i2 += stride) {
-        const x2 = flatCoordinates[i2];
-        const y = flatCoordinates[i2 + 1];
+      for (let i = 0, ii = flatCoordinates.length; i < ii; i += stride) {
+        const x2 = flatCoordinates[i];
+        const y = flatCoordinates[i + 1];
         if (containsXY(extent, x2, y)) {
           return true;
         }
@@ -8138,16 +8144,16 @@ var olpmtiles = (() => {
 
   // node_modules/ol/geom/flat/interiorpoint.js
   function getInteriorPointOfArray(flatCoordinates, offset, ends, stride, flatCenters, flatCentersOffset, dest) {
-    let i2, ii, x2, x1, x22, y1, y2;
+    let i, ii, x2, x1, x22, y1, y2;
     const y = flatCenters[flatCentersOffset + 1];
     const intersections = [];
     for (let r = 0, rr = ends.length; r < rr; ++r) {
       const end = ends[r];
       x1 = flatCoordinates[end - stride];
       y1 = flatCoordinates[end - stride + 1];
-      for (i2 = offset; i2 < end; i2 += stride) {
-        x22 = flatCoordinates[i2];
-        y2 = flatCoordinates[i2 + 1];
+      for (i = offset; i < end; i += stride) {
+        x22 = flatCoordinates[i];
+        y2 = flatCoordinates[i + 1];
         if (y <= y1 && y2 <= y || y1 <= y && y <= y2) {
           x2 = (y - y1) / (y2 - y1) * (x22 - x1) + x1;
           intersections.push(x2);
@@ -8160,8 +8166,8 @@ var olpmtiles = (() => {
     let maxSegmentLength = -Infinity;
     intersections.sort(ascending);
     x1 = intersections[0];
-    for (i2 = 1, ii = intersections.length; i2 < ii; ++i2) {
-      x22 = intersections[i2];
+    for (i = 1, ii = intersections.length; i < ii; ++i) {
+      x22 = intersections[i];
       const segmentLength = Math.abs(x22 - x1);
       if (segmentLength > maxSegmentLength) {
         x2 = (x1 + x22) / 2;
@@ -8184,15 +8190,15 @@ var olpmtiles = (() => {
   __name(getInteriorPointOfArray, "getInteriorPointOfArray");
   function getInteriorPointsOfMultiArray(flatCoordinates, offset, endss, stride, flatCenters) {
     let interiorPoints = [];
-    for (let i2 = 0, ii = endss.length; i2 < ii; ++i2) {
-      const ends = endss[i2];
+    for (let i = 0, ii = endss.length; i < ii; ++i) {
+      const ends = endss[i];
       interiorPoints = getInteriorPointOfArray(
         flatCoordinates,
         offset,
         ends,
         stride,
         flatCenters,
-        2 * i2,
+        2 * i,
         interiorPoints
       );
       offset = ends[ends.length - 1];
@@ -8204,10 +8210,10 @@ var olpmtiles = (() => {
   // node_modules/ol/geom/flat/reverse.js
   function coordinates(flatCoordinates, offset, end, stride) {
     while (offset < end - stride) {
-      for (let i2 = 0; i2 < stride; ++i2) {
-        const tmp = flatCoordinates[offset + i2];
-        flatCoordinates[offset + i2] = flatCoordinates[end - stride + i2];
-        flatCoordinates[end - stride + i2] = tmp;
+      for (let i = 0; i < stride; ++i) {
+        const tmp = flatCoordinates[offset + i];
+        flatCoordinates[offset + i] = flatCoordinates[end - stride + i];
+        flatCoordinates[end - stride + i] = tmp;
       }
       offset += stride;
       end -= stride;
@@ -8232,15 +8238,15 @@ var olpmtiles = (() => {
   __name(linearRingIsClockwise, "linearRingIsClockwise");
   function linearRingsAreOriented(flatCoordinates, offset, ends, stride, right) {
     right = right !== void 0 ? right : false;
-    for (let i2 = 0, ii = ends.length; i2 < ii; ++i2) {
-      const end = ends[i2];
+    for (let i = 0, ii = ends.length; i < ii; ++i) {
+      const end = ends[i];
       const isClockwise = linearRingIsClockwise(
         flatCoordinates,
         offset,
         end,
         stride
       );
-      if (i2 === 0) {
+      if (i === 0) {
         if (right && isClockwise || !right && !isClockwise) {
           return false;
         }
@@ -8255,8 +8261,8 @@ var olpmtiles = (() => {
   }
   __name(linearRingsAreOriented, "linearRingsAreOriented");
   function linearRingssAreOriented(flatCoordinates, offset, endss, stride, right) {
-    for (let i2 = 0, ii = endss.length; i2 < ii; ++i2) {
-      const ends = endss[i2];
+    for (let i = 0, ii = endss.length; i < ii; ++i) {
+      const ends = endss[i];
       if (!linearRingsAreOriented(flatCoordinates, offset, ends, stride, right)) {
         return false;
       }
@@ -8269,15 +8275,15 @@ var olpmtiles = (() => {
   __name(linearRingssAreOriented, "linearRingssAreOriented");
   function orientLinearRings(flatCoordinates, offset, ends, stride, right) {
     right = right !== void 0 ? right : false;
-    for (let i2 = 0, ii = ends.length; i2 < ii; ++i2) {
-      const end = ends[i2];
+    for (let i = 0, ii = ends.length; i < ii; ++i) {
+      const end = ends[i];
       const isClockwise = linearRingIsClockwise(
         flatCoordinates,
         offset,
         end,
         stride
       );
-      const reverse = i2 === 0 ? right && isClockwise || !right && !isClockwise : right && !isClockwise || !right && isClockwise;
+      const reverse = i === 0 ? right && isClockwise || !right && !isClockwise : right && !isClockwise || !right && isClockwise;
       if (reverse) {
         coordinates(flatCoordinates, offset, end, stride);
       }
@@ -8287,11 +8293,11 @@ var olpmtiles = (() => {
   }
   __name(orientLinearRings, "orientLinearRings");
   function orientLinearRingsArray(flatCoordinates, offset, endss, stride, right) {
-    for (let i2 = 0, ii = endss.length; i2 < ii; ++i2) {
+    for (let i = 0, ii = endss.length; i < ii; ++i) {
       offset = orientLinearRings(
         flatCoordinates,
         offset,
-        endss[i2],
+        endss[i],
         stride,
         right
       );
@@ -8304,21 +8310,21 @@ var olpmtiles = (() => {
     let offset = 0;
     let prevEndIndex = 0;
     let startOrientation;
-    for (let i2 = 0, ii = ends.length; i2 < ii; ++i2) {
-      const end = ends[i2];
+    for (let i = 0, ii = ends.length; i < ii; ++i) {
+      const end = ends[i];
       const orientation = linearRingIsClockwise(flatCoordinates, offset, end, 2);
       if (startOrientation === void 0) {
         startOrientation = orientation;
       }
       if (orientation === startOrientation) {
-        endss.push(ends.slice(prevEndIndex, i2 + 1));
+        endss.push(ends.slice(prevEndIndex, i + 1));
       } else {
         if (endss.length === 0) {
           continue;
         }
         endss[endss.length - 1].push(ends[prevEndIndex]);
       }
-      prevEndIndex = i2 + 1;
+      prevEndIndex = i + 1;
       offset = end;
     }
     return endss;
@@ -8556,8 +8562,8 @@ var olpmtiles = (() => {
       const ends = this.ends_;
       const linearRings2 = [];
       let offset = 0;
-      for (let i2 = 0, ii = ends.length; i2 < ii; ++i2) {
-        const end = ends[i2];
+      for (let i = 0, ii = ends.length; i < ii; ++i) {
+        const end = ends[i];
         const linearRing2 = new LinearRing_default(
           flatCoordinates.slice(offset, end),
           layout
@@ -8664,8 +8670,8 @@ var olpmtiles = (() => {
   function linearRingss2(flatCoordinates, offset, endss, stride) {
     const flatCenters = [];
     let extent = createEmpty();
-    for (let i2 = 0, ii = endss.length; i2 < ii; ++i2) {
-      const ends = endss[i2];
+    for (let i = 0, ii = endss.length; i < ii; ++i) {
+      const ends = endss[i];
       extent = createOrUpdateFromFlatCoordinates(
         flatCoordinates,
         offset,
@@ -8703,12 +8709,12 @@ var olpmtiles = (() => {
         );
         const flatCoordinates = [];
         const thisEndss = [];
-        for (let i2 = 0, ii = polygons.length; i2 < ii; ++i2) {
-          const polygon = polygons[i2];
+        for (let i = 0, ii = polygons.length; i < ii; ++i) {
+          const polygon = polygons[i];
           const offset = flatCoordinates.length;
           const ends = polygon.getEnds();
-          for (let j = 0, jj = ends.length; j < jj; ++j) {
-            ends[j] += offset;
+          for (let j2 = 0, jj = ends.length; j2 < jj; ++j2) {
+            ends[j2] += offset;
           }
           extend(flatCoordinates, polygon.getFlatCoordinates());
           thisEndss.push(ends);
@@ -8747,8 +8753,8 @@ var olpmtiles = (() => {
         const offset = this.flatCoordinates.length;
         extend(this.flatCoordinates, polygon.getFlatCoordinates());
         ends = polygon.getEnds().slice();
-        for (let i2 = 0, ii = ends.length; i2 < ii; ++i2) {
-          ends[i2] += offset;
+        for (let i = 0, ii = ends.length; i < ii; ++i) {
+          ends[i] += offset;
         }
       }
       this.endss_.push(ends);
@@ -8762,8 +8768,8 @@ var olpmtiles = (() => {
     clone() {
       const len = this.endss_.length;
       const newEndss = new Array(len);
-      for (let i2 = 0; i2 < len; ++i2) {
-        newEndss[i2] = this.endss_[i2].slice();
+      for (let i = 0; i < len; ++i) {
+        newEndss[i] = this.endss_[i].slice();
       }
       const multiPolygon = new _MultiPolygon(
         this.flatCoordinates.slice(),
@@ -8975,8 +8981,8 @@ var olpmtiles = (() => {
       const ends = this.endss_[index].slice();
       const end = ends[ends.length - 1];
       if (offset !== 0) {
-        for (let i2 = 0, ii = ends.length; i2 < ii; ++i2) {
-          ends[i2] -= offset;
+        for (let i = 0, ii = ends.length; i < ii; ++i) {
+          ends[i] -= offset;
         }
       }
       return new Polygon_default(
@@ -8996,12 +9002,12 @@ var olpmtiles = (() => {
       const endss = this.endss_;
       const polygons = [];
       let offset = 0;
-      for (let i2 = 0, ii = endss.length; i2 < ii; ++i2) {
-        const ends = endss[i2].slice();
+      for (let i = 0, ii = endss.length; i < ii; ++i) {
+        const ends = endss[i].slice();
         const end = ends[ends.length - 1];
         if (offset !== 0) {
-          for (let j = 0, jj = ends.length; j < jj; ++j) {
-            ends[j] -= offset;
+          for (let j2 = 0, jj = ends.length; j2 < jj; ++j2) {
+            ends[j2] -= offset;
           }
         }
         const polygon = new Polygon_default(
@@ -9180,8 +9186,8 @@ var olpmtiles = (() => {
           /** @type {Array<number>} */
           this.ends_
         );
-        for (let i2 = 0, ii = ends.length; i2 < ii; ++i2) {
-          const end = ends[i2];
+        for (let i = 0, ii = ends.length; i < ii; ++i) {
+          const end = ends[i];
           const midpoint = interpolatePoint(flatCoordinates, offset, end, 2, 0.5);
           extend(this.flatMidpoints_, midpoint);
           offset = end;
@@ -9310,11 +9316,11 @@ var olpmtiles = (() => {
      * @return {RenderFeature} A cloned render feature.
      */
     clone() {
-      var _a6;
+      var _a9;
       return new _RenderFeature(
         this.type_,
         this.flatCoordinates_.slice(),
-        (_a6 = this.ends_) == null ? void 0 : _a6.slice(),
+        (_a9 = this.ends_) == null ? void 0 : _a9.slice(),
         this.stride_,
         Object.assign({}, this.properties_),
         this.id_
@@ -9564,8 +9570,8 @@ var olpmtiles = (() => {
         options.decimals
       );
       const transform2 = /* @__PURE__ */ __name(function(coordinates2) {
-        for (let i2 = 0, ii = coordinates2.length; i2 < ii; ++i2) {
-          coordinates2[i2] = Math.round(coordinates2[i2] * power) / power;
+        for (let i = 0, ii = coordinates2.length; i < ii; ++i) {
+          coordinates2[i] = Math.round(coordinates2[i] * power) / power;
         }
         return coordinates2;
       }, "transform");
@@ -9759,8 +9765,8 @@ var olpmtiles = (() => {
         const pbfLayer = pbfLayers[name];
         const extent = pbfLayer ? [0, 0, pbfLayer.extent, pbfLayer.extent] : null;
         dataProjection.setExtent(extent);
-        for (let i2 = 0, ii = pbfLayer.length; i2 < ii; ++i2) {
-          const rawFeature = readRawFeature(pbf, pbfLayer, i2);
+        for (let i = 0, ii = pbfLayer.length; i < ii; ++i) {
+          const rawFeature = readRawFeature(pbf, pbfLayer, i);
           const feature = this.createFeature_(pbf, rawFeature, options);
           if (feature !== null) {
             features.push(feature);
@@ -9848,8 +9854,8 @@ var olpmtiles = (() => {
     }
   }
   __name(featurePBFReader, "featurePBFReader");
-  function readRawFeature(pbf, layer, i2) {
-    pbf.pos = layer.features[i2];
+  function readRawFeature(pbf, layer, i) {
+    pbf.pos = layer.features[i];
     const end = pbf.readVarint() + pbf.pos;
     const feature = {
       layer,
@@ -9979,8 +9985,8 @@ var olpmtiles = (() => {
           return void 0;
         }
         return template.replace(zRegEx, tileCoord[0].toString()).replace(xRegEx, tileCoord[1].toString()).replace(yRegEx, tileCoord[2].toString()).replace(dashYRegEx, function() {
-          const z = tileCoord[0];
-          const range = tileGrid.getFullTileRange(z);
+          const z2 = tileCoord[0];
+          const range = tileGrid.getFullTileRange(z2);
           if (!range) {
             throw new Error(
               "The {-y} placeholder requires a tile grid with extent"
@@ -9996,8 +10002,8 @@ var olpmtiles = (() => {
   function createFromTemplates(templates, tileGrid) {
     const len = templates.length;
     const tileUrlFunctions = new Array(len);
-    for (let i2 = 0; i2 < len; ++i2) {
-      tileUrlFunctions[i2] = createFromTemplate(templates[i2], tileGrid);
+    for (let i = 0; i < len; ++i) {
+      tileUrlFunctions[i] = createFromTemplate(templates[i], tileGrid);
     }
     return createFromTileUrlFunctions(tileUrlFunctions);
   }
@@ -10039,8 +10045,8 @@ var olpmtiles = (() => {
     match = /\{(\d+)-(\d+)\}/.exec(url);
     if (match) {
       const stop = parseInt(match[2], 10);
-      for (let i2 = parseInt(match[1], 10); i2 <= stop; i2++) {
-        urls.push(url.replace(match[0], i2.toString()));
+      for (let i = parseInt(match[1], 10); i <= stop; i++) {
+        urls.push(url.replace(match[0], i.toString()));
       }
       return urls;
     }
@@ -10197,8 +10203,8 @@ var olpmtiles = (() => {
      * @param {number} x Tile coordinate x.
      * @param {number} y Tile coordinate y.
      */
-    useTile(z, x2, y) {
-      const tileCoordKey = getKeyZXY(z, x2, y);
+    useTile(z2, x2, y) {
+      const tileCoordKey = getKeyZXY(z2, x2, y);
       if (this.tileCache.containsKey(tileCoordKey)) {
         this.tileCache.get(tileCoordKey);
       }
@@ -10405,21 +10411,21 @@ var olpmtiles = (() => {
       if (tileCache.getCount() === 0) {
         return features;
       }
-      const z = fromKey(tileCache.peekFirstKey())[0];
+      const z2 = fromKey(tileCache.peekFirstKey())[0];
       const tileGrid = this.tileGrid;
       tileCache.forEach(function(tile) {
-        if (tile.tileCoord[0] !== z || tile.getState() !== TileState_default.LOADED) {
+        if (tile.tileCoord[0] !== z2 || tile.getState() !== TileState_default.LOADED) {
           return;
         }
         const sourceTiles = tile.getSourceTiles();
-        for (let i2 = 0, ii = sourceTiles.length; i2 < ii; ++i2) {
-          const sourceTile = sourceTiles[i2];
+        for (let i = 0, ii = sourceTiles.length; i < ii; ++i) {
+          const sourceTile = sourceTiles[i];
           const tileCoord = sourceTile.tileCoord;
           if (intersects(extent, tileGrid.getTileCoordExtent(tileCoord))) {
             const tileFeatures = sourceTile.getFeatures();
             if (tileFeatures) {
-              for (let j = 0, jj = tileFeatures.length; j < jj; ++j) {
-                const candidate = tileFeatures[j];
+              for (let j2 = 0, jj = tileFeatures.length; j2 < jj; ++j2) {
+                const candidate = tileFeatures[j2];
                 const geometry = candidate.getGeometry();
                 if (intersects(extent, geometry.getExtent())) {
                   features.push(candidate);
@@ -10456,8 +10462,8 @@ var olpmtiles = (() => {
         const tile = tileCache.peek(cacheKey);
         if (tile) {
           const sourceTiles = tile.sourceTiles;
-          for (let i2 = 0, ii = sourceTiles.length; i2 < ii; ++i2) {
-            acc[sourceTiles[i2].getKey()] = true;
+          for (let i = 0, ii = sourceTiles.length; i < ii; ++i) {
+            acc[sourceTiles[i].getKey()] = true;
           }
         }
         return acc;
@@ -10477,8 +10483,8 @@ var olpmtiles = (() => {
         const urlTileCoord = tile.wrappedTileCoord;
         const tileGrid = this.getTileGridForProjection(projection);
         const extent = tileGrid.getTileCoordExtent(urlTileCoord);
-        const z = urlTileCoord[0];
-        const resolution = tileGrid.getResolution(z);
+        const z2 = urlTileCoord[0];
+        const resolution = tileGrid.getResolution(z2);
         buffer(extent, -resolution, extent);
         const sourceTileGrid = this.tileGrid;
         const sourceExtent = sourceTileGrid.getExtent();
@@ -10560,8 +10566,8 @@ var olpmtiles = (() => {
      * @param {import("../proj/Projection.js").default} projection Projection.
      * @return {!VectorRenderTile} Tile.
      */
-    getTile(z, x2, y, pixelRatio, projection) {
-      const coordKey = getKeyZXY(z, x2, y);
+    getTile(z2, x2, y, pixelRatio, projection) {
+      const coordKey = getKeyZXY(z2, x2, y);
       const key = this.getKey();
       let tile;
       if (this.tileCache.containsKey(coordKey)) {
@@ -10570,7 +10576,7 @@ var olpmtiles = (() => {
           return tile;
         }
       }
-      const tileCoord = [z, x2, y];
+      const tileCoord = [z2, x2, y];
       let urlTileCoord = this.getTileCoordForTileUrlFunction(
         tileCoord,
         projection
@@ -10579,7 +10585,7 @@ var olpmtiles = (() => {
       const tileGrid = this.getTileGridForProjection(projection);
       if (urlTileCoord && sourceExtent) {
         const tileExtent = tileGrid.getTileCoordExtent(urlTileCoord);
-        buffer(tileExtent, -tileGrid.getResolution(z), tileExtent);
+        buffer(tileExtent, -tileGrid.getResolution(z2), tileExtent);
         if (!intersects(sourceExtent, tileExtent)) {
           urlTileCoord = null;
         }
@@ -10587,7 +10593,7 @@ var olpmtiles = (() => {
       let empty = true;
       if (urlTileCoord !== null) {
         const sourceTileGrid = this.tileGrid;
-        const resolution = tileGrid.getResolution(z);
+        const resolution = tileGrid.getResolution(z2);
         const sourceZ = sourceTileGrid.getZForResolution(resolution, 1);
         const extent = tileGrid.getTileCoordExtent(urlTileCoord);
         buffer(extent, -resolution, extent);
@@ -10621,17 +10627,17 @@ var olpmtiles = (() => {
       if (!tileGrid) {
         const sourceTileGrid = this.tileGrid;
         const resolutions = sourceTileGrid.getResolutions().slice();
-        const origins = resolutions.map(function(resolution, z) {
-          return sourceTileGrid.getOrigin(z);
+        const origins = resolutions.map(function(resolution, z2) {
+          return sourceTileGrid.getOrigin(z2);
         });
-        const tileSizes = resolutions.map(function(resolution, z) {
-          return sourceTileGrid.getTileSize(z);
+        const tileSizes = resolutions.map(function(resolution, z2) {
+          return sourceTileGrid.getTileSize(z2);
         });
         const length = DEFAULT_MAX_ZOOM + 1;
-        for (let z = resolutions.length; z < length; ++z) {
-          resolutions.push(resolutions[z - 1] / 2);
-          origins.push(origins[z - 1]);
-          tileSizes.push(tileSizes[z - 1]);
+        for (let z2 = resolutions.length; z2 < length; ++z2) {
+          resolutions.push(resolutions[z2 - 1] / 2);
+          origins.push(origins[z2 - 1]);
+          tileSizes.push(tileSizes[z2 - 1]);
         }
         tileGrid = new TileGrid_default({
           extent: sourceTileGrid.getExtent(),
@@ -10657,9 +10663,9 @@ var olpmtiles = (() => {
      * @param {import("../proj/Projection.js").default} projection Projection.
      * @return {import("../size.js").Size} Tile size.
      */
-    getTilePixelSize(z, pixelRatio, projection) {
+    getTilePixelSize(z2, pixelRatio, projection) {
       const tileGrid = this.getTileGridForProjection(projection);
-      const tileSize = toSize(tileGrid.getTileSize(z), this.tmpSize);
+      const tileSize = toSize(tileGrid.getTileSize(z2), this.tmpSize);
       return [
         Math.round(tileSize[0] * pixelRatio),
         Math.round(tileSize[1] * pixelRatio)
@@ -10700,28 +10706,14 @@ var olpmtiles = (() => {
   }
   __name(defaultLoadFunction, "defaultLoadFunction");
 
-  // node_modules/pmtiles/dist/index.js
-  var __pow = Math.pow;
-  var __async2 = /* @__PURE__ */ __name((__this, __arguments, generator) => {
-    return new Promise((resolve, reject) => {
-      var fulfilled = /* @__PURE__ */ __name((value) => {
-        try {
-          step(generator.next(value));
-        } catch (e) {
-          reject(e);
-        }
-      }, "fulfilled");
-      var rejected = /* @__PURE__ */ __name((value) => {
-        try {
-          step(generator.throw(value));
-        } catch (e) {
-          reject(e);
-        }
-      }, "rejected");
-      var step = /* @__PURE__ */ __name((x2) => x2.done ? resolve(x2.value) : Promise.resolve(x2.value).then(fulfilled, rejected), "step");
-      step((generator = generator.apply(__this, __arguments)).next());
-    });
-  }, "__async");
+  // node_modules/fflate/esm/index.mjs
+  var import_module = __require("module");
+  var require2 = (0, import_module.createRequire)("/");
+  var Worker;
+  try {
+    Worker = require2("worker_threads").Worker;
+  } catch (e) {
+  }
   var u8 = Uint8Array;
   var u16 = Uint16Array;
   var i32 = Int32Array;
@@ -10798,17 +10790,17 @@ var olpmtiles = (() => {
   ]);
   var clim = new u8([16, 17, 18, 0, 8, 7, 9, 6, 10, 5, 11, 4, 12, 3, 13, 2, 14, 1, 15]);
   var freb = /* @__PURE__ */ __name(function(eb, start) {
-    var b = new u16(31);
-    for (var i2 = 0; i2 < 31; ++i2) {
-      b[i2] = start += 1 << eb[i2 - 1];
+    var b2 = new u16(31);
+    for (var i = 0; i < 31; ++i) {
+      b2[i] = start += 1 << eb[i - 1];
     }
-    var r = new i32(b[30]);
-    for (var i2 = 1; i2 < 30; ++i2) {
-      for (var j = b[i2]; j < b[i2 + 1]; ++j) {
-        r[j] = j - b[i2] << 5 | i2;
+    var r = new i32(b2[30]);
+    for (var i = 1; i < 30; ++i) {
+      for (var j2 = b2[i]; j2 < b2[i + 1]; ++j2) {
+        r[j2] = j2 - b2[i] << 5 | i;
       }
     }
-    return { b, r };
+    return { b: b2, r };
   }, "freb");
   var _a = freb(fleb, 2);
   var fl = _a.b;
@@ -10819,44 +10811,44 @@ var olpmtiles = (() => {
   var revfd = _b.r;
   var rev = new u16(32768);
   for (i = 0; i < 32768; ++i) {
-    x = (i & 43690) >> 1 | (i & 21845) << 1;
-    x = (x & 52428) >> 2 | (x & 13107) << 2;
-    x = (x & 61680) >> 4 | (x & 3855) << 4;
-    rev[i] = ((x & 65280) >> 8 | (x & 255) << 8) >> 1;
+    x2 = (i & 43690) >> 1 | (i & 21845) << 1;
+    x2 = (x2 & 52428) >> 2 | (x2 & 13107) << 2;
+    x2 = (x2 & 61680) >> 4 | (x2 & 3855) << 4;
+    rev[i] = ((x2 & 65280) >> 8 | (x2 & 255) << 8) >> 1;
   }
-  var x;
+  var x2;
   var i;
   var hMap = /* @__PURE__ */ __name(function(cd, mb, r) {
     var s = cd.length;
-    var i2 = 0;
-    var l = new u16(mb);
-    for (; i2 < s; ++i2) {
-      if (cd[i2])
-        ++l[cd[i2] - 1];
+    var i = 0;
+    var l2 = new u16(mb);
+    for (; i < s; ++i) {
+      if (cd[i])
+        ++l2[cd[i] - 1];
     }
     var le = new u16(mb);
-    for (i2 = 1; i2 < mb; ++i2) {
-      le[i2] = le[i2 - 1] + l[i2 - 1] << 1;
+    for (i = 1; i < mb; ++i) {
+      le[i] = le[i - 1] + l2[i - 1] << 1;
     }
     var co;
     if (r) {
       co = new u16(1 << mb);
       var rvb = 15 - mb;
-      for (i2 = 0; i2 < s; ++i2) {
-        if (cd[i2]) {
-          var sv = i2 << 4 | cd[i2];
-          var r_1 = mb - cd[i2];
-          var v = le[cd[i2] - 1]++ << r_1;
-          for (var m = v | (1 << r_1) - 1; v <= m; ++v) {
-            co[rev[v] >> rvb] = sv;
+      for (i = 0; i < s; ++i) {
+        if (cd[i]) {
+          var sv = i << 4 | cd[i];
+          var r_1 = mb - cd[i];
+          var v2 = le[cd[i] - 1]++ << r_1;
+          for (var m2 = v2 | (1 << r_1) - 1; v2 <= m2; ++v2) {
+            co[rev[v2] >> rvb] = sv;
           }
         }
       }
     } else {
       co = new u16(s);
-      for (i2 = 0; i2 < s; ++i2) {
-        if (cd[i2]) {
-          co[i2] = rev[le[cd[i2] - 1]++] >> 15 - cd[i2];
+      for (i = 0; i < s; ++i) {
+        if (cd[i]) {
+          co[i] = rev[le[cd[i] - 1]++] >> 15 - cd[i];
         }
       }
     }
@@ -10882,16 +10874,16 @@ var olpmtiles = (() => {
   var flrm = /* @__PURE__ */ hMap(flt, 9, 1);
   var fdrm = /* @__PURE__ */ hMap(fdt, 5, 1);
   var max = /* @__PURE__ */ __name(function(a) {
-    var m = a[0];
-    for (var i2 = 1; i2 < a.length; ++i2) {
-      if (a[i2] > m)
-        m = a[i2];
+    var m2 = a[0];
+    for (var i = 1; i < a.length; ++i) {
+      if (a[i] > m2)
+        m2 = a[i];
     }
-    return m;
+    return m2;
   }, "max");
-  var bits = /* @__PURE__ */ __name(function(d, p, m) {
+  var bits = /* @__PURE__ */ __name(function(d, p, m2) {
     var o = p / 8 | 0;
-    return (d[o] | d[o + 1] << 8) >> (p & 7) & m;
+    return (d[o] | d[o + 1] << 8) >> (p & 7) & m2;
   }, "bits");
   var bits16 = /* @__PURE__ */ __name(function(d, p) {
     var o = p / 8 | 0;
@@ -10900,14 +10892,12 @@ var olpmtiles = (() => {
   var shft = /* @__PURE__ */ __name(function(p) {
     return (p + 7) / 8 | 0;
   }, "shft");
-  var slc = /* @__PURE__ */ __name(function(v, s, e) {
+  var slc = /* @__PURE__ */ __name(function(v2, s, e) {
     if (s == null || s < 0)
       s = 0;
-    if (e == null || e > v.length)
-      e = v.length;
-    var n = new u8(e - s);
-    n.set(v.subarray(s, e));
-    return n;
+    if (e == null || e > v2.length)
+      e = v2.length;
+    return new u8(v2.subarray(s, e));
   }, "slc");
   var ec = [
     "unexpected EOF",
@@ -10939,14 +10929,15 @@ var olpmtiles = (() => {
     var sl = dat.length, dl = dict ? dict.length : 0;
     if (!sl || st.f && !st.l)
       return buf || new u8(0);
-    var noBuf = !buf || st.i != 2;
+    var noBuf = !buf;
+    var resize = noBuf || st.i != 2;
     var noSt = st.i;
-    if (!buf)
+    if (noBuf)
       buf = new u8(sl * 3);
-    var cbuf = /* @__PURE__ */ __name(function(l2) {
+    var cbuf = /* @__PURE__ */ __name(function(l3) {
       var bl = buf.length;
-      if (l2 > bl) {
-        var nbuf = new u8(Math.max(bl * 2, l2));
+      if (l3 > bl) {
+        var nbuf = new u8(Math.max(bl * 2, l3));
         nbuf.set(buf);
         buf = nbuf;
       }
@@ -10959,16 +10950,16 @@ var olpmtiles = (() => {
         var type = bits(dat, pos + 1, 3);
         pos += 3;
         if (!type) {
-          var s = shft(pos) + 4, l = dat[s - 4] | dat[s - 3] << 8, t = s + l;
+          var s = shft(pos) + 4, l2 = dat[s - 4] | dat[s - 3] << 8, t = s + l2;
           if (t > sl) {
             if (noSt)
               err(0);
             break;
           }
-          if (noBuf)
-            cbuf(bt + l);
+          if (resize)
+            cbuf(bt + l2);
           buf.set(dat.subarray(s, t), bt);
-          st.b = bt += l, st.p = pos = t * 8, st.f = final;
+          st.b = bt += l2, st.p = pos = t * 8, st.f = final;
           continue;
         } else if (type == 1)
           lm = flrm, dm = fdrm, lbt = 9, dbt = 5;
@@ -10978,28 +10969,28 @@ var olpmtiles = (() => {
           pos += 14;
           var ldt = new u8(tl);
           var clt = new u8(19);
-          for (var i2 = 0; i2 < hcLen; ++i2) {
-            clt[clim[i2]] = bits(dat, pos + i2 * 3, 7);
+          for (var i = 0; i < hcLen; ++i) {
+            clt[clim[i]] = bits(dat, pos + i * 3, 7);
           }
           pos += hcLen * 3;
           var clb = max(clt), clbmsk = (1 << clb) - 1;
           var clm = hMap(clt, clb, 1);
-          for (var i2 = 0; i2 < tl; ) {
+          for (var i = 0; i < tl; ) {
             var r = clm[bits(dat, pos, clbmsk)];
             pos += r & 15;
             var s = r >> 4;
             if (s < 16) {
-              ldt[i2++] = s;
+              ldt[i++] = s;
             } else {
               var c = 0, n = 0;
               if (s == 16)
-                n = 3 + bits(dat, pos, 3), pos += 2, c = ldt[i2 - 1];
+                n = 3 + bits(dat, pos, 3), pos += 2, c = ldt[i - 1];
               else if (s == 17)
                 n = 3 + bits(dat, pos, 7), pos += 3;
               else if (s == 18)
                 n = 11 + bits(dat, pos, 127), pos += 7;
               while (n--)
-                ldt[i2++] = c;
+                ldt[i++] = c;
             }
           }
           var lt = ldt.subarray(0, hLit), dt = ldt.subarray(hLit);
@@ -11015,7 +11006,7 @@ var olpmtiles = (() => {
           break;
         }
       }
-      if (noBuf)
+      if (resize)
         cbuf(bt + 131072);
       var lms = (1 << lbt) - 1, dms = (1 << dbt) - 1;
       var lpos = pos;
@@ -11037,9 +11028,9 @@ var olpmtiles = (() => {
         } else {
           var add3 = sym - 254;
           if (sym > 264) {
-            var i2 = sym - 257, b = fleb[i2];
-            add3 = bits(dat, pos, (1 << b) - 1) + fl[i2];
-            pos += b;
+            var i = sym - 257, b2 = fleb[i];
+            add3 = bits(dat, pos, (1 << b2) - 1) + fl[i];
+            pos += b2;
           }
           var d = dm[bits16(dat, pos) & dms], dsym = d >> 4;
           if (!d)
@@ -11047,38 +11038,33 @@ var olpmtiles = (() => {
           pos += d & 15;
           var dt = fd[dsym];
           if (dsym > 3) {
-            var b = fdeb[dsym];
-            dt += bits16(dat, pos) & (1 << b) - 1, pos += b;
+            var b2 = fdeb[dsym];
+            dt += bits16(dat, pos) & (1 << b2) - 1, pos += b2;
           }
           if (pos > tbts) {
             if (noSt)
               err(0);
             break;
           }
-          if (noBuf)
+          if (resize)
             cbuf(bt + 131072);
           var end = bt + add3;
           if (bt < dt) {
-            var shift2 = dl - dt, dend = Math.min(dt, end);
-            if (shift2 + bt < 0)
+            var shift = dl - dt, dend = Math.min(dt, end);
+            if (shift + bt < 0)
               err(3);
             for (; bt < dend; ++bt)
-              buf[bt] = dict[shift2 + bt];
+              buf[bt] = dict[shift + bt];
           }
-          for (; bt < end; bt += 4) {
+          for (; bt < end; ++bt)
             buf[bt] = buf[bt - dt];
-            buf[bt + 1] = buf[bt + 1 - dt];
-            buf[bt + 2] = buf[bt + 2 - dt];
-            buf[bt + 3] = buf[bt + 3 - dt];
-          }
-          bt = end;
         }
       }
       st.l = lm, st.p = lpos, st.b = bt, st.f = final;
       if (lm)
         final = 1, st.m = lbt, st.d = dm, st.n = dbt;
     } while (!final);
-    return bt == buf.length ? buf : slc(buf, 0, bt);
+    return bt != buf.length && noBuf ? slc(buf, 0, bt) : buf.subarray(0, bt);
   }, "inflt");
   var et = /* @__PURE__ */ new u8(0);
   var gzs = /* @__PURE__ */ __name(function(d) {
@@ -11093,8 +11079,8 @@ var olpmtiles = (() => {
     return st + (flg & 2);
   }, "gzs");
   var gzl = /* @__PURE__ */ __name(function(d) {
-    var l = d.length;
-    return (d[l - 4] | d[l - 3] << 8 | d[l - 2] << 16 | d[l - 1] << 24) >>> 0;
+    var l2 = d.length;
+    return (d[l2 - 4] | d[l2 - 3] << 8 | d[l2 - 2] << 16 | d[l2 - 1] << 24) >>> 0;
   }, "gzl");
   var zls = /* @__PURE__ */ __name(function(d, dict) {
     if ((d[0] & 15) != 8 || d[0] >> 4 > 7 || (d[0] << 8 | d[1]) % 31)
@@ -11129,966 +11115,443 @@ var olpmtiles = (() => {
     tds = 1;
   } catch (e) {
   }
-  var shift = /* @__PURE__ */ __name((n, shift2) => {
-    return n * __pow(2, shift2);
-  }, "shift");
-  var unshift = /* @__PURE__ */ __name((n, shift2) => {
-    return Math.floor(n / __pow(2, shift2));
-  }, "unshift");
-  var getUint24 = /* @__PURE__ */ __name((view, pos) => {
-    return shift(view.getUint16(pos + 1, true), 8) + view.getUint8(pos);
-  }, "getUint24");
-  var getUint48 = /* @__PURE__ */ __name((view, pos) => {
-    return shift(view.getUint32(pos + 2, true), 16) + view.getUint16(pos, true);
-  }, "getUint48");
-  var compare = /* @__PURE__ */ __name((tz, tx, ty, view, i2) => {
-    if (tz !== view.getUint8(i2))
-      return tz - view.getUint8(i2);
-    const x2 = getUint24(view, i2 + 1);
-    if (tx !== x2)
-      return tx - x2;
-    const y = getUint24(view, i2 + 4);
-    if (ty !== y)
-      return ty - y;
-    return 0;
-  }, "compare");
-  var queryLeafdir = /* @__PURE__ */ __name((view, z, x2, y) => {
-    const offsetLen = queryView(view, z | 128, x2, y);
-    if (offsetLen) {
-      return {
-        z,
-        x: x2,
-        y,
-        offset: offsetLen[0],
-        length: offsetLen[1],
-        isDir: true
-      };
-    }
-    return null;
-  }, "queryLeafdir");
-  var queryTile = /* @__PURE__ */ __name((view, z, x2, y) => {
-    const offsetLen = queryView(view, z, x2, y);
-    if (offsetLen) {
-      return {
-        z,
-        x: x2,
-        y,
-        offset: offsetLen[0],
-        length: offsetLen[1],
-        isDir: false
-      };
-    }
-    return null;
-  }, "queryTile");
-  var queryView = /* @__PURE__ */ __name((view, z, x2, y) => {
-    let m = 0;
-    let n = view.byteLength / 17 - 1;
-    while (m <= n) {
-      const k = n + m >> 1;
-      const cmp = compare(z, x2, y, view, k * 17);
-      if (cmp > 0) {
-        m = k + 1;
-      } else if (cmp < 0) {
-        n = k - 1;
-      } else {
-        return [getUint48(view, k * 17 + 7), view.getUint32(k * 17 + 13, true)];
+
+  // node_modules/pmtiles/dist/esm/index.js
+  var z = Object.defineProperty;
+  var b = Math.pow;
+  var l = /* @__PURE__ */ __name((i, e) => z(i, "name", { value: e, configurable: true }), "l");
+  var m = /* @__PURE__ */ __name((i, e, t) => new Promise((r, n) => {
+    var s = /* @__PURE__ */ __name((u) => {
+      try {
+        a(t.next(u));
+      } catch (c) {
+        n(c);
       }
-    }
-    return null;
-  }, "queryView");
-  var entrySort = /* @__PURE__ */ __name((a, b) => {
-    if (a.isDir && !b.isDir) {
-      return 1;
-    }
-    if (!a.isDir && b.isDir) {
-      return -1;
-    }
-    if (a.z !== b.z) {
-      return a.z - b.z;
-    }
-    if (a.x !== b.x) {
-      return a.x - b.x;
-    }
-    return a.y - b.y;
-  }, "entrySort");
-  var parseEntry = /* @__PURE__ */ __name((dataview, i2) => {
-    const zRaw = dataview.getUint8(i2 * 17);
-    const z = zRaw & 127;
-    return {
-      z,
-      x: getUint24(dataview, i2 * 17 + 1),
-      y: getUint24(dataview, i2 * 17 + 4),
-      offset: getUint48(dataview, i2 * 17 + 7),
-      length: dataview.getUint32(i2 * 17 + 13, true),
-      isDir: zRaw >> 7 === 1
-    };
-  }, "parseEntry");
-  var sortDir = /* @__PURE__ */ __name((a) => {
-    const entries = [];
-    const view = new DataView(a);
-    for (let i2 = 0; i2 < view.byteLength / 17; i2++) {
-      entries.push(parseEntry(view, i2));
-    }
-    return createDirectory(entries);
-  }, "sortDir");
-  var createDirectory = /* @__PURE__ */ __name((entries) => {
-    entries.sort(entrySort);
-    const buffer2 = new ArrayBuffer(17 * entries.length);
-    const arr = new Uint8Array(buffer2);
-    for (let i2 = 0; i2 < entries.length; i2++) {
-      const entry = entries[i2];
-      let z = entry.z;
-      if (entry.isDir)
-        z = z | 128;
-      arr[i2 * 17] = z;
-      arr[i2 * 17 + 1] = entry.x & 255;
-      arr[i2 * 17 + 2] = entry.x >> 8 & 255;
-      arr[i2 * 17 + 3] = entry.x >> 16 & 255;
-      arr[i2 * 17 + 4] = entry.y & 255;
-      arr[i2 * 17 + 5] = entry.y >> 8 & 255;
-      arr[i2 * 17 + 6] = entry.y >> 16 & 255;
-      arr[i2 * 17 + 7] = entry.offset & 255;
-      arr[i2 * 17 + 8] = unshift(entry.offset, 8) & 255;
-      arr[i2 * 17 + 9] = unshift(entry.offset, 16) & 255;
-      arr[i2 * 17 + 10] = unshift(entry.offset, 24) & 255;
-      arr[i2 * 17 + 11] = unshift(entry.offset, 32) & 255;
-      arr[i2 * 17 + 12] = unshift(entry.offset, 48) & 255;
-      arr[i2 * 17 + 13] = entry.length & 255;
-      arr[i2 * 17 + 14] = entry.length >> 8 & 255;
-      arr[i2 * 17 + 15] = entry.length >> 16 & 255;
-      arr[i2 * 17 + 16] = entry.length >> 24 & 255;
-    }
-    return buffer2;
-  }, "createDirectory");
-  var deriveLeaf = /* @__PURE__ */ __name((view, tile) => {
-    if (view.byteLength < 17)
-      return null;
-    const numEntries = view.byteLength / 17;
-    const entry = parseEntry(view, numEntries - 1);
-    if (entry.isDir) {
-      const leafLevel = entry.z;
-      const levelDiff = tile.z - leafLevel;
-      const leafX = Math.trunc(tile.x / (1 << levelDiff));
-      const leafY = Math.trunc(tile.y / (1 << levelDiff));
-      return { z: leafLevel, x: leafX, y: leafY };
-    }
-    return null;
-  }, "deriveLeaf");
-  function getHeader(source) {
-    return __async2(this, null, function* () {
-      const resp = yield source.getBytes(0, 512e3);
-      const dataview = new DataView(resp.data);
-      const jsonSize = dataview.getUint32(4, true);
-      const rootEntries = dataview.getUint16(8, true);
-      const dec = new TextDecoder("utf-8");
-      const jsonMetadata = JSON.parse(
-        dec.decode(new DataView(resp.data, 10, jsonSize))
-      );
-      let tileCompression = 0;
-      if (jsonMetadata.compression === "gzip") {
-        tileCompression = 2;
+    }, "s"), o = /* @__PURE__ */ __name((u) => {
+      try {
+        a(t.throw(u));
+      } catch (c) {
+        n(c);
       }
-      let minzoom = 0;
-      if ("minzoom" in jsonMetadata) {
-        minzoom = +jsonMetadata.minzoom;
-      }
-      let maxzoom = 0;
-      if ("maxzoom" in jsonMetadata) {
-        maxzoom = +jsonMetadata.maxzoom;
-      }
-      let centerLon = 0;
-      let centerLat = 0;
-      let centerZoom = 0;
-      let minLon = -180;
-      let minLat = -85;
-      let maxLon = 180;
-      let maxLat = 85;
-      if (jsonMetadata.bounds) {
-        const split = jsonMetadata.bounds.split(",");
-        minLon = +split[0];
-        minLat = +split[1];
-        maxLon = +split[2];
-        maxLat = +split[3];
-      }
-      if (jsonMetadata.center) {
-        const split = jsonMetadata.center.split(",");
-        centerLon = +split[0];
-        centerLat = +split[1];
-        centerZoom = +split[2];
-      }
-      const header = {
-        specVersion: dataview.getUint16(2, true),
-        rootDirectoryOffset: 10 + jsonSize,
-        rootDirectoryLength: rootEntries * 17,
-        jsonMetadataOffset: 10,
-        jsonMetadataLength: jsonSize,
-        leafDirectoryOffset: 0,
-        leafDirectoryLength: void 0,
-        tileDataOffset: 0,
-        tileDataLength: void 0,
-        numAddressedTiles: 0,
-        numTileEntries: 0,
-        numTileContents: 0,
-        clustered: false,
-        internalCompression: 1,
-        tileCompression,
-        tileType: 1,
-        minZoom: minzoom,
-        maxZoom: maxzoom,
-        minLon,
-        minLat,
-        maxLon,
-        maxLat,
-        centerZoom,
-        centerLon,
-        centerLat,
-        etag: resp.etag
-      };
-      return header;
-    });
-  }
-  __name(getHeader, "getHeader");
-  function getZxy(header, source, cache2, z, x2, y, signal) {
-    return __async2(this, null, function* () {
-      let rootDir = yield cache2.getArrayBuffer(
-        source,
-        header.rootDirectoryOffset,
-        header.rootDirectoryLength,
-        header
-      );
-      if (header.specVersion === 1) {
-        rootDir = sortDir(rootDir);
-      }
-      const entry = queryTile(new DataView(rootDir), z, x2, y);
-      if (entry) {
-        const resp = yield source.getBytes(entry.offset, entry.length, signal);
-        let tileData = resp.data;
-        const view = new DataView(tileData);
-        if (view.getUint8(0) === 31 && view.getUint8(1) === 139) {
-          tileData = decompressSync(new Uint8Array(tileData));
+    }, "o"), a = /* @__PURE__ */ __name((u) => u.done ? r(u.value) : Promise.resolve(u.value).then(s, o), "a");
+    a((t = t.apply(i, e)).next());
+  }), "m");
+  var re = l((i, e) => {
+    let t = false, r = "", n = L.GridLayer.extend({ createTile: l((s, o) => {
+      let a = document.createElement("img"), u = new AbortController(), c = u.signal;
+      return a.cancel = () => {
+        u.abort();
+      }, t || (i.getHeader().then((d) => {
+        d.tileType === 1 ? console.error("Error: archive contains MVT vector tiles, but leafletRasterLayer is for displaying raster tiles. See https://github.com/protomaps/PMTiles/tree/main/js for details.") : d.tileType === 2 ? r = "image/png" : d.tileType === 3 ? r = "image/jpeg" : d.tileType === 4 ? r = "image/webp" : d.tileType === 5 && (r = "image/avif");
+      }), t = true), i.getZxy(s.z, s.x, s.y, c).then((d) => {
+        if (d) {
+          let h = new Blob([d.data], { type: r }), p = window.URL.createObjectURL(h);
+          a.src = p, a.cancel = void 0, o(void 0, a);
         }
-        return {
-          data: tileData
-        };
-      }
-      const leafcoords = deriveLeaf(new DataView(rootDir), { z, x: x2, y });
-      if (leafcoords) {
-        const leafdirEntry = queryLeafdir(
-          new DataView(rootDir),
-          leafcoords.z,
-          leafcoords.x,
-          leafcoords.y
-        );
-        if (leafdirEntry) {
-          let leafDir = yield cache2.getArrayBuffer(
-            source,
-            leafdirEntry.offset,
-            leafdirEntry.length,
-            header
-          );
-          if (header.specVersion === 1) {
-            leafDir = sortDir(leafDir);
-          }
-          const tileEntry = queryTile(new DataView(leafDir), z, x2, y);
-          if (tileEntry) {
-            const resp = yield source.getBytes(
-              tileEntry.offset,
-              tileEntry.length,
-              signal
-            );
-            let tileData = resp.data;
-            const view = new DataView(tileData);
-            if (view.getUint8(0) === 31 && view.getUint8(1) === 139) {
-              tileData = decompressSync(new Uint8Array(tileData));
-            }
-            return {
-              data: tileData
-            };
-          }
+      }).catch((d) => {
+        if (d.name !== "AbortError") throw d;
+      }), a;
+    }, "createTile"), _removeTile: l(function(s) {
+      let o = this._tiles[s];
+      o && (o.el.cancel && o.el.cancel(), o.el.width = 0, o.el.height = 0, o.el.deleted = true, L.DomUtil.remove(o.el), delete this._tiles[s], this.fire("tileunload", { tile: o.el, coords: this._keyToTileCoords(s) }));
+    }, "_removeTile") });
+    return new n(e);
+  }, "leafletRasterLayer");
+  var j = l((i) => (e, t) => {
+    if (t instanceof AbortController) return i(e, t);
+    let r = new AbortController();
+    return i(e, r).then((n) => t(void 0, n.data, n.cacheControl || "", n.expires || ""), (n) => t(n)).catch((n) => t(n)), { cancel: l(() => r.abort(), "cancel") };
+  }, "v3compat");
+  var _a2;
+  var T = (_a2 = class {
+    constructor(e) {
+      this.tilev4 = l((e2, t) => m(this, null, function* () {
+        if (e2.type === "json") {
+          let p = e2.url.substr(10), y = this.tiles.get(p);
+          if (y || (y = new x(p), this.tiles.set(p, y)), this.metadata) return { data: yield y.getTileJson(e2.url) };
+          let f = yield y.getHeader();
+          return (f.minLon >= f.maxLon || f.minLat >= f.maxLat) && console.error(`Bounds of PMTiles archive ${f.minLon},${f.minLat},${f.maxLon},${f.maxLat} are not valid.`), { data: { tiles: [`${e2.url}/{z}/{x}/{y}`], minzoom: f.minZoom, maxzoom: f.maxZoom, bounds: [f.minLon, f.minLat, f.maxLon, f.maxLat] } };
         }
-      }
-      return void 0;
-    });
+        let r = new RegExp(/pmtiles:\/\/(.+)\/(\d+)\/(\d+)\/(\d+)/), n = e2.url.match(r);
+        if (!n) throw new Error("Invalid PMTiles protocol URL");
+        let s = n[1], o = this.tiles.get(s);
+        o || (o = new x(s), this.tiles.set(s, o));
+        let a = n[2], u = n[3], c = n[4], d = yield o.getHeader(), h = yield o == null ? void 0 : o.getZxy(+a, +u, +c, t.signal);
+        if (h) return { data: new Uint8Array(h.data), cacheControl: h.cacheControl, expires: h.expires };
+        if (d.tileType === 1) {
+          if (this.errorOnMissingTile) throw new Error("Tile not found.");
+          return { data: new Uint8Array() };
+        }
+        return { data: null };
+      }), "tilev4");
+      this.tile = j(this.tilev4);
+      this.tiles = /* @__PURE__ */ new Map(), this.metadata = (e == null ? void 0 : e.metadata) || false, this.errorOnMissingTile = (e == null ? void 0 : e.errorOnMissingTile) || false;
+    }
+    add(e) {
+      this.tiles.set(e.source.getKey(), e);
+    }
+    get(e) {
+      return this.tiles.get(e);
+    }
+  }, __name(_a2, "T"), _a2);
+  l(T, "Protocol");
+  function w(i, e) {
+    return (e >>> 0) * 4294967296 + (i >>> 0);
   }
-  __name(getZxy, "getZxy");
-  var v2_default = {
-    getHeader,
-    getZxy
-  };
-  function toNum(low, high) {
-    return (high >>> 0) * 4294967296 + (low >>> 0);
-  }
-  __name(toNum, "toNum");
-  function readVarintRemainder(l, p) {
-    const buf = p.buf;
-    let b = buf[p.pos++];
-    let h = (b & 112) >> 4;
-    if (b < 128)
-      return toNum(l, h);
-    b = buf[p.pos++];
-    h |= (b & 127) << 3;
-    if (b < 128)
-      return toNum(l, h);
-    b = buf[p.pos++];
-    h |= (b & 127) << 10;
-    if (b < 128)
-      return toNum(l, h);
-    b = buf[p.pos++];
-    h |= (b & 127) << 17;
-    if (b < 128)
-      return toNum(l, h);
-    b = buf[p.pos++];
-    h |= (b & 127) << 24;
-    if (b < 128)
-      return toNum(l, h);
-    b = buf[p.pos++];
-    h |= (b & 1) << 31;
-    if (b < 128)
-      return toNum(l, h);
+  __name(w, "w");
+  l(w, "toNum");
+  function F(i, e) {
+    let t = e.buf, r = t[e.pos++], n = (r & 112) >> 4;
+    if (r < 128 || (r = t[e.pos++], n |= (r & 127) << 3, r < 128) || (r = t[e.pos++], n |= (r & 127) << 10, r < 128) || (r = t[e.pos++], n |= (r & 127) << 17, r < 128) || (r = t[e.pos++], n |= (r & 127) << 24, r < 128) || (r = t[e.pos++], n |= (r & 1) << 31, r < 128)) return w(i, n);
     throw new Error("Expected varint not more than 10 bytes");
   }
-  __name(readVarintRemainder, "readVarintRemainder");
-  function readVarint(p) {
-    const buf = p.buf;
-    let b = buf[p.pos++];
-    let val = b & 127;
-    if (b < 128)
-      return val;
-    b = buf[p.pos++];
-    val |= (b & 127) << 7;
-    if (b < 128)
-      return val;
-    b = buf[p.pos++];
-    val |= (b & 127) << 14;
-    if (b < 128)
-      return val;
-    b = buf[p.pos++];
-    val |= (b & 127) << 21;
-    if (b < 128)
-      return val;
-    b = buf[p.pos];
-    val |= (b & 15) << 28;
-    return readVarintRemainder(val, p);
+  __name(F, "F");
+  l(F, "readVarintRemainder");
+  function v(i) {
+    let e = i.buf, t = e[i.pos++], r = t & 127;
+    return t < 128 || (t = e[i.pos++], r |= (t & 127) << 7, t < 128) || (t = e[i.pos++], r |= (t & 127) << 14, t < 128) || (t = e[i.pos++], r |= (t & 127) << 21, t < 128) ? r : (t = e[i.pos], r |= (t & 15) << 28, F(r, i));
   }
-  __name(readVarint, "readVarint");
-  function rotate2(n, xy, rx, ry) {
-    if (ry === 0) {
-      if (rx === 1) {
-        xy[0] = n - 1 - xy[0];
-        xy[1] = n - 1 - xy[1];
-      }
-      const t = xy[0];
-      xy[0] = xy[1];
-      xy[1] = t;
+  __name(v, "v");
+  l(v, "readVarint");
+  function k(i, e, t, r) {
+    if (r === 0) {
+      t === 1 && (e[0] = i - 1 - e[0], e[1] = i - 1 - e[1]);
+      let n = e[0];
+      e[0] = e[1], e[1] = n;
     }
   }
-  __name(rotate2, "rotate");
-  var tzValues = [
-    0,
-    1,
-    5,
-    21,
-    85,
-    341,
-    1365,
-    5461,
-    21845,
-    87381,
-    349525,
-    1398101,
-    5592405,
-    22369621,
-    89478485,
-    357913941,
-    1431655765,
-    5726623061,
-    22906492245,
-    91625968981,
-    366503875925,
-    1466015503701,
-    5864062014805,
-    23456248059221,
-    93824992236885,
-    375299968947541,
-    1501199875790165
-  ];
-  function zxyToTileId(z, x2, y) {
-    if (z > 26) {
-      throw Error("Tile zoom level exceeds max safe number limit (26)");
-    }
-    if (x2 > __pow(2, z) - 1 || y > __pow(2, z) - 1) {
-      throw Error("tile x/y outside zoom level bounds");
-    }
-    const acc = tzValues[z];
-    const n = __pow(2, z);
-    let rx = 0;
-    let ry = 0;
-    let d = 0;
-    const xy = [x2, y];
-    let s = n / 2;
-    while (s > 0) {
-      rx = (xy[0] & s) > 0 ? 1 : 0;
-      ry = (xy[1] & s) > 0 ? 1 : 0;
-      d += s * s * (3 * rx ^ ry);
-      rotate2(s, xy, rx, ry);
-      s = s / 2;
-    }
-    return acc + d;
+  __name(k, "k");
+  l(k, "rotate");
+  function N(i, e) {
+    let t = b(2, i), r = e, n = e, s = e, o = [0, 0], a = 1;
+    for (; a < t; ) r = 1 & s / 2, n = 1 & (s ^ r), k(a, o, r, n), o[0] += a * r, o[1] += a * n, s = s / 4, a *= 2;
+    return [i, o[0], o[1]];
   }
-  __name(zxyToTileId, "zxyToTileId");
-  function defaultDecompress(buf, compression) {
-    return __async2(this, null, function* () {
-      if (compression === 1 || compression === 0) {
-        return buf;
+  __name(N, "N");
+  l(N, "idOnLevel");
+  var q = [0, 1, 5, 21, 85, 341, 1365, 5461, 21845, 87381, 349525, 1398101, 5592405, 22369621, 89478485, 357913941, 1431655765, 5726623061, 22906492245, 91625968981, 366503875925, 1466015503701, 5864062014805, 23456248059221, 93824992236885, 375299968947541, 1501199875790165];
+  function G(i, e, t) {
+    if (i > 26) throw new Error("Tile zoom level exceeds max safe number limit (26)");
+    if (e > b(2, i) - 1 || t > b(2, i) - 1) throw new Error("tile x/y outside zoom level bounds");
+    let r = q[i], n = b(2, i), s = 0, o = 0, a = 0, u = [e, t], c = n / 2;
+    for (; c > 0; ) s = (u[0] & c) > 0 ? 1 : 0, o = (u[1] & c) > 0 ? 1 : 0, a += c * c * (3 * s ^ o), k(c, u, s, o), c = c / 2;
+    return r + a;
+  }
+  __name(G, "G");
+  l(G, "zxyToTileId");
+  function ie(i) {
+    let e = 0, t = 0;
+    for (let r = 0; r < 27; r++) {
+      let n = (1 << r) * (1 << r);
+      if (e + n > i) return N(r, i - e);
+      e += n;
+    }
+    throw new Error("Tile zoom level exceeds max safe number limit (26)");
+  }
+  __name(ie, "ie");
+  l(ie, "tileIdToZxy");
+  var J = ((s) => (s[s.Unknown = 0] = "Unknown", s[s.None = 1] = "None", s[s.Gzip = 2] = "Gzip", s[s.Brotli = 3] = "Brotli", s[s.Zstd = 4] = "Zstd", s))(J || {});
+  function D(i, e) {
+    return m(this, null, function* () {
+      if (e === 1 || e === 0) return i;
+      if (e === 2) {
+        if (typeof globalThis.DecompressionStream == "undefined") return decompressSync(new Uint8Array(i));
+        let t = new Response(i).body;
+        if (!t) throw new Error("Failed to read response stream");
+        let r = t.pipeThrough(new globalThis.DecompressionStream("gzip"));
+        return new Response(r).arrayBuffer();
       }
-      if (compression === 2) {
-        if (typeof globalThis.DecompressionStream === "undefined") {
-          return decompressSync(new Uint8Array(buf));
-        }
-        const stream = new Response(buf).body;
-        if (!stream) {
-          throw Error("Failed to read response stream");
-        }
-        const result = stream.pipeThrough(
-          // biome-ignore lint: needed to detect DecompressionStream in browser+node+cloudflare workers
-          new globalThis.DecompressionStream("gzip")
-        );
-        return new Response(result).arrayBuffer();
-      }
-      throw Error("Compression method not supported");
+      throw new Error("Compression method not supported");
     });
   }
-  __name(defaultDecompress, "defaultDecompress");
-  function tileTypeExt(t) {
-    if (t === 1)
-      return ".mvt";
-    if (t === 2)
-      return ".png";
-    if (t === 3)
-      return ".jpg";
-    if (t === 4)
-      return ".webp";
-    if (t === 5)
-      return ".avif";
-    return "";
+  __name(D, "D");
+  l(D, "defaultDecompress");
+  var O = ((o) => (o[o.Unknown = 0] = "Unknown", o[o.Mvt = 1] = "Mvt", o[o.Png = 2] = "Png", o[o.Jpeg = 3] = "Jpeg", o[o.Webp = 4] = "Webp", o[o.Avif = 5] = "Avif", o))(O || {});
+  function _(i) {
+    return i === 1 ? ".mvt" : i === 2 ? ".png" : i === 3 ? ".jpg" : i === 4 ? ".webp" : i === 5 ? ".avif" : "";
   }
-  __name(tileTypeExt, "tileTypeExt");
-  var HEADER_SIZE_BYTES = 127;
-  function findTile(entries, tileId) {
-    let m = 0;
-    let n = entries.length - 1;
-    while (m <= n) {
-      const k = n + m >> 1;
-      const cmp = tileId - entries[k].tileId;
-      if (cmp > 0) {
-        m = k + 1;
-      } else if (cmp < 0) {
-        n = k - 1;
-      } else {
-        return entries[k];
-      }
+  __name(_, "_");
+  l(_, "tileTypeExt");
+  var Y = 127;
+  function Q(i, e) {
+    let t = 0, r = i.length - 1;
+    for (; t <= r; ) {
+      let n = r + t >> 1, s = e - i[n].tileId;
+      if (s > 0) t = n + 1;
+      else if (s < 0) r = n - 1;
+      else return i[n];
     }
-    if (n >= 0) {
-      if (entries[n].runLength === 0) {
-        return entries[n];
-      }
-      if (tileId - entries[n].tileId < entries[n].runLength) {
-        return entries[n];
-      }
-    }
-    return null;
+    return r >= 0 && (i[r].runLength === 0 || e - i[r].tileId < i[r].runLength) ? i[r] : null;
   }
-  __name(findTile, "findTile");
-  var _a2;
-  var FetchSource = (_a2 = class {
-    constructor(url, customHeaders = new Headers()) {
-      this.url = url;
-      this.customHeaders = customHeaders;
-      this.mustReload = false;
-      let userAgent = "";
-      if ("navigator" in globalThis) {
-        userAgent = globalThis.navigator.userAgent || "";
-      }
-      const isWindows = userAgent.indexOf("Windows") > -1;
-      const isChromiumBased = /Chrome|Chromium|Edg|OPR|Brave/.test(userAgent);
-      this.chromeWindowsNoCache = false;
-      if (isWindows && isChromiumBased) {
-        this.chromeWindowsNoCache = true;
-      }
+  __name(Q, "Q");
+  l(Q, "findTile");
+  var _a3;
+  var A = (_a3 = class {
+    constructor(e) {
+      this.file = e;
+    }
+    getKey() {
+      return this.file.name;
+    }
+    getBytes(e, t) {
+      return m(this, null, function* () {
+        return { data: yield this.file.slice(e, e + t).arrayBuffer() };
+      });
+    }
+  }, __name(_a3, "A"), _a3);
+  l(A, "FileSource");
+  var _a4;
+  var U = (_a4 = class {
+    constructor(e, t = new Headers()) {
+      this.url = e, this.customHeaders = t, this.mustReload = false;
+      let r = "";
+      "navigator" in globalThis && (r = globalThis.navigator.userAgent || "");
+      let n = r.indexOf("Windows") > -1, s = /Chrome|Chromium|Edg|OPR|Brave/.test(r);
+      this.chromeWindowsNoCache = false, n && s && (this.chromeWindowsNoCache = true);
     }
     getKey() {
       return this.url;
     }
-    /**
-     * Mutate the custom [Headers](https://developer.mozilla.org/en-US/docs/Web/API/Headers) set for all requests to the remote archive.
-     */
-    setHeaders(customHeaders) {
-      this.customHeaders = customHeaders;
+    setHeaders(e) {
+      this.customHeaders = e;
     }
-    getBytes(offset, length, passedSignal, etag) {
-      return __async2(this, null, function* () {
-        let controller;
-        let signal;
-        if (passedSignal) {
-          signal = passedSignal;
-        } else {
-          controller = new AbortController();
-          signal = controller.signal;
+    getBytes(e, t, r, n) {
+      return m(this, null, function* () {
+        let s, o;
+        r ? o = r : (s = new AbortController(), o = s.signal);
+        let a = new Headers(this.customHeaders);
+        a.set("range", `bytes=${e}-${e + t - 1}`);
+        let u;
+        this.mustReload ? u = "reload" : this.chromeWindowsNoCache && (u = "no-store");
+        let c = yield fetch(this.url, { signal: o, cache: u, headers: a });
+        if (e === 0 && c.status === 416) {
+          let y = c.headers.get("Content-Range");
+          if (!y || !y.startsWith("bytes */")) throw new Error("Missing content-length on 416 response");
+          let f = +y.substr(8);
+          c = yield fetch(this.url, { signal: o, cache: "reload", headers: { range: `bytes=0-${f - 1}` } });
         }
-        const requestHeaders = new Headers(this.customHeaders);
-        requestHeaders.set("range", `bytes=${offset}-${offset + length - 1}`);
-        let cache2;
-        if (this.mustReload) {
-          cache2 = "reload";
-        } else if (this.chromeWindowsNoCache) {
-          cache2 = "no-store";
-        }
-        let resp = yield fetch(this.url, {
-          signal,
-          cache: cache2,
-          headers: requestHeaders
-          //biome-ignore lint: "cache" is incompatible between cloudflare workers and browser
-        });
-        if (offset === 0 && resp.status === 416) {
-          const contentRange = resp.headers.get("Content-Range");
-          if (!contentRange || !contentRange.startsWith("bytes */")) {
-            throw Error("Missing content-length on 416 response");
-          }
-          const actualLength = +contentRange.substr(8);
-          resp = yield fetch(this.url, {
-            signal,
-            cache: "reload",
-            headers: { range: `bytes=0-${actualLength - 1}` }
-            //biome-ignore lint: "cache" is incompatible between cloudflare workers and browser
-          });
-        }
-        let newEtag = resp.headers.get("Etag");
-        if (newEtag == null ? void 0 : newEtag.startsWith("W/")) {
-          newEtag = null;
-        }
-        if (resp.status === 416 || etag && newEtag && newEtag !== etag) {
-          this.mustReload = true;
-          throw new EtagMismatch(
-            `Server returned non-matching ETag ${etag} after one retry. Check browser extensions and servers for issues that may affect correct ETag headers.`
-          );
-        }
-        if (resp.status >= 300) {
-          throw Error(`Bad response code: ${resp.status}`);
-        }
-        const contentLength = resp.headers.get("Content-Length");
-        if (resp.status === 200 && (!contentLength || +contentLength > length)) {
-          if (controller)
-            controller.abort();
-          throw Error(
-            "Server returned no content-length header or content-length exceeding request. Check that your storage backend supports HTTP Byte Serving."
-          );
-        }
-        const a = yield resp.arrayBuffer();
-        return {
-          data: a,
-          etag: newEtag || void 0,
-          cacheControl: resp.headers.get("Cache-Control") || void 0,
-          expires: resp.headers.get("Expires") || void 0
-        };
+        let d = c.headers.get("Etag");
+        if (d != null && d.startsWith("W/") && (d = null), c.status === 416 || n && d && d !== n) throw this.mustReload = true, new E(`Server returned non-matching ETag ${n} after one retry. Check browser extensions and servers for issues that may affect correct ETag headers.`);
+        if (c.status >= 300) throw new Error(`Bad response code: ${c.status}`);
+        let h = c.headers.get("Content-Length");
+        if (c.status === 200 && (!h || +h > t)) throw s && s.abort(), new Error("Server returned no content-length header or content-length exceeding request. Check that your storage backend supports HTTP Byte Serving.");
+        return { data: yield c.arrayBuffer(), etag: d || void 0, cacheControl: c.headers.get("Cache-Control") || void 0, expires: c.headers.get("Expires") || void 0 };
       });
     }
-  }, __name(_a2, "FetchSource"), _a2);
-  function getUint64(v, offset) {
-    const wh = v.getUint32(offset + 4, true);
-    const wl = v.getUint32(offset + 0, true);
-    return wh * __pow(2, 32) + wl;
+  }, __name(_a4, "U"), _a4);
+  l(U, "FetchSource");
+  var C = U;
+  function g(i, e) {
+    let t = i.getUint32(e + 4, true), r = i.getUint32(e + 0, true);
+    return t * b(2, 32) + r;
   }
-  __name(getUint64, "getUint64");
-  function bytesToHeader(bytes, etag) {
-    const v = new DataView(bytes);
-    const specVersion = v.getUint8(7);
-    if (specVersion > 3) {
-      throw Error(
-        `Archive is spec version ${specVersion} but this library supports up to spec version 3`
-      );
-    }
-    return {
-      specVersion,
-      rootDirectoryOffset: getUint64(v, 8),
-      rootDirectoryLength: getUint64(v, 16),
-      jsonMetadataOffset: getUint64(v, 24),
-      jsonMetadataLength: getUint64(v, 32),
-      leafDirectoryOffset: getUint64(v, 40),
-      leafDirectoryLength: getUint64(v, 48),
-      tileDataOffset: getUint64(v, 56),
-      tileDataLength: getUint64(v, 64),
-      numAddressedTiles: getUint64(v, 72),
-      numTileEntries: getUint64(v, 80),
-      numTileContents: getUint64(v, 88),
-      clustered: v.getUint8(96) === 1,
-      internalCompression: v.getUint8(97),
-      tileCompression: v.getUint8(98),
-      tileType: v.getUint8(99),
-      minZoom: v.getUint8(100),
-      maxZoom: v.getUint8(101),
-      minLon: v.getInt32(102, true) / 1e7,
-      minLat: v.getInt32(106, true) / 1e7,
-      maxLon: v.getInt32(110, true) / 1e7,
-      maxLat: v.getInt32(114, true) / 1e7,
-      centerZoom: v.getUint8(118),
-      centerLon: v.getInt32(119, true) / 1e7,
-      centerLat: v.getInt32(123, true) / 1e7,
-      etag
-    };
+  __name(g, "g");
+  l(g, "getUint64");
+  function X(i, e) {
+    let t = new DataView(i), r = t.getUint8(7);
+    if (r > 3) throw new Error(`Archive is spec version ${r} but this library supports up to spec version 3`);
+    return { specVersion: r, rootDirectoryOffset: g(t, 8), rootDirectoryLength: g(t, 16), jsonMetadataOffset: g(t, 24), jsonMetadataLength: g(t, 32), leafDirectoryOffset: g(t, 40), leafDirectoryLength: g(t, 48), tileDataOffset: g(t, 56), tileDataLength: g(t, 64), numAddressedTiles: g(t, 72), numTileEntries: g(t, 80), numTileContents: g(t, 88), clustered: t.getUint8(96) === 1, internalCompression: t.getUint8(97), tileCompression: t.getUint8(98), tileType: t.getUint8(99), minZoom: t.getUint8(100), maxZoom: t.getUint8(101), minLon: t.getInt32(102, true) / 1e7, minLat: t.getInt32(106, true) / 1e7, maxLon: t.getInt32(110, true) / 1e7, maxLat: t.getInt32(114, true) / 1e7, centerZoom: t.getUint8(118), centerLon: t.getInt32(119, true) / 1e7, centerLat: t.getInt32(123, true) / 1e7, etag: e };
   }
-  __name(bytesToHeader, "bytesToHeader");
-  function deserializeIndex(buffer2) {
-    const p = { buf: new Uint8Array(buffer2), pos: 0 };
-    const numEntries = readVarint(p);
-    const entries = [];
-    let lastId = 0;
-    for (let i2 = 0; i2 < numEntries; i2++) {
-      const v = readVarint(p);
-      entries.push({ tileId: lastId + v, offset: 0, length: 0, runLength: 1 });
-      lastId += v;
+  __name(X, "X");
+  l(X, "bytesToHeader");
+  function Z(i) {
+    let e = { buf: new Uint8Array(i), pos: 0 }, t = v(e), r = [], n = 0;
+    for (let s = 0; s < t; s++) {
+      let o = v(e);
+      r.push({ tileId: n + o, offset: 0, length: 0, runLength: 1 }), n += o;
     }
-    for (let i2 = 0; i2 < numEntries; i2++) {
-      entries[i2].runLength = readVarint(p);
+    for (let s = 0; s < t; s++) r[s].runLength = v(e);
+    for (let s = 0; s < t; s++) r[s].length = v(e);
+    for (let s = 0; s < t; s++) {
+      let o = v(e);
+      o === 0 && s > 0 ? r[s].offset = r[s - 1].offset + r[s - 1].length : r[s].offset = o - 1;
     }
-    for (let i2 = 0; i2 < numEntries; i2++) {
-      entries[i2].length = readVarint(p);
-    }
-    for (let i2 = 0; i2 < numEntries; i2++) {
-      const v = readVarint(p);
-      if (v === 0 && i2 > 0) {
-        entries[i2].offset = entries[i2 - 1].offset + entries[i2 - 1].length;
-      } else {
-        entries[i2].offset = v - 1;
-      }
-    }
-    return entries;
+    return r;
   }
-  __name(deserializeIndex, "deserializeIndex");
-  function detectVersion(a) {
-    const v = new DataView(a);
-    if (v.getUint16(2, true) === 2) {
-      console.warn(
-        "PMTiles spec version 2 has been deprecated; please see github.com/protomaps/PMTiles for tools to upgrade"
-      );
-      return 2;
-    }
-    if (v.getUint16(2, true) === 1) {
-      console.warn(
-        "PMTiles spec version 1 has been deprecated; please see github.com/protomaps/PMTiles for tools to upgrade"
-      );
-      return 1;
-    }
-    return 3;
-  }
-  __name(detectVersion, "detectVersion");
-  var _a3;
-  var EtagMismatch = (_a3 = class extends Error {
-  }, __name(_a3, "EtagMismatch"), _a3);
-  function getHeaderAndRoot(source, decompress) {
-    return __async2(this, null, function* () {
-      const resp = yield source.getBytes(0, 16384);
-      const v = new DataView(resp.data);
-      if (v.getUint16(0, true) !== 19792) {
-        throw new Error("Wrong magic number for PMTiles archive");
-      }
-      if (detectVersion(resp.data) < 3) {
-        return [yield v2_default.getHeader(source)];
-      }
-      const headerData = resp.data.slice(0, HEADER_SIZE_BYTES);
-      const header = bytesToHeader(headerData, resp.etag);
-      const rootDirData = resp.data.slice(
-        header.rootDirectoryOffset,
-        header.rootDirectoryOffset + header.rootDirectoryLength
-      );
-      const dirKey = `${source.getKey()}|${header.etag || ""}|${header.rootDirectoryOffset}|${header.rootDirectoryLength}`;
-      const rootDir = deserializeIndex(
-        yield decompress(rootDirData, header.internalCompression)
-      );
-      return [header, [dirKey, rootDir.length, rootDir]];
+  __name(Z, "Z");
+  l(Z, "deserializeIndex");
+  var _a5;
+  var R = (_a5 = class extends Error {
+  }, __name(_a5, "R"), _a5);
+  l(R, "EtagMismatch");
+  var E = R;
+  function K(i, e) {
+    return m(this, null, function* () {
+      let t = yield i.getBytes(0, 16384);
+      if (new DataView(t.data).getUint16(0, true) !== 19792) throw new Error("Wrong magic number for PMTiles archive");
+      let n = t.data.slice(0, Y), s = X(n, t.etag), o = t.data.slice(s.rootDirectoryOffset, s.rootDirectoryOffset + s.rootDirectoryLength), a = `${i.getKey()}|${s.etag || ""}|${s.rootDirectoryOffset}|${s.rootDirectoryLength}`, u = Z(yield e(o, s.internalCompression));
+      return [s, [a, u.length, u]];
     });
   }
-  __name(getHeaderAndRoot, "getHeaderAndRoot");
-  function getDirectory(source, decompress, offset, length, header) {
-    return __async2(this, null, function* () {
-      const resp = yield source.getBytes(offset, length, void 0, header.etag);
-      const data = yield decompress(resp.data, header.internalCompression);
-      const directory = deserializeIndex(data);
-      if (directory.length === 0) {
-        throw new Error("Empty directory is invalid");
-      }
-      return directory;
+  __name(K, "K");
+  l(K, "getHeaderAndRoot");
+  function I(i, e, t, r, n) {
+    return m(this, null, function* () {
+      let s = yield i.getBytes(t, r, void 0, n.etag), o = yield e(s.data, n.internalCompression), a = Z(o);
+      if (a.length === 0) throw new Error("Empty directory is invalid");
+      return a;
     });
   }
-  __name(getDirectory, "getDirectory");
-  var _a4;
-  var SharedPromiseCache = (_a4 = class {
-    constructor(maxCacheEntries = 100, prefetch = true, decompress = defaultDecompress) {
-      this.cache = /* @__PURE__ */ new Map();
-      this.invalidations = /* @__PURE__ */ new Map();
-      this.maxCacheEntries = maxCacheEntries;
-      this.counter = 1;
-      this.decompress = decompress;
+  __name(I, "I");
+  l(I, "getDirectory");
+  var _a6;
+  var H = (_a6 = class {
+    constructor(e = 100, t = true, r = D) {
+      this.cache = /* @__PURE__ */ new Map(), this.maxCacheEntries = e, this.counter = 1, this.decompress = r;
     }
-    getHeader(source) {
-      return __async2(this, null, function* () {
-        const cacheKey = source.getKey();
-        const cacheValue = this.cache.get(cacheKey);
-        if (cacheValue) {
-          cacheValue.lastUsed = this.counter++;
-          const data = yield cacheValue.data;
-          return data;
-        }
-        const p = new Promise((resolve, reject) => {
-          getHeaderAndRoot(source, this.decompress).then((res) => {
-            if (res[1]) {
-              this.cache.set(res[1][0], {
-                lastUsed: this.counter++,
-                data: Promise.resolve(res[1][2])
-              });
-            }
-            resolve(res[0]);
-            this.prune();
-          }).catch((e) => {
-            reject(e);
-          });
-        });
-        this.cache.set(cacheKey, { lastUsed: this.counter++, data: p });
-        return p;
+    getHeader(e) {
+      return m(this, null, function* () {
+        let t = e.getKey(), r = this.cache.get(t);
+        if (r) return r.lastUsed = this.counter++, r.data;
+        let n = yield K(e, this.decompress);
+        return n[1] && this.cache.set(n[1][0], { lastUsed: this.counter++, data: n[1][2] }), this.cache.set(t, { lastUsed: this.counter++, data: n[0] }), this.prune(), n[0];
       });
     }
-    getDirectory(source, offset, length, header) {
-      return __async2(this, null, function* () {
-        const cacheKey = `${source.getKey()}|${header.etag || ""}|${offset}|${length}`;
-        const cacheValue = this.cache.get(cacheKey);
-        if (cacheValue) {
-          cacheValue.lastUsed = this.counter++;
-          const data = yield cacheValue.data;
-          return data;
-        }
-        const p = new Promise((resolve, reject) => {
-          getDirectory(source, this.decompress, offset, length, header).then((directory) => {
-            resolve(directory);
-            this.prune();
-          }).catch((e) => {
-            reject(e);
-          });
-        });
-        this.cache.set(cacheKey, { lastUsed: this.counter++, data: p });
-        return p;
+    getDirectory(e, t, r, n) {
+      return m(this, null, function* () {
+        let s = `${e.getKey()}|${n.etag || ""}|${t}|${r}`, o = this.cache.get(s);
+        if (o) return o.lastUsed = this.counter++, o.data;
+        let a = yield I(e, this.decompress, t, r, n);
+        return this.cache.set(s, { lastUsed: this.counter++, data: a }), this.prune(), a;
       });
     }
-    // for v2 backwards compatibility
-    getArrayBuffer(source, offset, length, header) {
-      return __async2(this, null, function* () {
-        const cacheKey = `${source.getKey()}|${header.etag || ""}|${offset}|${length}`;
-        const cacheValue = this.cache.get(cacheKey);
-        if (cacheValue) {
-          cacheValue.lastUsed = this.counter++;
-          const data = yield cacheValue.data;
-          return data;
-        }
-        const p = new Promise((resolve, reject) => {
-          source.getBytes(offset, length, void 0, header.etag).then((resp) => {
-            resolve(resp.data);
-            if (this.cache.has(cacheKey)) {
-            }
-            this.prune();
-          }).catch((e) => {
-            reject(e);
+    prune() {
+      if (this.cache.size > this.maxCacheEntries) {
+        let e = 1 / 0, t;
+        this.cache.forEach((r, n) => {
+          r.lastUsed < e && (e = r.lastUsed, t = n);
+        }), t && this.cache.delete(t);
+      }
+    }
+    invalidate(e) {
+      return m(this, null, function* () {
+        this.cache.delete(e.getKey());
+      });
+    }
+  }, __name(_a6, "H"), _a6);
+  l(H, "ResolvedValueCache");
+  var _a7;
+  var M = (_a7 = class {
+    constructor(e = 100, t = true, r = D) {
+      this.cache = /* @__PURE__ */ new Map(), this.invalidations = /* @__PURE__ */ new Map(), this.maxCacheEntries = e, this.counter = 1, this.decompress = r;
+    }
+    getHeader(e) {
+      return m(this, null, function* () {
+        let t = e.getKey(), r = this.cache.get(t);
+        if (r) return r.lastUsed = this.counter++, yield r.data;
+        let n = new Promise((s, o) => {
+          K(e, this.decompress).then((a) => {
+            a[1] && this.cache.set(a[1][0], { lastUsed: this.counter++, data: Promise.resolve(a[1][2]) }), s(a[0]), this.prune();
+          }).catch((a) => {
+            o(a);
           });
         });
-        this.cache.set(cacheKey, { lastUsed: this.counter++, data: p });
-        return p;
+        return this.cache.set(t, { lastUsed: this.counter++, data: n }), n;
+      });
+    }
+    getDirectory(e, t, r, n) {
+      return m(this, null, function* () {
+        let s = `${e.getKey()}|${n.etag || ""}|${t}|${r}`, o = this.cache.get(s);
+        if (o) return o.lastUsed = this.counter++, yield o.data;
+        let a = new Promise((u, c) => {
+          I(e, this.decompress, t, r, n).then((d) => {
+            u(d), this.prune();
+          }).catch((d) => {
+            c(d);
+          });
+        });
+        return this.cache.set(s, { lastUsed: this.counter++, data: a }), a;
       });
     }
     prune() {
       if (this.cache.size >= this.maxCacheEntries) {
-        let minUsed = Infinity;
-        let minKey = void 0;
-        this.cache.forEach((cacheValue, key) => {
-          if (cacheValue.lastUsed < minUsed) {
-            minUsed = cacheValue.lastUsed;
-            minKey = key;
-          }
-        });
-        if (minKey) {
-          this.cache.delete(minKey);
-        }
+        let e = 1 / 0, t;
+        this.cache.forEach((r, n) => {
+          r.lastUsed < e && (e = r.lastUsed, t = n);
+        }), t && this.cache.delete(t);
       }
     }
-    invalidate(source) {
-      return __async2(this, null, function* () {
-        const key = source.getKey();
-        if (this.invalidations.get(key)) {
-          return yield this.invalidations.get(key);
-        }
-        this.cache.delete(source.getKey());
-        const p = new Promise((resolve, reject) => {
-          this.getHeader(source).then((h) => {
-            resolve();
-            this.invalidations.delete(key);
-          }).catch((e) => {
-            reject(e);
+    invalidate(e) {
+      return m(this, null, function* () {
+        let t = e.getKey();
+        if (this.invalidations.get(t)) return yield this.invalidations.get(t);
+        this.cache.delete(e.getKey());
+        let r = new Promise((n, s) => {
+          this.getHeader(e).then((o) => {
+            n(), this.invalidations.delete(t);
+          }).catch((o) => {
+            s(o);
           });
         });
-        this.invalidations.set(key, p);
+        this.invalidations.set(t, r);
       });
     }
-  }, __name(_a4, "SharedPromiseCache"), _a4);
-  var _a5;
-  var PMTiles = (_a5 = class {
-    constructor(source, cache2, decompress) {
-      if (typeof source === "string") {
-        this.source = new FetchSource(source);
-      } else {
-        this.source = source;
-      }
-      if (decompress) {
-        this.decompress = decompress;
-      } else {
-        this.decompress = defaultDecompress;
-      }
-      if (cache2) {
-        this.cache = cache2;
-      } else {
-        this.cache = new SharedPromiseCache();
-      }
+  }, __name(_a7, "M"), _a7);
+  l(M, "SharedPromiseCache");
+  var P = M;
+  var _a8;
+  var B = (_a8 = class {
+    constructor(e, t, r) {
+      typeof e == "string" ? this.source = new C(e) : this.source = e, r ? this.decompress = r : this.decompress = D, t ? this.cache = t : this.cache = new P();
     }
-    /**
-     * Return the header of the archive,
-     * including information such as tile type, min/max zoom, bounds, and summary statistics.
-     */
     getHeader() {
-      return __async2(this, null, function* () {
+      return m(this, null, function* () {
         return yield this.cache.getHeader(this.source);
       });
     }
-    /** @hidden */
-    getZxyAttempt(z, x2, y, signal) {
-      return __async2(this, null, function* () {
-        const tileId = zxyToTileId(z, x2, y);
-        const header = yield this.cache.getHeader(this.source);
-        if (header.specVersion < 3) {
-          return v2_default.getZxy(header, this.source, this.cache, z, x2, y, signal);
-        }
-        if (z < header.minZoom || z > header.maxZoom) {
-          return void 0;
-        }
-        let dO = header.rootDirectoryOffset;
-        let dL = header.rootDirectoryLength;
-        for (let depth = 0; depth <= 3; depth++) {
-          const directory = yield this.cache.getDirectory(
-            this.source,
-            dO,
-            dL,
-            header
-          );
-          const entry = findTile(directory, tileId);
-          if (entry) {
-            if (entry.runLength > 0) {
-              const resp = yield this.source.getBytes(
-                header.tileDataOffset + entry.offset,
-                entry.length,
-                signal,
-                header.etag
-              );
-              return {
-                data: yield this.decompress(resp.data, header.tileCompression),
-                cacheControl: resp.cacheControl,
-                expires: resp.expires
-              };
+    getZxyAttempt(e, t, r, n) {
+      return m(this, null, function* () {
+        let s = G(e, t, r), o = yield this.cache.getHeader(this.source);
+        if (e < o.minZoom || e > o.maxZoom) return;
+        let a = o.rootDirectoryOffset, u = o.rootDirectoryLength;
+        for (let c = 0; c <= 3; c++) {
+          let d = yield this.cache.getDirectory(this.source, a, u, o), h = Q(d, s);
+          if (h) {
+            if (h.runLength > 0) {
+              let p = yield this.source.getBytes(o.tileDataOffset + h.offset, h.length, n, o.etag);
+              return { data: yield this.decompress(p.data, o.tileCompression), cacheControl: p.cacheControl, expires: p.expires };
             }
-            dO = header.leafDirectoryOffset + entry.offset;
-            dL = entry.length;
-          } else {
-            return void 0;
-          }
+            a = o.leafDirectoryOffset + h.offset, u = h.length;
+          } else return;
         }
-        throw Error("Maximum directory depth exceeded");
+        throw new Error("Maximum directory depth exceeded");
       });
     }
-    /**
-     * Primary method to get a single tile's bytes from an archive.
-     *
-     * Returns undefined if the tile does not exist in the archive.
-     */
-    getZxy(z, x2, y, signal) {
-      return __async2(this, null, function* () {
+    getZxy(e, t, r, n) {
+      return m(this, null, function* () {
         try {
-          return yield this.getZxyAttempt(z, x2, y, signal);
-        } catch (e) {
-          if (e instanceof EtagMismatch) {
-            this.cache.invalidate(this.source);
-            return yield this.getZxyAttempt(z, x2, y, signal);
-          }
-          throw e;
+          return yield this.getZxyAttempt(e, t, r, n);
+        } catch (s) {
+          if (s instanceof E) return this.cache.invalidate(this.source), yield this.getZxyAttempt(e, t, r, n);
+          throw s;
         }
       });
     }
-    /** @hidden */
     getMetadataAttempt() {
-      return __async2(this, null, function* () {
-        const header = yield this.cache.getHeader(this.source);
-        const resp = yield this.source.getBytes(
-          header.jsonMetadataOffset,
-          header.jsonMetadataLength,
-          void 0,
-          header.etag
-        );
-        const decompressed = yield this.decompress(
-          resp.data,
-          header.internalCompression
-        );
-        const dec = new TextDecoder("utf-8");
-        return JSON.parse(dec.decode(decompressed));
+      return m(this, null, function* () {
+        let e = yield this.cache.getHeader(this.source), t = yield this.source.getBytes(e.jsonMetadataOffset, e.jsonMetadataLength, void 0, e.etag), r = yield this.decompress(t.data, e.internalCompression), n = new TextDecoder("utf-8");
+        return JSON.parse(n.decode(r));
       });
     }
-    /**
-     * Return the arbitrary JSON metadata of the archive.
-     */
     getMetadata() {
-      return __async2(this, null, function* () {
+      return m(this, null, function* () {
         try {
           return yield this.getMetadataAttempt();
         } catch (e) {
-          if (e instanceof EtagMismatch) {
-            this.cache.invalidate(this.source);
-            return yield this.getMetadataAttempt();
-          }
+          if (e instanceof E) return this.cache.invalidate(this.source), yield this.getMetadataAttempt();
           throw e;
         }
       });
     }
-    /**
-     * Construct a [TileJSON](https://github.com/mapbox/tilejson-spec) object.
-     *
-     * baseTilesUrl is the desired tiles URL, excluding the suffix `/{z}/{x}/{y}.{ext}`.
-     * For example, if the desired URL is `http://example.com/tileset/{z}/{x}/{y}.mvt`,
-     * the baseTilesUrl should be `https://example.com/tileset`.
-     */
-    getTileJson(baseTilesUrl) {
-      return __async2(this, null, function* () {
-        const header = yield this.getHeader();
-        const metadata = yield this.getMetadata();
-        const ext = tileTypeExt(header.tileType);
-        return {
-          tilejson: "3.0.0",
-          scheme: "xyz",
-          tiles: [`${baseTilesUrl}/{z}/{x}/{y}${ext}`],
-          // biome-ignore lint: TileJSON spec
-          vector_layers: metadata.vector_layers,
-          attribution: metadata.attribution,
-          description: metadata.description,
-          name: metadata.name,
-          version: metadata.version,
-          bounds: [header.minLon, header.minLat, header.maxLon, header.maxLat],
-          center: [header.centerLon, header.centerLat, header.centerZoom],
-          minzoom: header.minZoom,
-          maxzoom: header.maxZoom
-        };
+    getTileJson(e) {
+      return m(this, null, function* () {
+        let t = yield this.getHeader(), r = yield this.getMetadata(), n = _(t.tileType);
+        return { tilejson: "3.0.0", scheme: "xyz", tiles: [`${e}/{z}/{x}/{y}${n}`], vector_layers: r.vector_layers, attribution: r.attribution, description: r.description, name: r.name, version: r.version, bounds: [t.minLon, t.minLat, t.maxLon, t.maxLat], center: [t.centerLon, t.centerLat, t.centerZoom], minzoom: t.minZoom, maxzoom: t.maxZoom };
       });
     }
-  }, __name(_a5, "PMTiles"), _a5);
+  }, __name(_a8, "B"), _a8);
+  l(B, "PMTiles");
+  var x = B;
 
   // src/index.ts
   var _PMTilesRasterSource = class _PMTilesRasterSource extends DataTile_default3 {
@@ -12104,7 +11567,7 @@ var olpmtiles = (() => {
           img.src = src;
         });
       }, "loadImage");
-      const p = new PMTiles(options.url);
+      const p = new x(options.url);
       p.getHeader().then((h) => {
         const projection = options.projection === void 0 ? "EPSG:3857" : options.projection;
         this.tileGrid = options.tileGrid || createXYZ({
@@ -12114,8 +11577,8 @@ var olpmtiles = (() => {
           maxZoom: h.maxZoom,
           tileSize: options.tileSize
         });
-        this.setLoader((z, x2, y) => __async(this, null, function* () {
-          const response = yield p.getZxy(z, x2, y);
+        this.setLoader((z2, x2, y) => __async(this, null, function* () {
+          const response = yield p.getZxy(z2, x2, y);
           if (!response) {
             return new Uint8Array();
           }
@@ -12139,17 +11602,17 @@ var olpmtiles = (() => {
       }));
       this.tileLoadFunction = /* @__PURE__ */ __name((tile, url) => {
         const vtile = tile;
-        const re = new RegExp(/pmtiles:\/\/(\d+)\/(\d+)\/(\d+)/);
-        const result = url.match(re);
+        const re2 = new RegExp(/pmtiles:\/\/(\d+)\/(\d+)\/(\d+)/);
+        const result = url.match(re2);
         if (!(result && result.length >= 4)) {
           throw Error("Could not parse tile URL");
         }
-        const z = +result[1];
+        const z2 = +result[1];
         const x2 = +result[2];
         const y = +result[3];
         vtile.setLoader(
           (extent, resolution, projection) => {
-            this.pmtiles_.getZxy(z, x2, y).then((tile_result) => {
+            this.pmtiles_.getZxy(z2, x2, y).then((tile_result) => {
               if (tile_result) {
                 const format = vtile.getFormat();
                 vtile.setFeatures(
@@ -12170,7 +11633,7 @@ var olpmtiles = (() => {
           }
         );
       }, "tileLoadFunction");
-      this.pmtiles_ = new PMTiles(options.url);
+      this.pmtiles_ = new x(options.url);
       this.pmtiles_.getHeader().then((h) => {
         const projection = options.projection || "EPSG:3857";
         const extent = options.extent || extentFromProjection(projection);
