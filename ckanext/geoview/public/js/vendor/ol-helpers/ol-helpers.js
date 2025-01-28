@@ -1197,7 +1197,7 @@ ol.proj.addProjection(createEPSG4326Proj('EPSG:4326:LONLAT', 'enu'));
     OL_HELPERS.createPmtilesLayer = async function(url) {
         const response = await fetch(url, {
             method: 'GET',
-            headers: {'Content-Range': '0-1000'},
+            headers: {'Range': 'bytes=0-16383'},
         })
         
         if (response.redirected) {
