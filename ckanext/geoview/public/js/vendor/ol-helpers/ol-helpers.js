@@ -57,10 +57,11 @@ if (window.Proj4js) {
     // add your projection definitions here
     // definitions can be found at http://spatialreference.org/ref/epsg/{xxxx}/proj4js/
 
-    proj4.defs['OGC:CRS84'] = proj4.defs['EPSG:4326']
+    proj4.defs['OGC:CRS84'] = proj4.defs['EPSG:4326'];
 
     // add EPSG:4326 as coming from GML, to allow for geometry transforms performed by format.GML
-    proj4.defs['http://www.opengis.net/gml/srs/epsg.xml#4326'] = proj4.defs['EPSG:4326']
+    proj4.defs['http://www.opengis.net/gml/srs/epsg.xml#4326'] = proj4.defs['EPSG:4326'];
+    proj4.defs['http://www.opengis.net/def/crs/EPSG/0/4326'] = proj4.defs['EPSG:4326'];
 
     // warn : 31370 definition from spatialreference.org is wrong
     proj4.defs("EPSG:31370", "+proj=lcc +lat_1=51.16666723333333 +lat_2=49.8333339 +lat_0=90 +lon_0=4.367486666666666 +x_0=150000.013 +y_0=5400088.438 +ellps=intl +towgs84=-106.868628,52.297783,-103.723893,0.336570,-0.456955,1.842183,-1.2747 +units=m +no_defs");
@@ -1340,6 +1341,12 @@ ol.proj.addProjection(createEPSG4326Proj('EPSG:4326:LONLAT', 'enu'));
                                 if (featureTypeProperties.length) {
 
                                     var srs;
+                                    // WFS/GML parser uses the exact identifier name to parse lat/lon vs
+                                    // lon/lat for the various versions of EPSG:4326 that are different
+                                    // depending on how it's specified and the WFS version.
+                                    // Hang on to the identifier, because http://www.opengis.net/def/crs/EPSG/0/4326 indicates lon/lat
+                                    // where urn:ogc:def:crs:EPSG::4326 indicates lat/lon. 
+                                    var srs_identifier = null;
 
                                     var defaultSrs = candidate.defaultSrs
                                     var altSrs = candidate.otherSrs
@@ -1353,13 +1360,9 @@ ol.proj.addProjection(createEPSG4326Proj('EPSG:4326:LONLAT', 'enu'));
                                             srs = ol.proj.get("EPSG:4326");
                                         else {
                                             for (var srsIdx = 0, length = allSrs.length; srsIdx < length; srsIdx++) {
-                                                // alternate format, https://www.opengis.net/def/crs/EPSG/0/4326
-                                                if (allSrs[srsIdx].match(/EPSG\/0\/4326$/)) {
-                                                    srs = ol.proj.get("EPSG:4326");
-                                                    break;
-                                                }
                                                 if (allSrs[srsIdx].match(/urn:ogc:def:crs:EPSG:.*:4326$/)) {
                                                     srs = ol.proj.get(allSrs[srsIdx]);
+                                                    srs_identifier = allSrs[srsIdx];
                                                     break;
                                                 }
                                             }
@@ -1367,14 +1370,15 @@ ol.proj.addProjection(createEPSG4326Proj('EPSG:4326:LONLAT', 'enu'));
 
                                         if (!srs) {
                                             // look for current map projection in advertised projections
-                                            if (map && map.getView().getProjection() && allSrs.indexOf(map.getView().getProjection().getCode()) >= 0)
+                                            if (map && map.getView().getProjection() && allSrs.indexOf(map.getView().getProjection().getCode()) >= 0) {
                                                 srs = map.getView().getProjection();
-
                                             // fallback on layer projection, if supported
-                                            else if (window.Proj4js && window.Proj4js.Proj(allSrs[0]))
+                                            } else if (window.Proj4js && window.Proj4js.Proj(allSrs[0])) {
+                                                srs_identifier = allSrs[0];
                                                 srs = ol.proj.get(allSrs[0]);
-                                            else {
-                                                const query = allSrs[0].split(':').pop();
+                                            } else {
+                                                srs_identifier = allSrs[0];
+                                                let query = allSrs[0].split(':').pop();
                                                 if (query.includes('/')) {
                                                     query = query.split('/').pop();
                                                 }
@@ -1436,7 +1440,7 @@ ol.proj.addProjection(createEPSG4326Proj('EPSG:4326:LONLAT', 'enu'));
                                                 var format = new ol.format.WFS({
                                                     //version: ver,
                                                     url: url,
-                                                    projection: isLonLat4326 ? OL_HELPERS.EPSG4326_LONLAT : resolvedSrs,
+                                                    projection: resolvedSrs,
                                                     // If specifying featureType, it is mandatory to also specify featureNS
                                                     // if not, OL will introspect and find all NS and feature types
                                                     //featureType: candidate.name,
@@ -1473,11 +1477,10 @@ ol.proj.addProjection(createEPSG4326Proj('EPSG:4326:LONLAT', 'enu'));
                                                             version: ver,
                                                             request: 'GetFeature',
                                                             maxFeatures: MAX_FEATURES,
-                                                            typename: candidate.name, /* TODO deal with WFS that require the prefix to be included : $candidate.prefixedName*/
-                                                            srsname: resolvedSrs.getCode(),
-                                                            /* explicit SRS must be provided here, as some impl (geoserver)
-                                                             take lat/lon axis order by default.
-                                                             EPSG:4326 enforces lon/lat order */
+                                                            /* TODO deal with WFS that require the prefix to be included : $candidate.prefixedName*/
+                                                            typename: candidate.name,
+                                                            /* send in the expected srs identifier to resolve axis ordering */
+                                                            srsname: srs_identifier || resolvedSrs.getCode(),
                                                             /* TODO check if map proj is compatible with WFS
                                                              some versions/impls need always 4326 bbox
                                                              do on-the-fly reprojection if needed */
