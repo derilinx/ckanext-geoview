@@ -200,8 +200,12 @@
 
 
                 var coordinateFormatter = function(coordinate) {
-                    var degrees = map && map.getView() && map.getView().getProjection() && (map.getView().getProjection().getUnits() == 'degrees')
-                    return ol.coordinate.toStringXY(coordinate, degrees ? 5:2);
+                    const proj = map?.getView()?.getProjection();
+                    if (window.proj4 && proj) {
+                        const coords = window.proj4(proj.getCode(), 'EPSG:4326', coordinate);
+                        return ol.coordinate.toStringXY(coords, 5);
+                    }
+                    return ol.coordinate.toStringXY(coordinate, 2);
                 };
 
                 const baseMapLayer = baseMapLayerList[0];
