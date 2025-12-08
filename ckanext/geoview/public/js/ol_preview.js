@@ -278,25 +278,30 @@
 
                     let selected = null;
                     let selected_rf = null;
-                    const onHighlight = (pixel) =>
-                          featureLayer.getFeatures(pixel).then(function (features) {
-                              // Vector tile layers use _RenderFeatures, which are read-only versions that don't 
-                              // have many of the interfaces in common with Features.
-                              // Add/remove feature depend on actual features, not render features.
-                              const feature_rf = features.length ? features[0] : undefined;
-                              const feature = (feature_rf && !feature_rf.on) ? ol.render.Feature.toFeature(feature_rf) : feature_rf
-                              if (feature_rf !== selected_rf) {
-                                  if (selected) {
-                                      highlightLayer.getSource().removeFeature(selected);
+                    const onHighlight = (pixel) => {
+                          try {
+                              featureLayer.getFeatures(pixel).then(function (features) {
+                                  // Vector tile layers use _RenderFeatures, which are read-only versions that don't 
+                                  // have many of the interfaces in common with Features.
+                                  // Add/remove feature depend on actual features, not render features.
+                                  const feature_rf = features.length ? features[0] : undefined;
+                                  const feature = (feature_rf && !feature_rf.on) ? ol.render.Feature.toFeature(feature_rf) : feature_rf
+                                  if (feature_rf !== selected_rf) {
+                                      if (selected) {
+                                          highlightLayer.getSource().removeFeature(selected);
+                                      }
+                                      if (feature) {
+                                          highlightLayer.getSource().addFeature(feature);
+                                      }
+                                      selected = feature;
+                                      selected_rf = feature_rf;
                                   }
-                                  if (feature) {
-                                      highlightLayer.getSource().addFeature(feature);
-                                  }
-                                  selected = feature;
-                                  selected_rf = feature_rf;
-                              }
-                          });
-                    
+                              }).catch(e=> {console.log("Couldn't get feature"); console.log(e);});
+                          } catch (e) {
+                              //console.log("featureLayer doesn't support getFeatures");
+                          }
+                    };
+
                     map.on('pointermove', function (e) {
                         if (e.dragging) {
                             return;

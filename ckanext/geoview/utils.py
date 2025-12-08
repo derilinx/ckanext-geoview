@@ -120,7 +120,8 @@ def proxy_service_url(req, url, unzip=False):
             z = zipfile.ZipFile(StringIO.StringIO(r.content))
             response.body_file.write(z.read(z.namelist()[0]))
         else:
-            response.content_type = r.headers["content-type"]
+            # errors from some odd upstreams don't actually have a content-type
+            response.content_type = r.headers.get("content-type", 'text/plain')
             response.charset = r.encoding
 
             length = 0
