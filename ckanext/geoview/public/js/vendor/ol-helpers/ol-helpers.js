@@ -1311,11 +1311,14 @@ ol.proj.addProjection(createEPSG4326Proj('EPSG:4326:LONLAT', 'enu'));
 
                 /* TODO should we have a dedicated WFS parser that handles multiple versions ? */
                 var ver = capas.version
-                if (ver == "2.0.0")
-                    ver = "1.1.0"  // 2.0.0 causes failures in some cases (e.g. Geoserver TOPP States WFS)
+
+                // pinning versions causes issues with haleconnect
+//                if (ver == "2.0.0")
+  //                  ver = "1.1.0"  // 2.0.0 causes failures in some cases (e.g. Geoserver TOPP States WFS)
 
                 // force GML version to 2.0; GML3 introduces variations in axis order depending on implementations
-                var gmlFormatVersion = "GML2";
+                // 3.2 is required to pick up the right geometry name
+                var gmlFormatVersion = "GML32";
 
                 var candidates = capas.featureTypes
                 if (ftNames) candidates = capas.featureTypes.filter(function (ft) {
@@ -1415,7 +1418,13 @@ ol.proj.addProjection(createEPSG4326Proj('EPSG:4326:LONLAT', 'enu'));
 
                                             if (useGET) {
 
-                                                var gmlFormat = gmlFormatVersion == 'GML2' ? new ol.format.GML2() : new ol.format.GML3();
+                                                const gmlFormatmap = {
+                                                    'GML2': ol.format.GML2,
+                                                    'GML3': ol.format.GML3,
+                                                    'GML32': ol.format.GML32,
+                                                };
+
+                                                var gmlFormat = new gmlFormatmap[gmlFormatVersion]();
 
                                                 if (gmlFormatVersion == 'GML2' && isLonLat4326) {
 
@@ -1438,7 +1447,7 @@ ol.proj.addProjection(createEPSG4326Proj('EPSG:4326:LONLAT', 'enu'));
                                                 }
 
                                                 var format = new ol.format.WFS({
-                                                    //version: ver,
+                                                    version: ver,
                                                     url: url,
                                                     projection: resolvedSrs,
                                                     // If specifying featureType, it is mandatory to also specify featureNS
@@ -1486,7 +1495,7 @@ ol.proj.addProjection(createEPSG4326Proj('EPSG:4326:LONLAT', 'enu'));
                                                              do on-the-fly reprojection if needed */
                                                             bbox: bbox,
                                                             // some WFS have wrong axis order if GML3
-                                                            outputFormat: gmlFormatVersion
+                                                            //outputFormat: gmlFormatVersion
                                                         }
 
                                                         ftLayer.getSource().setState(ol.source.State.LOADING)
@@ -1503,21 +1512,6 @@ ol.proj.addProjection(createEPSG4326Proj('EPSG:4326:LONLAT', 'enu'));
                                                         ).then(
                                                             function (text) {
                                                                 var features = format.readFeatures(text, {featureProjection: mapProjection, dataProjection: resolvedSrs})
-                                                                /* This is no longer needed as axis order is forced to lon/lat in format.GML
-                                                                 if (!isLatLon && ol.proj.equivalent(resolvedSrs, OL_HELPERS.EPSG4326)) {
-                                                                 // OL3+ only supports xy. --> reverse axis order if not native latLon
-                                                                 for (var i = 0; i < features.length; i++) {
-                                                                 features[i].getGeometry().applyTransform(function (coords, coords2, stride) {
-                                                                 for (var j = 0; j < coords.length; j += stride) {
-                                                                 var y = coords[j];
-                                                                 var x = coords[j + 1];
-                                                                 coords[j] = x;
-                                                                 coords[j + 1] = y;
-                                                                 }
-                                                                 });
-                                                                 }
-                                                                 }
-                                                                 */
 
                                                                 // generate fid from properties hash to avoid multiple insertion of same feature
                                                                 // (when max_features strategy is applied and features have no intrisic ID)
@@ -1526,7 +1520,7 @@ ol.proj.addProjection(createEPSG4326Proj('EPSG:4326:LONLAT', 'enu'));
                                                                         var hashkey = new ol.format.GeoJSON().writeFeature(feature).hashCode();
                                                                         feature.setId(hashkey);
                                                                     }
-                                                                })
+                                                                });
 
                                                                 ftLayer
                                                                     .getSource()
