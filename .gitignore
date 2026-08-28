@@ -5,4 +5,11 @@ syntax: glob
 *~
 build
 \#*\#
+<<<<<<< HEAD
+*
+node_modules
+#*
+=======
 .\#*
+node_modules
+>>>>>>> origin/ol-10
