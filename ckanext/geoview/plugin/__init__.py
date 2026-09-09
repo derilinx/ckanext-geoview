@@ -109,41 +109,69 @@ class OLGeoView(GeoViewMixin, GeoViewBase):
         return view_formats
 
     def alternate_formats(self, resource):
-        alternate_formats_str = resource.get('alternate_formats','{}')
-        alternate_formats = json.loads(alternate_formats_str)
-        return alternate_formats
+        if not resource:
+            return {}
+
+        alternate_formats = resource.get("alternate_formats", {})
+        if isinstance(alternate_formats, dict):
+            return alternate_formats
+
+        if not alternate_formats:
+            return {}
+
+        if isinstance(alternate_formats, str):
+            try:
+                alternate_formats = json.loads(alternate_formats)
+            except (TypeError, ValueError):
+                log.warning(
+                    "Unable to parse alternate_formats for geoview resource: %r",
+                    alternate_formats,
+                )
+                return {}
+
+        if isinstance(alternate_formats, dict):
+            return alternate_formats
+
+        return {}
 
     def available_formats(self, resource):
         view_formats = self.view_formats()
-        available_formats = {k: v['url'] for k,v in self.alternate_formats(resource).items() if k in view_formats}
+        available_formats = {
+            k: v["url"]
+            for k, v in self.alternate_formats(resource).items()
+            if k in view_formats and isinstance(v, dict) and "url" in v
+        }
 
-        format_lower = resource.get('format','').lower() or self._guess_format_from_extension(resource['url'])
+        format_lower = (
+            resource.get("format", "").lower()
+            or self._guess_format_from_extension(resource["url"])
+        )
 
         if format_lower in view_formats:
-            available_formats[format_lower] = resource['url']
+            available_formats[format_lower] = resource["url"]
 
         return available_formats
-                                                                                              
-    
+
     def can_view(self, data_dict):
-        format_lower = data_dict["resource"].get("format", "").lower()
+        resource = data_dict["resource"]
+        format_lower = resource.get("format", "").lower()
         same_domain = on_same_domain(data_dict)
 
         # Guess from file extension
-        if not format_lower and data_dict["resource"].get("url"):
-            format_lower = self._guess_format_from_extension(
-                data_dict["resource"]["url"]
-            )
-            
-        alternate_formats = set(self.alternate_formats(data_dict['resource']).keys())
+        if not format_lower and resource.get("url"):
+            format_lower = self._guess_format_from_extension(resource["url"])
 
-        if not format_lower or not alternate_formats:
+        alternate_formats = self.alternate_formats(resource)
+        alternate_keys = set(alternate_formats.keys())
+        view_formats = self.view_formats()
+
+        if not format_lower:
             return False
 
-        view_formats = self.view_formats()
-        
-        log.error(data_dict['resource'])
-        correct_format = format_lower in view_formats or not alternate_formats.isdisjoint(set(view_formats))
+        correct_format = (
+            format_lower in view_formats
+            or not alternate_keys.isdisjoint(set(view_formats))
+        )
         can_preview_from_domain = self.proxy_enabled or same_domain
 
         return correct_format and can_preview_from_domain
