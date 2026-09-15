@@ -69,6 +69,8 @@
           _baseOptions.id = mapConfig['mapbox.map_id'];
           _baseOptions.accessToken = mapConfig['mapbox.access_token'];
 
+          baseLayer = new L.TileLayer(baseLayerUrl, _baseOptions);
+
         } else if (mapConfig.type == 'custom') {
           // Custom XYZ layer
           baseLayerUrl = mapConfig['url'] || mapConfig['custom_url'] || mapConfig['custom.url'];
