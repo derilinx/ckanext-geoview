@@ -14,8 +14,9 @@ log = logging.getLogger(__name__)
 GEOJSON_MAX_FILE_SIZE = 25 * 1024 * 1024
 
 
-MAX_FILE_SIZE = 3 * 1024 * 1024  # 1MB
-CHUNK_SIZE = 512
+MAX_FILE_SIZE = toolkit.asint(toolkit.config.get('ckan.resource_proxy.max_file_size', 3 * 1024 * 1024))
+CHUNK_SIZE = toolkit.asint(toolkit.config.get('ckan.resource_proxy.chunk_size', 4096))
+
 
 # HTTP request parameters that may conflict with OGC services
 # protocols and should be excluded from proxied calls
