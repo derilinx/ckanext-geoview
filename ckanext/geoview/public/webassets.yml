@@ -4,6 +4,7 @@ openlayers_js:
   extra:
     preload:
       - base/main
+      - vendor/bootstrap
   contents:
     - js/vendor/underscore/underscore-min.js
     - js/vendor/proj4/proj4.js
