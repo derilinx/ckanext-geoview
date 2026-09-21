@@ -77,7 +77,6 @@ shp_js:
     - js/vendor/shp2geojson/preview.js
     - js/vendor/shp2geojson/preprocess.js
     - js/vendor/jszip/jszip.min.js
-    - js/vendor/jszip-utils/jszip-utils.min.js
     - js/common_map.js
     - js/shp_preview.js
 shp_css:

@@ -12,10 +12,6 @@ Include all of the necessary files for the webpage to preview shp.
 ```
 <script src="https://cdnjs.cloudflare.com/ajax/libs/proj4js/2.3.3/proj4.js"></script>
 <script src="lib/jszip.js"></script>
-<script src="lib/jszip-utils.js"></script>
-<!--[if IE]>
-<script type="text/javascript" src="lib/jszip-utils-ie.js"></script>
-<![endif]-->
 
 <script src="preprocess.js"></script>
 <script src="preview.js"></script>

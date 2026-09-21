@@ -5,7 +5,6 @@ VENDOR_DIR="$CURRENT_DIR/ckanext/geoview/public/js/vendor"
 
 declare -a libs=(
   "jszip;/node_modules/jszip/dist/jszip.min.js;/jszip/"
-  "jszip-utils;/node_modules/jszip-utils/dist/jszip-utils.min.js;/jszip-utils/"
   "leaflet (js);/node_modules/leaflet/dist/leaflet.js;/leaflet/"
   "leaflet (css);/node_modules/leaflet/dist/leaflet.css;/leaflet/"
   "leaflet (images);/node_modules/leaflet/dist/images;/leaflet/"
