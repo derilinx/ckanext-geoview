@@ -36,13 +36,13 @@
                 });
 
 
-      map = new L.Map(container, leafletMapOptions);
+      var map = new L.Map(container, leafletMapOptions);
 
       const parseConfig = (mapConfig) => {
-        const _baseOptions = {...leafletBaseLayerOptions};       
+        const _baseOptions = {...leafletBaseLayerOptions};
         var baseLayer;
         var baseLayerUrl;
-        
+
         if (mapConfig.type == 'mapbox') {
           // MapBox base map
           if (!mapConfig['mapbox.map_id'] || !mapConfig['mapbox.access_token']) {
@@ -78,7 +78,7 @@
           if (mapConfig.tms) _baseOptions.tms = mapConfig.tms;
           _baseOptions.attribution = mapConfig.attribution;
           _baseOptions.title = mapConfig.title;
-          
+
           baseLayer = new L.TileLayer(baseLayerUrl, _baseOptions);
 
         } else if (mapConfig.type == 'wms') {
@@ -103,15 +103,15 @@
         } else {
           let c = L.Control.extend({
 
-            onAdd: (map) => {
-              let element = document.createElement("div");
-              element.className = "leaflet-control-no-provider";
-              element.innerHTML = 'No map provider set. Please check the <a href="https://docs.ckan.org/projects/ckanext-spatial/en/latest/map-widgets.html">documentation</a>';
-              return element;
-            },
-            onRemove: (map) => {}
-          })
-          map.addControl(new c({position: "bottomleft"}))
+          onAdd: (map) => {
+            let element = document.createElement("div");
+            element.className = "leaflet-control-no-provider";
+            element.innerHTML = 'No map provider set. Please check the <a href="https://docs.ckan.org/projects/ckanext-spatial/en/latest/map-widgets/" target="_blank">documentation</a>';
+            return element;
+          },
+          onRemove: (map) => {}
+        })
+        map.addControl(new c({position: "bottomleft"}))
 
         }
         return baseLayer;
@@ -123,13 +123,13 @@
       } else {
           baseLayers = [parseConfig(mapConfig)]
       }
-      
+
       if (baseLayers[0]) {
 
         map.addLayer(baseLayers[0]);
 
         if (baseLayers.length > 1) {
-          // layerControl handles adding the extra layers. 
+          // layerControl handles adding the extra layers.
           baseMapMap = Object.fromEntries(baseLayers.map(l => [l.options.title, l]))
           var layerControl = L.control.layers(baseMapMap, {}).addTo(map);
         } else {
