@@ -16,6 +16,7 @@ GEOJSON_MAX_FILE_SIZE = 25 * 1024 * 1024
 
 MAX_FILE_SIZE = toolkit.asint(toolkit.config.get('ckan.resource_proxy.max_file_size', 3 * 1024 * 1024))
 CHUNK_SIZE = toolkit.asint(toolkit.config.get('ckan.resource_proxy.chunk_size', 4096))
+TIMEOUT = toolkit.asint(toolkit.config.get('ckan.resource_proxy.timeout', 10))
 
 
 # HTTP request parameters that may conflict with OGC services
@@ -74,9 +75,9 @@ def proxy_service_url(req, url):
             length = int(req.environ["CONTENT_LENGTH"])
             headers = {"Content-Type": req.environ["CONTENT_TYPE"]}
             body = req.body
-            r = requests.post(url, data=body, headers=headers, stream=True)
+            r = requests.post(url, data=body, headers=headers, stream=True, timeout=TIMEOUT)
         else:
-            r = requests.get(url, params=req.query_string, stream=True)
+            r = requests.get(url, params=req.query_string, stream=True, timeout=TIMEOUT)
 
         # log.info('Request: {req}'.format(req=r.request.url))
         # log.info('Request Headers: {h}'.format(h=r.request.headers))
