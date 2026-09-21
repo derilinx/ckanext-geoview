@@ -33,51 +33,51 @@ function loadshp(config, returnData) {
 
         EPSGUser = proj4('EPSG:'+EPSG);
 
-        if(typeof url != 'string') {
-            var reader = new FileReader();
-            reader.onload = function(e) {
-                var URL = window.URL || window.webkitURL || window.mozURL || window.msURL,
-                zip = new JSZip(e.target.result),
-                shpString =  zip.file(/.shp$/i)[0].name,
-                dbfString = zip.file(/.dbf$/i)[0].name,
-                prjString = zip.file(/.prj$/i)[0];
-                if(prjString) {
-                    proj4.defs('EPSGUSER', zip.file(prjString.name).asText());
-                    try {
-                      EPSGUser = proj4('EPSGUSER');
-                    } catch (e) {
-                      console.error('Unsuported Projection: ' + e);
-                    }
-                }
+        // JSZip reads a File/Blob as it is, so only a remote zip has to be
+        // fetched first.
+        var archive = typeof url != 'string' ?
+            Promise.resolve(url) :
+            fetch(url).then(function(response) {
+                if(!response.ok)
+                    throw new Error('Cannot fetch ' + url + ': ' + response.status + ' ' + response.statusText);
+                return response.blob();
+            });
 
-                SHPParser.load(URL.createObjectURL(new Blob([zip.file(shpString).asArrayBuffer()])), shpLoader, returnData);
-                DBFParser.load(URL.createObjectURL(new Blob([zip.file(dbfString).asArrayBuffer()])), encoding, dbfLoader, returnData);
+        archive.then(function(data) {
+            return JSZip.loadAsync(data);
+        }).then(function(zip) {
+            var shpFile = zip.file(/.shp$/i)[0],
+            dbfFile = zip.file(/.dbf$/i)[0],
+            prjFile = zip.file(/.prj$/i)[0];
+
+            if(!shpFile || !dbfFile)
+                throw new Error('The archive must contain both a .shp and a .dbf file');
+
+            return Promise.all([
+                shpFile.async('arraybuffer'),
+                dbfFile.async('arraybuffer'),
+                prjFile ? prjFile.async('text') : null
+            ]);
+        }).then(function(contents) {
+            var URL = window.URL || window.webkitURL || window.mozURL || window.msURL,
+            shpBuffer = contents[0],
+            dbfBuffer = contents[1],
+            prjText = contents[2];
+
+            if(prjText) {
+                proj4.defs('EPSGUSER', prjText);
+                try {
+                  EPSGUser = proj4('EPSGUSER');
+                } catch (e) {
+                  console.error('Unsuported Projection: ' + e);
+                }
             }
 
-            reader.readAsArrayBuffer(url);
-        } else {
-            JSZipUtils.getBinaryContent(url, function(err, data) {
-                if(err) throw err;
-
-                var URL = window.URL || window.webkitURL,
-                zip = new JSZip(data),
-                shpString =  zip.file(/.shp$/i)[0].name,
-                dbfString = zip.file(/.dbf$/i)[0].name,
-                prjString = zip.file(/.prj$/i)[0];
-                if(prjString) {
-		    proj4.defs('EPSGUSER', zip.file(prjString.name).asText());
-		    try {
-		      EPSGUser = proj4('EPSGUSER');
-		    } catch (e) {
-		      console.error('Unsuported Projection: ' + e);
-		    }
-                }
-
-                SHPParser.load(URL.createObjectURL(new Blob([zip.file(shpString).asArrayBuffer()])), shpLoader, returnData);
-                DBFParser.load(URL.createObjectURL(new Blob([zip.file(dbfString).asArrayBuffer()])), encoding, dbfLoader, returnData);
-
-            });
-        }
+            SHPParser.load(URL.createObjectURL(new Blob([shpBuffer])), shpLoader, returnData);
+            DBFParser.load(URL.createObjectURL(new Blob([dbfBuffer])), encoding, dbfLoader, returnData);
+        }).catch(function(err) {
+            console.error('Cannot load shapefile: ' + err);
+        });
     });
 }
 

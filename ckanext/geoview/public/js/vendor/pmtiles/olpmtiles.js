@@ -21,13 +21,7 @@ var olpmtiles = (() => {
     return a;
   };
   var __name = (target, value) => __defProp(target, "name", { value, configurable: true });
-  var __require = /* @__PURE__ */ ((x2) => typeof require !== "undefined" ? require : typeof Proxy !== "undefined" ? new Proxy(x2, {
-    get: (a, b2) => (typeof require !== "undefined" ? require : a)[b2]
-  }) : x2)(function(x2) {
-    if (typeof require !== "undefined") return require.apply(this, arguments);
-    throw Error('Dynamic require of "' + x2 + '" is not supported');
-  });
-  var __commonJS = (cb, mod) => function __require2() {
+  var __commonJS = (cb, mod) => function __require() {
     return mod || (0, cb[__getOwnPropNames(cb)[0]])((mod = { exports: {} }).exports, mod), mod.exports;
   };
   var __export = (target, all) => {
@@ -10706,14 +10700,7 @@ var olpmtiles = (() => {
   }
   __name(defaultLoadFunction, "defaultLoadFunction");
 
-  // node_modules/fflate/esm/index.mjs
-  var import_module = __require("module");
-  var require2 = (0, import_module.createRequire)("/");
-  var Worker;
-  try {
-    Worker = require2("worker_threads").Worker;
-  } catch (e) {
-  }
+  // node_modules/fflate/esm/browser.js
   var u8 = Uint8Array;
   var u16 = Uint16Array;
   var i32 = Int32Array;
